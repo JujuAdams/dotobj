@@ -135,11 +135,27 @@
             }
         },
         {
+            "Key": "6e5c2081-9c63-4dc9-b06b-021dbbce231f",
+            "Value": {
+                "id": "0c1cd3b9-72bb-4398-9fb5-ebcb215c3437",
+                "resourcePath": "scripts\\dotobj_load_material\\dotobj_load_material.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "725c4727-3a9b-422f-8b02-f8f7c1e4b581",
             "Value": {
                 "id": "c73dbcf7-eb39-48b7-bae6-8d39e1262b04",
                 "resourcePath": "views\\725c4727-3a9b-422f-8b02-f8f7c1e4b581.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "7474804a-d9b7-4cb5-a82a-49533d87056f",
+            "Value": {
+                "id": "f503ba53-c49d-402c-b15a-2310660f9463",
+                "resourcePath": "datafiles_yy\\sponza_original.obj.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -231,6 +247,14 @@
             }
         },
         {
+            "Key": "a63f1f76-6264-4ae1-b0dd-b41ef9d219c0",
+            "Value": {
+                "id": "fc61e01f-db2c-4b01-a84e-1969b4a7d3e9",
+                "resourcePath": "datafiles_yy\\sponza.mtl.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "a9188620-a624-4a5a-83ae-a1b53faf038b",
             "Value": {
                 "id": "ad68ead3-28a4-4efe-9146-03937bcabaab",
@@ -263,10 +287,26 @@
             }
         },
         {
+            "Key": "b3e34ff0-8a78-49dc-9d69-38e896449343",
+            "Value": {
+                "id": "8aee4854-caa7-4a7e-aeb6-eb6e7febb3a3",
+                "resourcePath": "datafiles_yy\\sponza_modified.obj.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "b8069647-d149-402d-8710-44fdfebcfb1e",
             "Value": {
                 "id": "02328824-8a98-4da8-a814-a9d871cce989",
                 "resourcePath": "scripts\\vertex_buffer_transform\\vertex_buffer_transform.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "bb785071-b7e8-4c65-ba8b-f1ed2df8d08b",
+            "Value": {
+                "id": "262eb293-f6bf-4b2b-bc19-0085a58ccf78",
+                "resourcePath": "scripts\\dotobj_load_material_from_file\\dotobj_load_material_from_file.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -354,7 +394,9 @@
     "script_order": [
         "30d72bd4-2c4c-4ae9-b8a3-ed830490c8a8",
         "c8673924-8984-4c9f-8af9-fcb6a17890d4",
+        "6e5c2081-9c63-4dc9-b06b-021dbbce231f",
         "93491c9e-be22-40da-a25f-cb7a37b4fa12",
+        "bb785071-b7e8-4c65-ba8b-f1ed2df8d08b",
         "dcd58b46-b703-45fa-b985-fa6936d6a2f1",
         "b261830e-c49a-4c06-a330-b034ea5d3f71",
         "b8069647-d149-402d-8710-44fdfebcfb1e"

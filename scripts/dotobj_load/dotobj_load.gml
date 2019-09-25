@@ -45,9 +45,63 @@
 
 #region Internal macros
 
-#macro __DOTOBJ_VERSION        "3.0.0"
-#macro __DOTOBJ_DATE           "2019/9/25"
-#macro __DOTOBJ_DEFAULT_GROUP  "__dotobj__default__"
+#macro __DOTOBJ_VERSION                    "3.0.0"
+#macro __DOTOBJ_DATE                       "2019/9/25"
+#macro __DOTOBJ_DEFAULT_GROUP              "__dotobj_default__"
+#macro __DOTOBJ_DEFAULT_MATERIAL_LIBRARY   "__dotobj_default_mtllib__"
+#macro __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC  "__dotobj_default_mtl__"
+#macro __DOTOBJ_DEFAULT_MATERIAL_NAME      (__DOTOBJ_DEFAULT_MATERIAL_LIBRARY + "." + __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC)
+
+enum eDotObjGroup
+{
+    Line,
+    Name,
+    VertexList,
+    VertexBuffer,
+    Material,
+    __Size
+}
+
+enum eDotObjMaterial
+{
+    Ambient,           //u24 RGB
+    Diffuse,           //u24 RGB
+    Emissive,          //u24 RGB
+    Specular,          //u24 RGB
+    SpecularExp,       //f64
+    Transparency,      //f64
+    Transmission,      //u24 RGB
+    IlluminationModel, //u8 index
+    Dissolve,          //f64
+    Sharpness,         //f64
+    OpticalDensity,    //f64
+    AmbientMap,        //Texture array (see eDotObjTexture)
+    DiffuseMap,        //Texture array (see eDotObjTexture)
+    EmissiveMap,       //Texture array (see eDotObjTexture)
+    SpecularMap,       //Texture array (see eDotObjTexture)
+    SpecularExpMap,    //Texture array (see eDotObjTexture)
+    DissolveMap,       //Texture array (see eDotObjTexture)
+    NormalMap,         //Texture array (see eDotObjTexture)
+    __Size
+}
+
+enum eDotObjTexture
+{
+    Pointer,
+    BlendU,
+    BlendV,
+    BumpMultiplier,
+    SharpnessBoost,
+    ColourCorrection,
+    Channel,
+    ScalarRange,
+    UVClamp,
+    UVOffset,
+    UVScale,
+    Turbulence,
+    Resolution,
+    __Size
+}
 
 #endregion
 
@@ -74,7 +128,28 @@ var _line_data_list = ds_list_create();
 //Some .obj files use groups to store multiple individual vertex buffers
 var _group_map   = ds_map_create();
 var _vertex_list = ds_list_create();
-ds_map_add_list(_group_map, __DOTOBJ_DEFAULT_GROUP, _vertex_list);
+var _group_array = array_create(eDotObjGroup.__Size, undefined);
+_group_array[@ eDotObjGroup.Line        ] = 0;
+_group_array[@ eDotObjGroup.Name        ] = __DOTOBJ_DEFAULT_GROUP;
+_group_array[@ eDotObjGroup.VertexList  ] = _vertex_list;
+_group_array[@ eDotObjGroup.VertexBuffer] = undefined;
+_group_array[@ eDotObjGroup.Material    ] = undefined;
+_group_map[? __DOTOBJ_DEFAULT_GROUP] = _group_array;
+
+//Handle materials
+var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
+var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
+var _material_name     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+
+//Create some variables to track errors
+var _vec4_error            = false;
+var _texture_depth_error   = false;
+var _smoothing_group_error = false;
+var _map_error             = false;
+var _missing_positions     = 0;
+var _missing_normals       = 0;
+var _missing_uvs           = 0;
+var _negative_references   = 0;
 
 //Start at the start of the buffer...
 var _buffer_size = buffer_get_size(_buffer);
@@ -82,6 +157,7 @@ var _old_tell = buffer_tell(_buffer);
 buffer_seek(_buffer, buffer_seek_start, 0);
 
 //And let's iterate over the entire buffer, byte-by-byte
+var _line = 1;
 var _line_started = false;
 var _value_read_start   = 0;
 var _i = 0;
@@ -95,7 +171,7 @@ repeat(_buffer_size)
     {
         //If we haven't found a valid starting character yet (i.e. a character that has ASCII code > 32)...
         
-        if (_value != 32)
+        if (_value > 32)
         {
             //If we find a valid starting character, update the line-start position and start reading the line!
             _value_read_start = buffer_tell(_buffer)-1;
@@ -111,7 +187,8 @@ repeat(_buffer_size)
             
             //Jump back to the where the value started, then read it in as a string
             buffer_seek(_buffer, buffer_seek_start, _value_read_start);
-            ds_list_add(_line_data_list, buffer_read(_buffer, buffer_string));
+            var _string = buffer_read(_buffer, buffer_string);
+            if (_string != "") ds_list_add(_line_data_list, _string);
             
             //And reset our value read position for the next value
             _value_read_start = buffer_tell(_buffer);
@@ -125,7 +202,11 @@ repeat(_buffer_size)
                     case "v": //Position
                         if (ds_list_size(_line_data_list) == 1+4)
                         {
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! 4-element vertex position data is for mathematical curves/surfaces. This is not supported.");
+                            if (DOTOBJ_OUTPUT_WARNINGS && !_vec4_error)
+                            {
+                                show_debug_message("dotobj_load(): Warning! 4-element vertex position data is for mathematical curves/surfaces. This is not supported. (line=" + string(_line) + ")");
+                                _vec4_error = true;
+                            }
                             break;
                         }
                         
@@ -151,7 +232,25 @@ repeat(_buffer_size)
                     case "vt": //Texture coordinate
                         if (ds_list_size(_line_data_list) == 1+3)
                         {
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Texture depth is not supported; W-component of the texture coordinate will be ignored.");
+                            if (DOTOBJ_OUTPUT_WARNINGS && !_texture_depth_error)
+                            {
+                                switch(_line_data_list[| 3])
+                                {
+                                    case "0":
+                                    case "0.0":
+                                    case "0.00":
+                                    case "0.000":
+                                    case "0.0000":
+                                    case "0.00000":
+                                        //Ignore texture depths of exactly 0
+                                    break;
+                                    
+                                    default:
+                                        show_debug_message("dotobj_load(): Warning! Texture depth is not supported; W-component of the texture coordinate will be ignored. (line=" + string(_line) + ")");
+                                        _texture_depth_error = true;
+                                    break;
+                                }
+                            }
                         }
                         
                         ds_list_add(_texture_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]));
@@ -182,7 +281,7 @@ repeat(_buffer_size)
                     break;
                     
                     case "l": //Line definition
-                        if (DOTOBJ_OUTPUT_WARNINGS && !DOTOBJ_IGNORE_LINES) show_debug_message("dotobj_load(): Warning! Line primitives are not currently supported.");
+                        if (DOTOBJ_OUTPUT_WARNINGS && !DOTOBJ_IGNORE_LINES) show_debug_message("dotobj_load(): Warning! Line primitives are not currently supported. (line=" + string(_line) + ")");
                     break;
                     
                     case "g": //Group definition
@@ -197,9 +296,26 @@ repeat(_buffer_size)
                                 ++_i;
                             }
                             
-                            //Create a new vertex list and add it to the group map
-                            var _vertex_list = ds_list_create();
-                            ds_map_add_list(_group_map, _string, _vertex_list);
+                            if (ds_map_exists(_group_map, _string))
+                            {
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Group \"" + string(_string) + "\" has the same name as another group. (line=" + string(_line) + ")");
+                                var _group_array = _group_map[? _string];
+                                _vertex_list = _group_array[eDotObjGroup.VertexList];
+                            }
+                            else
+                            {
+                                //Create a new vertex list and add it to the group map
+                                var _vertex_list = ds_list_create();
+                                
+                                var _group_array = array_create(eDotObjGroup.__Size, undefined);
+                                _group_array[@ eDotObjGroup.Line        ] = _line;
+                                _group_array[@ eDotObjGroup.Name        ] = _string;
+                                _group_array[@ eDotObjGroup.VertexList  ] = _vertex_list;
+                                _group_array[@ eDotObjGroup.VertexBuffer] = undefined;
+                                _group_array[@ eDotObjGroup.Material    ] = _material_name;
+                                
+                                _group_map[? _string] = _group_array;
+                            }
                         }
                     break;
                     
@@ -217,25 +333,46 @@ repeat(_buffer_size)
                         {
                             if (_use_array)
                             {
-                                //Create a new vertex list and add it to the group map
-                                var _vertex_list = ds_list_create();
-                                ds_map_add_list(_group_map, _string, _vertex_list);
+                                if (ds_map_exists(_group_map, _string))
+                                {
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Object-as-group \"" + string(_string) + "\" has the same name as another group. (line=" + string(_line) + ")");
+                                    var _group_array = _group_map[? _string];
+                                    _vertex_list = _group_array[eDotObjGroup.VertexList];
+                                }
+                                else
+                                {
+                                    //Create a new vertex list and add it to the group map
+                                    var _vertex_list = ds_list_create();
+                                    
+                                    var _group_array = array_create(eDotObjGroup.__Size, undefined);
+                                    _group_array[@ eDotObjGroup.Line        ] = _line;
+                                    _group_array[@ eDotObjGroup.Name        ] = _string;
+                                    _group_array[@ eDotObjGroup.VertexList  ] = _vertex_list;
+                                    _group_array[@ eDotObjGroup.VertexBuffer] = undefined;
+                                    _group_array[@ eDotObjGroup.Material    ] = _material_name;
+                                    
+                                    _group_map[? _string] = _group_array;
+                                }
                             }
                         }
                         else
                         {
                             if (DOTOBJ_OUTPUT_WARNINGS)
                             {
-                                show_debug_message("dotobj_load(): Warning! Object \"" + string(_string) + "\" found. Objects are not supported; use groups instead, or set DOTOBJ_OBJECTS_ARE_GROUPS to <true>.");
+                                show_debug_message("dotobj_load(): Warning! Object \"" + string(_string) + "\" found. Objects are not supported; use groups instead, or set DOTOBJ_OBJECTS_ARE_GROUPS to <true>. (line=" + string(_line) + ")");
                             }
                         }
                     break;
                     
                     case "s": //Section definition
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Smoothing groups are not currently supported.");
+                        if (DOTOBJ_OUTPUT_WARNINGS && !_smoothing_group_error)
+                        {
+                            show_debug_message("dotobj_load(): Warning! Smoothing groups are not currently supported. (line=" + string(_line) + ")");
+                            _smoothing_group_error = true;
+                        }
                     break;
                     
-                    case "#": //Ignore comments
+                    case "#": //Comments
                         if (DOTOBJ_OUTPUT_COMMENTS)
                         {
                             var _string = "";
@@ -252,18 +389,45 @@ repeat(_buffer_size)
                     break;
                     
                     case "mtllib":
+                        var _string = "";
+                        var _i = 1;
+                        var _size = ds_list_size(_line_data_list);
+                        repeat(_size-1)
+                        {
+                            _string += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                            ++_i;
+                        }
+                        
+                        var _material_library = _string;
+                        var _material_name    = _material_library + "." + _material_specific;
+                    break;
+                    
                     case "usemtl":
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Materials are not currently supported.");
+                        var _string = "";
+                        var _i = 1;
+                        var _size = ds_list_size(_line_data_list);
+                        repeat(_size-1)
+                        {
+                            _string += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                            ++_i;
+                        }
+                        
+                        var _material_specific = _string;
+                        var _material_name     = _material_library + "." + _material_specific;
                     break;
                     
                     case "maplib":
                     case "usemap":
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! External texture map files are not currently supported.");
+                        if (DOTOBJ_OUTPUT_WARNINGS && !_map_error)
+                        {
+                            show_debug_message("dotobj_load(): Warning! External texture map files are not currently supported. (line=" + string(_line) + ")");
+                            _map_error = true;
+                        }
                     break;
                     
                     case "shadow_obj":
                     case "trace_obj":
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is an external .obj reference. This is not supported.");
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is an external .obj reference. This is not supported. (line=" + string(_line) + ")");
                     break;
                     
                     case "vp":
@@ -289,21 +453,21 @@ repeat(_buffer_size)
                     case "cdc": //Depreciated
                     case "cdp": //Depreciated
                     case "res": //Depreciated
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is for mathematical curves/surfaces. This is not supported.");
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is for mathematical curves/surfaces. This is not supported. (line=" + string(_line) + ")");
                     break;
                     
                     case "lod":
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! In-file LODs are not currently supported.");
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! In-file LODs are not currently supported. (line=" + string(_line) + ")");
                     break;
                     
                     case "bevel":
                     case "c_interp":
                     case "d_interp":
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is a rendering attribute. This is not supported.");
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is a rendering attribute. This is not supported. (line=" + string(_line) + ")");
                     break;
                     
                     default: //Something else that we don't recognise!
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised.");
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised. (line=" + string(_line) + ")");
                     break;
                 }
                 
@@ -313,15 +477,12 @@ repeat(_buffer_size)
             }
         }
     }
+    
+    if ((_value == 10) || (_value == 13)) ++_line;
 }
 
 //Create an array to store our final vertex buffers
 var _array = [];
-
-//Create some variables to track errors
-var _missing_positions = 0;
-var _missing_normals   = 0;
-var _missing_uvs       = 0;
 
 //Iterate over all the groups we've found
 //If we're not returning arrays, the group map should only contain one group
@@ -329,13 +490,24 @@ var _key = ds_map_find_first(_group_map);
 repeat(ds_map_size(_group_map))
 {
     //Find our list of faces for this group
-    _vertex_list = _group_map[? _key];
+    var _group_array = _group_map[? _key];
+    _vertex_list = _group_array[eDotObjGroup.VertexList];
+    
     if (ds_list_size(_vertex_list) <= 0)
     {
-        if ((_key != __DOTOBJ_DEFAULT_GROUP) || (ds_map_size(_group_map) <= 1))
+        if (DOTOBJ_OUTPUT_WARNINGS)
         {
-            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Group \"" + string(_key) + "\" has no faces.");
+            if ((_key == __DOTOBJ_DEFAULT_GROUP) && (ds_map_size(_group_map) > 1))
+            {
+                show_debug_message("dotobj_load(): Caution! Default group \"" + string(_key) + "\" has no triangles.");
+            }
+            else
+            {
+                show_debug_message("dotobj_load(): Warning! Group \"" + string(_key) + "\" has no triangles.");
+            }
         }
+        
+        _key = ds_map_find_next(_group_map, _key);
         continue;
     }
     
@@ -410,15 +582,19 @@ repeat(ds_map_size(_group_map))
             }
             else
             {
-                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Face " + string(_i) + " for group \"" + string(_key) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
+                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_key) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
                 continue;
             }
         }
         else
         {
-            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Face " + string(_i) + " for group \"" + string(_key) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_key) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
             continue;
         }
+        
+        if (_v_index == "") _v_index = 0;
+        if (_n_index == "") _n_index = 0;
+        if (_t_index == "") _t_index = 0;
         
         _v_index = 3*floor(real(_v_index));
         _n_index = 2*floor(real(_n_index));
@@ -427,7 +603,7 @@ repeat(ds_map_size(_group_map))
         //Some .obj file use negative references to look at data recently defined. This isn't supported!
         if ((_v_index < 0) || (_n_index < 0) || (_t_index < 0))
         {
-            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Negative references are not supported.");
+            ++_negative_references;
             continue;
         }
         
@@ -500,7 +676,7 @@ repeat(ds_map_size(_group_map))
         }
     }
     
-    //Once we've finished iterating over the faces, finish our vertex buffer
+    //Once we've finished iterating over the triangles, finish our vertex buffer
     vertex_end(_vbuff);
     
     //Add this vertex buffer to our array
@@ -524,9 +700,10 @@ buffer_seek(_buffer, buffer_seek_start, _old_tell);
 //Report errors if we found any
 if (DOTOBJ_OUTPUT_WARNINGS)
 {
-    if (_missing_positions > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing positions (x" + string(_missing_positions) + ")");
-    if (_missing_normals   > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing normals (x"   + string(_missing_normals  ) + ")");
-    if (_missing_uvs       > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing UVs (x"       + string(_missing_uvs      ) + ")");
+    if (_negative_references > 0) show_debug_message("dotobj_load(): Warning! .obj had negative position references (x" + string(_negative_references) + ")");
+    if (_missing_positions   > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing positions (x"     + string(_missing_positions  ) + ")");
+    if (_missing_normals     > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing normals (x"       + string(_missing_normals    ) + ")");
+    if (_missing_uvs         > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing UVs (x"           + string(_missing_uvs        ) + ")");
 }
 
 //If we want to report the load time, do it!

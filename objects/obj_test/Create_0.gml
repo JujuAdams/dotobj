@@ -6,6 +6,10 @@ vertex_format_add_colour();          //            +  4
 vertex_format_add_texcoord();        //            +  8
 vertex_format = vertex_format_end(); //vertex size = 24
 
+materials_map = ds_map_create();
+dotobj_load_material_from_file(materials_map, "sponza.mtl");
+dotobj_load_from_file("sponza_modified.obj", vertex_format, false, true, true, true, true);
+
 //Load our .obj from disk
 //We want to ignore normals but keep the texture coordinates
 //Additionally, GameMaker has its y-axis (V-component) of texture coordinates upside down so we need to fix that

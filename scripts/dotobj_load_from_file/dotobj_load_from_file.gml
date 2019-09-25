@@ -25,7 +25,7 @@
 /// it's useful to export each group as a separate vertex buffer. Set the optional
 /// "useArray" argument to <true> to return an array of vertex buffers.
 /// 
-/// @param file             File to read from
+/// @param file            File to read from
 /// @param vertexFormat    Vertex format to use. See above for details on what vertex formats are supported
 /// @param writeNormals    Whether to write normals into the vertex buffer. Set this to <false> if your vertex format does not contain normals
 /// @param writeUVs        Whether to write texture coordinates into the vertex buffer. Set this to <false> if your vertex format does not contain texture coordinates
