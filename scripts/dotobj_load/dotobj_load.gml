@@ -11,7 +11,7 @@
 /// 
 /// Returns: A vertex buffer, or an array of vertex buffers if "useBuffer" is <true>
 /// 
-/// This script expects the vertex format to be setup as follows:
+/// This script expects the vertex format to be set up as follows:
 /// - 3D Position
 /// - Normal
 /// - Colour
