@@ -1,13 +1,15 @@
 /// Adds materials from an ASCII .mtl file, stored in a buffer, to a ds_map
 /// @jujuadams    contact@jujuadams.com
 /// 
-/// @param map      ds_map to add materials to
-/// @param buffer   Buffer to read from
+/// @param map           ds_map to add materials to
+/// @param libraryName   
+/// @param buffer        Buffer to read from
 
 if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
 
-var _root_map = argument0;
-var _buffer   = argument1;
+var _root_map     = argument0;
+var _library_name = argument1;
+var _buffer       = argument2;
 
 //We keep a list of data per line
 var _map            = -1;
@@ -68,7 +70,7 @@ repeat(_buffer_size)
                                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not yet supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
                             break;
                             default: //Using RGB
                             break;
@@ -82,7 +84,7 @@ repeat(_buffer_size)
                                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not yet supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
                             break;
                             default: //Using RGB
                             break;
@@ -96,7 +98,7 @@ repeat(_buffer_size)
                                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not yet supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
                             break;
                             default: //Using RGB
                             break;
@@ -110,7 +112,7 @@ repeat(_buffer_size)
                                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not yet supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
                             break;
                             default: //Using RGB
                             break;
@@ -277,8 +279,8 @@ repeat(_buffer_size)
                             ++_i;
                         }
                         
-                        _map = ds_map_create();
-                        ds_map_add_map(_root_map, _string, _map);
+                        var _material_array = array_create(eDotObjMaterial.__Size, undefined);
+                        _root_map[? _library_name + "." + _string] = _material_array;
                     break;
                     
                     case "#": //Comments

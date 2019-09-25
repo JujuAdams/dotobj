@@ -191,6 +191,14 @@
             }
         },
         {
+            "Key": "83ba96b6-3282-4d1f-8cab-c0fb2c164c6a",
+            "Value": {
+                "id": "02f5361f-8b71-4c01-8cd6-808ddd7e5f2d",
+                "resourcePath": "scripts\\dotobj_material\\dotobj_material.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "8427047f-9ef8-4c77-89f3-9c20623d07b6",
             "Value": {
                 "id": "7c4583c6-e22f-4792-8942-62fea6987075",
@@ -397,6 +405,7 @@
         "6e5c2081-9c63-4dc9-b06b-021dbbce231f",
         "93491c9e-be22-40da-a25f-cb7a37b4fa12",
         "bb785071-b7e8-4c65-ba8b-f1ed2df8d08b",
+        "83ba96b6-3282-4d1f-8cab-c0fb2c164c6a",
         "dcd58b46-b703-45fa-b985-fa6936d6a2f1",
         "b261830e-c49a-4c06-a330-b034ea5d3f71",
         "b8069647-d149-402d-8710-44fdfebcfb1e"

@@ -8,7 +8,7 @@ var _root_map = argument0;
 var _filename = argument1;
 
 var _buffer = buffer_load(_filename);
-var _result = dotobj_load_material(_root_map, _buffer);
+var _result = dotobj_load_material(_root_map, _filename, _buffer);
 buffer_delete(_buffer);
 
 return _result;

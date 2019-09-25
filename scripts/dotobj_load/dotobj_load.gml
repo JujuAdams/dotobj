@@ -47,9 +47,9 @@
 
 #macro __DOTOBJ_VERSION                    "3.0.0"
 #macro __DOTOBJ_DATE                       "2019/9/25"
-#macro __DOTOBJ_DEFAULT_GROUP              "__dotobj_default__"
-#macro __DOTOBJ_DEFAULT_MATERIAL_LIBRARY   "__dotobj_default_mtllib__"
-#macro __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC  "__dotobj_default_mtl__"
+#macro __DOTOBJ_DEFAULT_GROUP              "__dotobj_group__"
+#macro __DOTOBJ_DEFAULT_MATERIAL_LIBRARY   "__dotobj_library__"
+#macro __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC  "__dotobj_material__"
 #macro __DOTOBJ_DEFAULT_MATERIAL_NAME      (__DOTOBJ_DEFAULT_MATERIAL_LIBRARY + "." + __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC)
 
 enum eDotObjGroup
@@ -57,6 +57,13 @@ enum eDotObjGroup
     Line,
     Name,
     VertexList,
+    MeshList,
+    __Size
+}
+
+enum eDotObjMesh
+{
+    GroupName,
     VertexBuffer,
     Material,
     __Size
@@ -133,13 +140,12 @@ _group_array[@ eDotObjGroup.Line        ] = 0;
 _group_array[@ eDotObjGroup.Name        ] = __DOTOBJ_DEFAULT_GROUP;
 _group_array[@ eDotObjGroup.VertexList  ] = _vertex_list;
 _group_array[@ eDotObjGroup.VertexBuffer] = undefined;
-_group_array[@ eDotObjGroup.Material    ] = undefined;
+_group_array[@ eDotObjGroup.Material    ] = __DOTOBJ_DEFAULT_MATERIAL_NAME;
 _group_map[? __DOTOBJ_DEFAULT_GROUP] = _group_array;
 
 //Handle materials
 var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
 var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
-var _material_name     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
 
 //Create some variables to track errors
 var _vec4_error            = false;
@@ -312,7 +318,7 @@ repeat(_buffer_size)
                                 _group_array[@ eDotObjGroup.Name        ] = _string;
                                 _group_array[@ eDotObjGroup.VertexList  ] = _vertex_list;
                                 _group_array[@ eDotObjGroup.VertexBuffer] = undefined;
-                                _group_array[@ eDotObjGroup.Material    ] = _material_name;
+                                _group_array[@ eDotObjGroup.Material    ] = __DOTOBJ_DEFAULT_MATERIAL_NAME;
                                 
                                 _group_map[? _string] = _group_array;
                             }
@@ -349,7 +355,7 @@ repeat(_buffer_size)
                                     _group_array[@ eDotObjGroup.Name        ] = _string;
                                     _group_array[@ eDotObjGroup.VertexList  ] = _vertex_list;
                                     _group_array[@ eDotObjGroup.VertexBuffer] = undefined;
-                                    _group_array[@ eDotObjGroup.Material    ] = _material_name;
+                                    _group_array[@ eDotObjGroup.Material    ] = __DOTOBJ_DEFAULT_MATERIAL_NAME;
                                     
                                     _group_map[? _string] = _group_array;
                                 }
@@ -399,7 +405,7 @@ repeat(_buffer_size)
                         }
                         
                         var _material_library = _string;
-                        var _material_name    = _material_library + "." + _material_specific;
+                        show_debug_message("dotobj_load(): Set material library to \"" + _string + "\".");
                     break;
                     
                     case "usemtl":
@@ -412,8 +418,13 @@ repeat(_buffer_size)
                             ++_i;
                         }
                         
+                        if (DOTOBJ_OUTPUT_WARNINGS && (_group_array[@ eDotObjGroup.Material] != __DOTOBJ_DEFAULT_MATERIAL_NAME))
+                        {
+                            show_debug_message("dotobj_load(): Warning! Setting a material twice for group \"" + string(_group_array[eDotObjGroup.Name]) + "\" is unsupported. \"" + string(_group_array[@ eDotObjGroup.Material]) + " --> \"" + _material_library + "." + _string + "\". (line=" + string(_line) + ")");
+                        }
+                        
                         var _material_specific = _string;
-                        var _material_name     = _material_library + "." + _material_specific;
+                        _group_array[@ eDotObjGroup.Material] = _material_library + "." + _material_specific;
                     break;
                     
                     case "maplib":
@@ -491,7 +502,12 @@ repeat(ds_map_size(_group_map))
 {
     //Find our list of faces for this group
     var _group_array = _group_map[? _key];
-    _vertex_list = _group_array[eDotObjGroup.VertexList];
+    var _group_line     = _group_array[eDotObjGroup.Line      ];
+    var _group_name     = _group_array[eDotObjGroup.Name      ];
+    var _group_material = _group_array[eDotObjGroup.Material  ];
+    var _vertex_list    = _group_array[eDotObjGroup.VertexList];
+    
+    //show_debug_message("dotobj_load(): Group \"" + _group_name + "\" (line " + string(_group_line) + ") uses material \"" + _group_material + "\" and has " + string(ds_list_size(_vertex_list)/3) + " triangles");
     
     if (ds_list_size(_vertex_list) <= 0)
     {
@@ -499,7 +515,7 @@ repeat(ds_map_size(_group_map))
         {
             if ((_key == __DOTOBJ_DEFAULT_GROUP) && (ds_map_size(_group_map) > 1))
             {
-                show_debug_message("dotobj_load(): Caution! Default group \"" + string(_key) + "\" has no triangles.");
+                show_debug_message("dotobj_load(): Caution! Default group \"" + string(_key) + "\" has no triangles (but other groups exist).");
             }
             else
             {
@@ -511,8 +527,16 @@ repeat(ds_map_size(_group_map))
         continue;
     }
     
+    var _material_array = dotobj_material(materials_map, _group_material);
+    if (_material_array == undefined)
+    {
+        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Material \"" + _group_material + "\" doesn't exist for group \"" + _group_name + "\" (line " + string(_group_line) + "), using default material instead.");
+        _material_array = dotobj_material(materials_map, __DOTOBJ_DEFAULT_MATERIAL_NAME);
+    }
+    
     //Create a vertex buffer for this group
     var _vbuff = vertex_create_buffer();
+    _group_array[@ eDotObjGroup.VertexBuffer] = _vbuff;
     vertex_begin(_vbuff, _vformat);
     
     //Iterate over all the vertices for this group
@@ -704,6 +728,13 @@ if (DOTOBJ_OUTPUT_WARNINGS)
     if (_missing_positions   > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing positions (x"     + string(_missing_positions  ) + ")");
     if (_missing_normals     > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing normals (x"       + string(_missing_normals    ) + ")");
     if (_missing_uvs         > 0) show_debug_message("dotobj_load(): Warning! .obj referenced missing UVs (x"           + string(_missing_uvs        ) + ")");
+}
+
+//Test to see if we've mucked something up and no vertex buffers have been created
+if (DOTOBJ_OUTPUT_WARNINGS && (array_length_1d(_array) < 1))
+{
+    show_debug_message("dotobj_load(): Warning! No vertex buffers were created.");
+    _array[0] = undefined;
 }
 
 //If we want to report the load time, do it!
