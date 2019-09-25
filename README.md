@@ -12,11 +12,11 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 
 1. Normals
 
-2. Texture coordinates and UV flipping, for compatibility between DirectX and OpenGL
+2. Texture coordinates, and UV flipping - *(for compatibility between DirectX and OpenGL)*
 
 3. Multiple vertex buffer output via .obj groups
 
-4. Vertex colours - (not in the official .obj spec, but some editors can export them)
+4. Vertex colours - *(not in the official .obj spec, but some editors can export them)*
 
 5. n-gon faces
 
