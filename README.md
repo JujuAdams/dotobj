@@ -10,11 +10,11 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 
 **dotobj currently supports:**
 
-1. Normals
+1. Position, texture coordinates. normals
 
-2. Texture coordinates, and UV flipping - *(for compatibility between DirectX and OpenGL)*
+2. Multiple vertex buffer output via .obj groups
 
-3. Multiple vertex buffer output via .obj groups
+3. UV flipping - *(for compatibility between DirectX and OpenGL)*
 
 4. Vertex colours - *(not in the official .obj spec, but some editors can export them)*
 
