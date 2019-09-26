@@ -1,6 +1,6 @@
 <h1 align="center">dotobj 4.0.0</h1>
 
-### @jujuadams, platypus model by @r0wan_dev
+### @jujuadams
 
 Lightweight .obj 3D model loader written in native GML. Can load from external files or from buffers. This example does not show off complex renderering or PBR, it only demonstrates the loading capabilities of the library.
 
@@ -8,21 +8,27 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 
 &nbsp;
 
-**`dotobj` currently supports:**
+<p align="center"><img src="https://raw.githubusercontent.com/JujuAdams/dotobj/master/dotobj_4_0_0_sponza.png" style="display:block; margin:auto;"><i>Look! It's Sponza! In GameMaker!</i></p>
+
+&nbsp;
+
+**dotobj currently supports:**
 
 1. Per vertex position, texture coordinates, and normals
 
-2. Materials, groups, and objects
+2. Materials and material libraries
 
-3. Vertex colours - *(not in the official .obj spec, but some editors can export them)*
+3. Groups
 
-4. UV flipping - *(for compatibility between DirectX and OpenGL)*
+4. Vertex colours - *(not in the official .obj spec, but some editors can export them)*
 
-5. N-gon faces
+5. UV flipping for compatibility between DirectX and OpenGL
 
-6. Custom vertex buffer formats
+6. N-gon faces
 
-7. Winding-order reversal
+7. Custom vertex buffer formats
+
+8. Winding-order reversal
 
 &nbsp;
 
@@ -32,7 +38,7 @@ GameMaker Studio 2.2.3 allows you to import assets, including scripts and shader
 
 &nbsp;
 
-**Please note that `dotobj` doesn't support the following features:**
+**Please note that dotobj doesn't support the following features:**
 
 1. Smoothing groups
 
