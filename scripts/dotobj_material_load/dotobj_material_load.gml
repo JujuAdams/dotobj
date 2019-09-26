@@ -1,4 +1,4 @@
-/// Adds materials from an ASCII .mtl file, stored in a buffer, to a ds_map
+/// Adds materials from an ASCII .mtl file, stored in a buffer, to the global material library.
 /// @jujuadams    contact@jujuadams.com
 /// 
 /// @param libraryName   Name of the library (usually a filename)
@@ -64,6 +64,7 @@ repeat(_buffer_size)
                 
                 if (_line_data_list[| 0] == "newmtl")
                 {
+                    //Create a new material
                     var _material_name = "";
                     var _i = 1;
                     var _size = ds_list_size(_line_data_list);
@@ -77,6 +78,7 @@ repeat(_buffer_size)
                 }
                 else if (_line_data_list[| 0] == "#")
                 {
+                    //Handle comments
                     if (DOTOBJ_OUTPUT_COMMENTS)
                     {
                         var _string = "";
@@ -93,7 +95,7 @@ repeat(_buffer_size)
                 }
                 else if (!is_array(_material_array))
                 {
-                    if (DOTOBJ_OUTPUT_COMMENTS)
+                    if (DOTOBJ_OUTPUT_WARNINGS)
                     {
                         show_debug_message("dotobj_load_material(): Warning! No material has been created (ln=" + string(_meta_line) + ")");
                     }
@@ -106,10 +108,10 @@ repeat(_buffer_size)
                         switch(_line_data_list[| 1])
                         {
                             case "spectral": //Spectral curve file (.rfl)
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported");
                             break;
                             default: //Using RGB
                                 _material_array[@ eDotObjMaterial.Ambient] = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -121,10 +123,10 @@ repeat(_buffer_size)
                         switch(_line_data_list[| 1])
                         {
                             case "spectral": //Spectral curve file (.rfl)
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported");
                             break;
                             default: //Using RGB
                                 _material_array[@ eDotObjMaterial.Diffuse] = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -136,10 +138,10 @@ repeat(_buffer_size)
                         switch(_line_data_list[| 1])
                         {
                             case "spectral": //Spectral curve file (.rfl)
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported");
                             break;
                             default: //Using RGB
                                 _material_array[@ eDotObjMaterial.Specular] = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -151,10 +153,10 @@ repeat(_buffer_size)
                         switch(_line_data_list[| 1])
                         {
                             case "spectral": //Spectral curve file (.rfl)
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Spectral curves are not supported");
                             break;
                             case "xyz": //Using CIE-XYZ
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): CIE-XYZ colourspace is not currently supported");
                             break;
                             default: //Using RGB
                                 _material_array[@ eDotObjMaterial.Emissive] = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -198,11 +200,11 @@ repeat(_buffer_size)
                             case "5": //Reflection: Fresnel on and Ray trace on
                             case "6": //Transparency: Refraction on,  Reflection: Fresnel off and Ray trace on
                             case "7": //Transparency: Refraction on,  Reflection: Fresnel on and Ray trace on
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Illumination model \"" + string(_line_data_list[| 1]) + "\" is not supported as it requires raytracing.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Illumination model \"" + string(_line_data_list[| 1]) + "\" is not supported as it requires raytracing");
                             break;
                             
                             default:
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Illumination model \"" + string(_line_data_list[| 1]) + "\" not recognised.");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Illumination model \"" + string(_line_data_list[| 1]) + "\" not recognised");
                             break;
                         }
                     break;
@@ -267,7 +269,10 @@ repeat(_buffer_size)
                     #region Texture map options
                     
                     case "-blenu":   //Horizontal texture blending
-                    case "-blenv":   //Horizontal texture blending
+                    case "-blenv":   //Vertical texture blending
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Warning! Horizontal/vertical texture blending is not supported. (ln=" + string(_meta_line) + ")");
+                    break;
+                    
                     case "-bm":      //Bump multiplier
                     case "-boost":   //Boosts mipmapped image file sharpness (.mpc / .mps / .mpb)
                     case "-cc":      //Colour correction
@@ -278,6 +283,7 @@ repeat(_buffer_size)
                     case "-s":       //Texture coordinate scaling
                     case "-t":       //Turbulence
                     case "-texres":  //Texture resolution
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not currently supported. (ln=" + string(_meta_line) + ")");
                     break;
                     
                     #endregion
@@ -285,12 +291,13 @@ repeat(_buffer_size)
                     #region Reflection map
                     
                     case "refl": //Reflection map
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Warning! Reflection maps are not supported. (ln=" + string(_meta_line) + ")");
                     break;
                     
                     #endregion
                     
                     default: //Something else that we don't recognise!
-                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised. (ln=" + string(_meta_line) + ")");;
+                        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load_material(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised. (ln=" + string(_meta_line) + ")");
                     break;
                 }
                 

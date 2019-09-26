@@ -35,7 +35,7 @@ var _material_name = argument1;
 var _name = _library_name + "." + _material_name;
 if (ds_map_exists(global.__dotobj_material_library, _name))
 {
-    show_debug_message("dotobj_new_material(): Warning! Material \"" + string(_name) + "\" already exists.");
+    show_debug_message("dotobj_new_material(): Warning! Material \"" + string(_name) + "\" already exists");
     return global.__dotobj_material_library[? _name];
 }
 
@@ -45,6 +45,6 @@ _array[@ eDotObjMaterial.Name   ] = _material_name;
 
 global.__dotobj_material_library[? _name] = _array;
 
-if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_new_mesh(): Created material \"" + string(_name) + "\"");
+if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_new_material(): Created material \"" + string(_name) + "\"");
 
 return _array;

@@ -11,6 +11,9 @@ if (keyboard_check_released(vk_f3))
     window_set_cursor(mouse_lock? cr_none : cr_default);
 }
 
+//Toggle the fullscreen if we press f4
+if (keyboard_check_released(vk_f4)) window_set_fullscreen(!window_get_fullscreen());
+
 //If we've got the mouse locked...
 if (mouse_lock)
 {

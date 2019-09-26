@@ -1,0 +1,1 @@
+draw_text(10, 10, "Loading...\n\n\n(This can take a while.)");

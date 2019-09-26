@@ -1,4 +1,4 @@
-/// Turns an ASCII .obj file, stored in a buffer, into a vertex buffer
+/// Turns an ASCII .obj file, stored in a buffer, into a series of vertex buffers stored in a tree-like heirachy.
 /// @jujuadams    contact@jujuadams.com
 /// 
 /// @param buffer          Buffer to read from
@@ -8,7 +8,7 @@
 /// @param flipUVs         Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct for DirectX / OpenGL idiosyncrasies
 /// @param reverseTris     Whether to reverse the triangle definition order to be compatible with the culling mode of your choice (clockwise/counter-clockwise)
 /// 
-/// Returns: A dotobj model (a ds_map containing .obj groups).
+/// Returns: A dotobj model (an array).
 /// 
 /// 
 /// 
@@ -34,7 +34,7 @@
 /// 
 /// This .obj load does *not* support the following features:
 /// - Smoothing groups
-/// - External texture map or .obj references
+/// - Map libraries
 /// - Freeform curve/surface geometry (NURBs/Bezier curves etc.)
 /// - Line primitives
 /// - Separate in-file LOD
@@ -48,28 +48,6 @@ var _write_texcoords   = argument[3];
 var _flip_texcoords    = argument[4];
 var _reverse_triangles = argument[5];
 
-//Create some lists to store the .obj file's data
-//We fill in the 0th element because .obj vertices are 1-indexed (!)
-var _position_list = ds_list_create(); ds_list_add(_position_list, 0,0,0  );
-var _colour_list   = ds_list_create(); ds_list_add(_colour_list,   1,1,1,1);
-var _normal_list   = ds_list_create(); ds_list_add(_normal_list,   0,0,0  );
-var _texture_list  = ds_list_create(); ds_list_add(_texture_list,  0,0    );
-
-//We keep a list of data per line
-var _line_data_list = ds_list_create();
-
-var _model_array = dotobj_new_model();
-
-//Some .obj files use groups to store multiple individual vertex buffers
-var _group_name       = __DOTOBJ_DEFAULT_GROUP;
-var _group_array      = dotobj_new_group(_model_array, _group_name, 0);
-var _mesh_array       = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
-var _mesh_vertex_list = _mesh_array[@ eDotObjMesh.VertexList];
-
-//Handle materials
-var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
-var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
-
 //Create some variables to track errors
 var _vec4_error            = false;
 var _texture_depth_error   = false;
@@ -79,6 +57,28 @@ var _missing_positions     = 0;
 var _missing_normals       = 0;
 var _missing_uvs           = 0;
 var _negative_references   = 0;
+
+
+//Create some lists to store the .obj file's data
+//We fill in the 0th element because .obj vertices are 1-indexed (!)
+var _position_list = ds_list_create(); ds_list_add(_position_list, 0,0,0  );
+var _colour_list   = ds_list_create(); ds_list_add(_colour_list,   1,1,1,1);
+var _normal_list   = ds_list_create(); ds_list_add(_normal_list,   0,0,0  );
+var _texture_list  = ds_list_create(); ds_list_add(_texture_list,  0,0    );
+
+//Create a model for us to fill
+//We add a default group and default mesh to the model for use later during parsing
+var _model_array      = dotobj_new_model();
+var _group_array      = dotobj_new_group(_model_array, __DOTOBJ_DEFAULT_GROUP, 0);
+var _mesh_array       = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
+var _mesh_vertex_list = _mesh_array[@ eDotObjMesh.VertexList];
+
+//Handle materials
+var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
+var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
+
+//We keep a list of data per line
+var _line_data_list = ds_list_create();
 
 //Metadata
 var _meta_line           = 1;
@@ -143,6 +143,7 @@ repeat(_buffer_size)
                             break;
                         }
                         
+                        //Add the position to our global list of positions
                         ds_list_add(_position_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]), real(_line_data_list[| 3]));
                         
                         if (ds_list_size(_line_data_list) == 1+3+3)
@@ -186,17 +187,19 @@ repeat(_buffer_size)
                             }
                         }
                         
+                        //Add our UVs to the global list of UVs
                         ds_list_add(_texture_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]));
                     break;
                     
                     case "vn": //Normal
+                        //Add our normal to the global list of normals
                         ds_list_add(_normal_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]), real(_line_data_list[| 3]));
                     break;
                     
                     case "f": //Face definition
                         var _line_data_size = ds_list_size(_line_data_list);
                         
-                        //Add all triangles, vertex-by-vertex, defined by this face
+                        //Add all triangles, vertex-by-vertex, defined by this face to the mesh's vertex list
                         _meta_triangles += _line_data_size-3;
                         var _f = 0;
                         repeat(_line_data_size-3)
@@ -229,8 +232,9 @@ repeat(_buffer_size)
                             ++_i;
                         }
                         
-                        var _group_array = dotobj_new_group(_model_array, _group_name, 0);
-                        var _mesh_array = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
+                        //Create a new group and give it a blank mesh
+                        var _group_array      = dotobj_new_group(_model_array, _group_name, 0);
+                        var _mesh_array       = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
                         var _mesh_vertex_list = _mesh_array[eDotObjMesh.VertexList];
                     break;
                     
@@ -247,8 +251,9 @@ repeat(_buffer_size)
                         
                         if (DOTOBJ_OBJECTS_ARE_GROUPS)
                         {
-                            var _group_array = dotobj_new_group(_model_array, _group_name, 0);
-                            var _mesh_array  = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
+                            //If we want to parse objects as groups, create a new group and give it a blank mesh
+                            var _group_array      = dotobj_new_group(_model_array, _group_name, 0);
+                            var _mesh_array       = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
                             var _mesh_vertex_list = _mesh_array[eDotObjMesh.VertexList];
                         }
                         else if (DOTOBJ_OUTPUT_WARNINGS)
@@ -292,7 +297,7 @@ repeat(_buffer_size)
                             ++_i;
                         }
                         
-                        //show_debug_message("dotobj_load(): Set material library to \"" + _material_library + "\".");
+                        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_load(): Set material library to \"" + _material_library + "\"");
                     break;
                     
                     case "usemtl":
@@ -416,7 +421,7 @@ repeat(ds_list_size(_group_list))
         //Check if this mesh is empty
         if (ds_list_size(_mesh_vertex_list) <= 0)
         {
-            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Group \"" + string(_group_name) + "\" mesh " + string(_mesh) + " has no triangles.");
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Group \"" + string(_group_name) + "\" mesh " + string(_mesh) + " has no triangles");
             ++_mesh;
             continue;
         }
@@ -425,7 +430,7 @@ repeat(ds_list_size(_group_list))
         var _material_array = global.__dotobj_material_library[? _mesh_material];
         if (_material_array == undefined)
         {
-            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Material \"" + _mesh_material + "\" doesn't exist for group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + ", using default material instead.");
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_load(): Warning! Material \"" + _mesh_material + "\" doesn't exist for group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + ", using default material instead");
             _material_array = global.__dotobj_material_library[? __DOTOBJ_DEFAULT_MATERIAL_NAME];
         }
         
@@ -632,7 +637,7 @@ if (DOTOBJ_OUTPUT_WARNINGS)
 }
 
 //If we want to report the load time, do it!
-if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("dotobj_load(): lines=" + string(_meta_line) + ", vertex buffers=" + string(_meta_vertex_buffers) + ", triangles=" + string(_meta_triangles) + ". Time to load was " + string((get_timer() - _timer)/1000) + "ms.");
+if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("dotobj_load(): lines=" + string(_meta_line) + ", vertex buffers=" + string(_meta_vertex_buffers) + ", triangles=" + string(_meta_triangles) + ". Time to load was " + string((get_timer() - _timer)/1000) + "ms");
 
 //Return our data
 return _model_array;

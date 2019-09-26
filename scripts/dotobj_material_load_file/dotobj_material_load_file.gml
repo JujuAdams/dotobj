@@ -1,4 +1,4 @@
-/// Adds materials from an ASCII .mtl file to a ds_map
+/// Adds materials from an ASCII .mtl file to the global material library.
 /// @jujuadams    contact@jujuadams.com
 /// 
 /// @param filename   File to read from
