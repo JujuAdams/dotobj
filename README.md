@@ -6,8 +6,6 @@ Lightweight .obj 3D model loader written in native GML. Can load from external f
 
 Details on the .obj format can be found here: http://paulbourke.net/dataformats/obj/
 
-&nbsp;
-
 <p align="center"><img src="https://raw.githubusercontent.com/JujuAdams/dotobj/master/dotobj_4_0_0_sponza.png" style="display:block; margin:auto;"></p>
 
 &nbsp;
