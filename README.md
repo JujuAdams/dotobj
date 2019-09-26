@@ -8,6 +8,10 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 
 &nbsp;
 
+<p align="center"><img src="https://raw.githubusercontent.com/JujuAdams/dotobj/master/dotobj_4_0_0_sponza.png" style="display:block; margin:auto;"></p>
+
+&nbsp;
+
 **dotobj currently supports:**
 
 1. Per vertex position, texture coordinates, and normals
