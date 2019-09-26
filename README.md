@@ -18,7 +18,7 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 
 2. Materials and material libraries
 
-3. Groups
+3. Groups and objects
 
 4. Vertex colours - *(not in the official .obj spec, but some editors can export them)*
 
