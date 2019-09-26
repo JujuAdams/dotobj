@@ -31,11 +31,107 @@
     },
     "resources": [
         {
+            "Key": "04971c93-604e-45a9-868c-a49ec8c328e3",
+            "Value": {
+                "id": "1c85d822-ca0d-4653-9c58-42e103913323",
+                "resourcePath": "datafiles_yy\\textures\\vase_plant.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "04c9d978-8acd-4488-98b9-a060885e8274",
+            "Value": {
+                "id": "64ddc649-3bf4-4df6-b3a4-715ae1ba4ac5",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_a_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "0d10ef9d-8b5a-41e4-a41d-04cdc7e7f8c9",
+            "Value": {
+                "id": "3d04ddf9-e4a8-4920-a9b9-308985a3ddf7",
+                "resourcePath": "datafiles_yy\\textures\\sponza_fabric_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "0dd0a959-4431-4297-b6c0-a0ba3ea155a5",
             "Value": {
                 "id": "2a911b71-85e2-4ec6-a893-903ad69226fb",
                 "resourcePath": "objects\\obj_test\\obj_test.yy",
                 "resourceType": "GMObject"
+            }
+        },
+        {
+            "Key": "1170c9e8-ef04-462b-958f-1580799e8fe6",
+            "Value": {
+                "id": "c9b5da90-3b99-436e-b3eb-7db8ca551dd0",
+                "resourcePath": "rooms\\rm_init\\rm_init.yy",
+                "resourceType": "GMRoom"
+            }
+        },
+        {
+            "Key": "130d84f2-6aef-4986-be65-146b1fcb8f45",
+            "Value": {
+                "id": "887a06d2-c91a-46d1-ad92-5298cbd0be37",
+                "resourcePath": "scripts\\dotobj_new_material\\dotobj_new_material.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "14b0e8fe-14e7-4605-a7bf-065fd92bba90",
+            "Value": {
+                "id": "80794a2a-ad73-4e8f-9eb2-18085933b069",
+                "resourcePath": "datafiles_yy\\textures\\sponza_ceiling_a_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "16700810-68b8-4a92-a474-9a938eb095c2",
+            "Value": {
+                "id": "87b6fc64-d91c-46c8-b0fc-64995b0798ef",
+                "resourcePath": "views\\16700810-68b8-4a92-a474-9a938eb095c2.yy",
+                "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "16f893b0-37f7-4637-9279-a9beebe13a78",
+            "Value": {
+                "id": "7e752412-1cb7-4983-b9f9-8506b45d270d",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_c_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "17d16d14-f671-4ab6-a806-6b7e667d37d8",
+            "Value": {
+                "id": "29caaf62-8e74-4e71-9663-1a549eedc3c4",
+                "resourcePath": "datafiles_yy\\textures\\sponza_curtain_green_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "19b948a5-c66b-461f-804f-d90e812f4e8e",
+            "Value": {
+                "id": "163aedd1-e970-464e-b6bf-a752e7e54486",
+                "resourcePath": "datafiles_yy\\textures\\spnza_bricks_a_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "19c61b92-52d9-4102-a9ff-73048d33c8c0",
+            "Value": {
+                "id": "6acb33fa-a9f2-44f6-bc8c-c42871bb16c2",
+                "resourcePath": "datafiles_yy\\textures\\vase_round.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "1f5553a3-3b95-414e-9a4b-46aaf2bd53a9",
+            "Value": {
+                "id": "d60d05ed-031f-4d08-874c-1a9d96355845",
+                "resourcePath": "datafiles_yy\\textures\\chain_texture_mask.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -47,6 +143,22 @@
             }
         },
         {
+            "Key": "25a88ddc-3694-4b29-adb0-54b7816e77b5",
+            "Value": {
+                "id": "02e6d2db-34a9-49e2-bb59-79be33358a38",
+                "resourcePath": "datafiles_yy\\textures\\sponza_roof_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "271d7513-8236-48ef-8637-4b0d4a3d20d4",
+            "Value": {
+                "id": "02ca251b-e6b1-447d-a8fa-beb85cc532c8",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_b_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "27b3cca9-0b83-4782-b5e1-64d3d9c2afab",
             "Value": {
                 "id": "f4822194-9a0d-43bb-b8ff-5e8c02bd9acc",
@@ -55,11 +167,67 @@
             }
         },
         {
+            "Key": "2a07207b-cb12-4817-ab8f-c4c150de2ea6",
+            "Value": {
+                "id": "b21beff3-7947-41d3-a8a1-46334c73031e",
+                "resourcePath": "datafiles_yy\\textures\\sponza_fabric_green_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "2a7d6868-6c16-4290-b0ed-90ed0aea385d",
+            "Value": {
+                "id": "e15e6dfd-d5a1-458d-a93f-7483e7cd3823",
+                "resourcePath": "datafiles_yy\\textures\\vase_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "2bd01f9e-e34e-41b0-b7ed-94f8df37d6de",
+            "Value": {
+                "id": "94ab314a-c051-443a-b510-aad6adda7b98",
+                "resourcePath": "scripts\\dotobj_init\\dotobj_init.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "2e8c594c-dc8f-4ff6-99f6-d92923322bbc",
+            "Value": {
+                "id": "ba474878-3551-42a9-82de-ed41001d2537",
+                "resourcePath": "datafiles_yy\\textures\\vase_plant_mask.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "303ff709-f300-4ca9-a1d7-f33e55fc0aa5",
+            "Value": {
+                "id": "22fca220-925a-42f3-b4c5-a8ff175a093f",
+                "resourcePath": "datafiles_yy\\textures\\vase_plant_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "30d72bd4-2c4c-4ae9-b8a3-ed830490c8a8",
             "Value": {
                 "id": "2dd07af6-7638-4879-aac0-f43a478b363f",
                 "resourcePath": "scripts\\__dotobj_config\\__dotobj_config.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "31fdb646-a9ce-49df-a2f4-e244b80f2e44",
+            "Value": {
+                "id": "fc303871-27d1-4154-bb86-15d021a074a8",
+                "resourcePath": "datafiles_yy\\textures\\sponza_thorn_mask.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "35ca22b0-8d1f-47cc-89ad-5e01f8446257",
+            "Value": {
+                "id": "1f7e44c5-ee05-4ab9-8ac7-eb94c5999154",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_a_diff.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -79,6 +247,14 @@
             }
         },
         {
+            "Key": "4226e736-acbc-43f5-9e50-d7f8623b6352",
+            "Value": {
+                "id": "9ec3fba9-6050-4b05-843b-fd4ec03bef30",
+                "resourcePath": "datafiles_yy\\textures\\sponza_arch_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "42c1fbe4-d365-494d-8af6-f843c625f5c5",
             "Value": {
                 "id": "ffbec18f-1be9-4f55-bbaa-28e67adc7bbf",
@@ -95,6 +271,22 @@
             }
         },
         {
+            "Key": "46001b4b-27dd-430d-9a49-bc072d193be9",
+            "Value": {
+                "id": "e6dc90f0-34fd-40ce-a8c7-77db9efdf25d",
+                "resourcePath": "datafiles_yy\\textures\\background.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "46d8fe16-e2d6-4c92-a4f1-9782d5ea850e",
+            "Value": {
+                "id": "b55a5ba7-80e7-44f9-875e-108c67c93749",
+                "resourcePath": "datafiles_yy\\textures\\sponza_fabric_blue_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "4729f848-4ff0-4f2b-998c-1cea023a913e",
             "Value": {
                 "id": "4c3a31d1-dcb6-4c19-a3fe-bb3bb2bfcdd2",
@@ -103,11 +295,19 @@
             }
         },
         {
-            "Key": "50c49b21-1943-4bbd-8400-fabbab424d6b",
+            "Key": "4cd18c04-9cf2-4d32-9bef-de6c3e762ac6",
             "Value": {
-                "id": "15969fa1-df07-4124-bcdc-1f7c418df2dd",
-                "resourcePath": "sprites\\spr_texture\\spr_texture.yy",
-                "resourceType": "GMSprite"
+                "id": "617abfd9-49d0-4a85-b1f4-c8cd67fe3062",
+                "resourcePath": "datafiles_yy\\textures\\sponza_flagpole_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "4ed0dc4e-3e79-4975-b95c-f68e7b859b01",
+            "Value": {
+                "id": "68e877ce-2277-4b88-941c-1a5668d8cbbe",
+                "resourcePath": "datafiles_yy\\textures\\sponza_arch_spec.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -119,11 +319,43 @@
             }
         },
         {
+            "Key": "54d76492-b117-47e8-8c9a-9c906de46e04",
+            "Value": {
+                "id": "36543d78-5170-4976-92a7-410b13827ea5",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_b_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "550af80c-1167-4542-bee7-9a4c87f973e8",
+            "Value": {
+                "id": "8d1ca3cd-6c0a-4057-aed9-36c12f2f3877",
+                "resourcePath": "datafiles_yy\\textures\\sponza_flagpole_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "55ceec62-4642-4904-a228-bd2df2879ae5",
             "Value": {
                 "id": "cdcc6cea-5e5a-4916-9b18-bbc0929e53cc",
                 "resourcePath": "rooms\\rm_main\\rm_main.yy",
                 "resourceType": "GMRoom"
+            }
+        },
+        {
+            "Key": "694c0e16-ca59-4675-95f6-9009660931ed",
+            "Value": {
+                "id": "59d0d3a5-c0af-4a21-a662-2a47402bd876",
+                "resourcePath": "datafiles_yy\\textures\\sponza_floor_a_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "6a26e4dd-fa78-41b9-8bc3-04d534820b01",
+            "Value": {
+                "id": "fb676ba6-d52b-48b6-be1f-3b3911ccf89c",
+                "resourcePath": "scripts\\dotobj_new_mesh\\dotobj_new_mesh.yy",
+                "resourceType": "GMScript"
             }
         },
         {
@@ -138,8 +370,24 @@
             "Key": "6e5c2081-9c63-4dc9-b06b-021dbbce231f",
             "Value": {
                 "id": "0c1cd3b9-72bb-4398-9fb5-ebcb215c3437",
-                "resourcePath": "scripts\\dotobj_load_material\\dotobj_load_material.yy",
+                "resourcePath": "scripts\\dotobj_material_load\\dotobj_material_load.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "6ec3eed0-342d-45d2-8901-2b27bd2a1477",
+            "Value": {
+                "id": "1bb2e06f-d9c5-462e-a2dd-f1ac5a3a4d13",
+                "resourcePath": "datafiles_yy\\textures\\lion_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "7008cb7a-65ea-45cf-a631-f14dc4da8c0e",
+            "Value": {
+                "id": "f08ff546-ee34-4231-a1d6-1ad3779e9697",
+                "resourcePath": "datafiles_yy\\textures\\sponza_thorn_diff.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -151,10 +399,10 @@
             }
         },
         {
-            "Key": "7474804a-d9b7-4cb5-a82a-49533d87056f",
+            "Key": "72bf6c25-f028-4c37-9c27-fc406c93163c",
             "Value": {
-                "id": "f503ba53-c49d-402c-b15a-2310660f9463",
-                "resourcePath": "datafiles_yy\\sponza_original.obj.yy",
+                "id": "5dc44022-f639-45a8-adcf-bee5595f1cd7",
+                "resourcePath": "datafiles_yy\\textures\\sponza_thorn_ddn.png.yy",
                 "resourceType": "GMIncludedFile"
             }
         },
@@ -167,11 +415,27 @@
             }
         },
         {
+            "Key": "7a116b27-fad9-4f5c-936b-42e98f180c60",
+            "Value": {
+                "id": "bf6c0c30-d4d0-4a13-92a8-4ac5731815fc",
+                "resourcePath": "datafiles_yy\\textures\\sponza_fabric_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "7e093a2a-e51c-4a1e-9a53-f9080d38730b",
             "Value": {
                 "id": "a4968eca-bb67-476f-a39e-d0268ad50b3a",
                 "resourcePath": "options\\windowsuap\\options_windowsuap.yy",
                 "resourceType": "GMWindowsUAPOptions"
+            }
+        },
+        {
+            "Key": "7e690600-bdb8-4a7e-ac42-2eb2b0fc9fd1",
+            "Value": {
+                "id": "a567af38-23dc-41fc-8252-1ddb7cea81cc",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_b_diff.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -191,19 +455,19 @@
             }
         },
         {
-            "Key": "83ba96b6-3282-4d1f-8cab-c0fb2c164c6a",
-            "Value": {
-                "id": "02f5361f-8b71-4c01-8cd6-808ddd7e5f2d",
-                "resourcePath": "scripts\\dotobj_material\\dotobj_material.yy",
-                "resourceType": "GMScript"
-            }
-        },
-        {
             "Key": "8427047f-9ef8-4c77-89f3-9c20623d07b6",
             "Value": {
                 "id": "7c4583c6-e22f-4792-8942-62fea6987075",
                 "resourcePath": "options\\ios\\options_ios.yy",
                 "resourceType": "GMiOSOptions"
+            }
+        },
+        {
+            "Key": "84ec629c-aab0-41ed-8409-269f34ec493d",
+            "Value": {
+                "id": "a9861c4f-6ebe-4ee1-a073-646e34236bbf",
+                "resourcePath": "datafiles_yy\\textures\\spnza_bricks_a_spec.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -215,10 +479,18 @@
             }
         },
         {
+            "Key": "8fd090ef-2d31-4e32-b56a-2141b0d4b16f",
+            "Value": {
+                "id": "74353d94-0351-4f9b-9781-3b62ed4151d2",
+                "resourcePath": "datafiles_yy\\textures\\lion.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "93491c9e-be22-40da-a25f-cb7a37b4fa12",
             "Value": {
                 "id": "a1d3bcc0-dbf9-48d4-855a-49b290ea4451",
-                "resourcePath": "scripts\\dotobj_load_from_file\\dotobj_load_from_file.yy",
+                "resourcePath": "scripts\\dotobj_model_load_file\\dotobj_model_load_file.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -228,6 +500,22 @@
                 "id": "a9cbd7f0-d946-4c18-88fe-62cb88dcced3",
                 "resourcePath": "options\\tvos\\options_tvos.yy",
                 "resourceType": "GMtvOSOptions"
+            }
+        },
+        {
+            "Key": "969b1a2b-5e51-4eba-8e4b-4e73138c8d49",
+            "Value": {
+                "id": "a21fea84-8d85-4b0d-b72c-279051ec3187",
+                "resourcePath": "datafiles_yy\\textures\\spnza_bricks_a_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "9ac8dcde-1ac6-49f8-b53d-5350d7f8fac7",
+            "Value": {
+                "id": "ce0a8624-d4d2-4142-9eb4-99c5fe389410",
+                "resourcePath": "datafiles_yy\\textures\\vase_dif.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -247,11 +535,43 @@
             }
         },
         {
+            "Key": "9e3bff51-7b63-4261-b139-306170cc4c14",
+            "Value": {
+                "id": "dbe0726a-f436-4df2-a92b-c648b3dda8e9",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_a_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "9f180005-8780-4611-b067-86f592b13cea",
+            "Value": {
+                "id": "d3fd7543-b779-4098-9a20-f7cd84552932",
+                "resourcePath": "datafiles_yy\\textures\\lion2_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "9f70921d-d135-4ba6-a071-39df4faf0a08",
+            "Value": {
+                "id": "0c3d33dd-1f30-48bd-8c86-2d5d07b956fe",
+                "resourcePath": "datafiles_yy\\textures\\vase_hanging.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "a128950b-5063-4876-b4a6-b99dbd2ea6d1",
             "Value": {
                 "id": "1e47a7ad-eeea-44f2-a8c0-6f7a64d775e0",
                 "resourcePath": "options\\amazonfire\\options_amazonfire.yy",
                 "resourceType": "GMAmazonFireOptions"
+            }
+        },
+        {
+            "Key": "a1ea77d2-d6c2-4e0c-8307-7cc0b69519d6",
+            "Value": {
+                "id": "2a60428b-28c7-4ccd-99f7-4d566e470d2a",
+                "resourcePath": "datafiles_yy\\textures\\vase_round_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -271,11 +591,19 @@
             }
         },
         {
-            "Key": "ac78afb7-f4ea-49d1-a14d-c6a1962eb1ff",
+            "Key": "ab58cd95-3961-493b-9257-ba9075915b82",
             "Value": {
-                "id": "810a980d-8cef-421f-8902-63bd7c6fdf75",
-                "resourcePath": "datafiles_yy\\plato.obj.yy",
+                "id": "110a3d19-3d31-425f-805a-266aa039da6e",
+                "resourcePath": "datafiles_yy\\textures\\vase_round_spec.png.yy",
                 "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "abde8ade-91e2-458a-9e94-fac886d58325",
+            "Value": {
+                "id": "196749e9-08c4-4e87-8179-30609c3ff757",
+                "resourcePath": "objects\\obj_init\\obj_init.yy",
+                "resourceType": "GMObject"
             }
         },
         {
@@ -287,35 +615,67 @@
             }
         },
         {
-            "Key": "b261830e-c49a-4c06-a330-b034ea5d3f71",
+            "Key": "b1a0c366-bb74-4a28-b320-231130c2c7ec",
             "Value": {
-                "id": "b834389e-fdd7-4391-a612-63fea467b041",
-                "resourcePath": "scripts\\vertex_buffer_set_colour\\vertex_buffer_set_colour.yy",
+                "id": "05c1adec-878f-46c1-b983-4084a528d668",
+                "resourcePath": "scripts\\dotobj_new_model\\dotobj_new_model.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "b2770699-73d2-4726-8772-fac969c9a26b",
+            "Value": {
+                "id": "83fcfe55-e270-4dc5-bf6a-0fe8f6375cad",
+                "resourcePath": "scripts\\dotobj_model_draw_diffuse\\dotobj_model_draw_diffuse.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "b2f90288-9885-4a7d-bc0f-bf53bcba903f",
+            "Value": {
+                "id": "fc8940c2-99ef-4c1b-8139-a12db4f103b3",
+                "resourcePath": "datafiles_yy\\textures\\sponza_curtain_blue_diff.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
             "Key": "b3e34ff0-8a78-49dc-9d69-38e896449343",
             "Value": {
                 "id": "8aee4854-caa7-4a7e-aeb6-eb6e7febb3a3",
-                "resourcePath": "datafiles_yy\\sponza_modified.obj.yy",
+                "resourcePath": "datafiles_yy\\sponza.obj.yy",
                 "resourceType": "GMIncludedFile"
             }
         },
         {
-            "Key": "b8069647-d149-402d-8710-44fdfebcfb1e",
+            "Key": "b618cc98-91ef-4ed0-ab50-986fcf0d1512",
             "Value": {
-                "id": "02328824-8a98-4da8-a814-a9d871cce989",
-                "resourcePath": "scripts\\vertex_buffer_transform\\vertex_buffer_transform.yy",
-                "resourceType": "GMScript"
+                "id": "1747fc00-199c-4ffa-9306-c6352b301cf1",
+                "resourcePath": "datafiles_yy\\textures\\sponza_thorn_spec.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "b7b88a6b-ba28-4de0-8726-2868f8a559ba",
+            "Value": {
+                "id": "015dba1d-a593-4761-bf05-bab25d9181da",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_c_diff.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
             "Key": "bb785071-b7e8-4c65-ba8b-f1ed2df8d08b",
             "Value": {
                 "id": "262eb293-f6bf-4b2b-bc19-0085a58ccf78",
-                "resourcePath": "scripts\\dotobj_load_material_from_file\\dotobj_load_material_from_file.yy",
+                "resourcePath": "scripts\\dotobj_material_load_file\\dotobj_material_load_file.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "be8c80b6-ace5-4755-b06f-bff2a7ccc5bd",
+            "Value": {
+                "id": "b1438cbc-6529-46e1-8fcb-c8ffadd43500",
+                "resourcePath": "datafiles_yy\\textures\\sponza_floor_a_diff.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         },
         {
@@ -327,10 +687,42 @@
             }
         },
         {
+            "Key": "c196d219-61e7-4fa6-b666-4bb902382d5c",
+            "Value": {
+                "id": "c9c6c2c7-dc0b-438f-b88f-5010999941fe",
+                "resourcePath": "scripts\\dotobj_new_texture\\dotobj_new_texture.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "c40ce69f-173f-4d90-9db0-d338843517f2",
+            "Value": {
+                "id": "235e1037-8cf9-4b89-915c-f327c14c8f64",
+                "resourcePath": "datafiles_yy\\textures\\sponza_ceiling_a_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "c50a5b23-2a47-413a-85f0-d1684aaabc8f",
+            "Value": {
+                "id": "88dacbbb-2966-4f78-9744-4525d15aeb9c",
+                "resourcePath": "datafiles_yy\\textures\\background_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "c656bbd5-0bef-4e1d-beaf-77fe4977ca02",
+            "Value": {
+                "id": "d983ca7d-ce9f-4227-8586-585eb8e261f0",
+                "resourcePath": "datafiles_yy\\textures\\sponza_arch_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "c8673924-8984-4c9f-8af9-fcb6a17890d4",
             "Value": {
                 "id": "eebe6427-24f0-49c8-a90f-c86dadf01e8a",
-                "resourcePath": "scripts\\dotobj_load\\dotobj_load.yy",
+                "resourcePath": "scripts\\dotobj_model_load\\dotobj_model_load.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -343,6 +735,22 @@
             }
         },
         {
+            "Key": "d2bff359-4b0f-4efe-9d8e-badd367308fe",
+            "Value": {
+                "id": "dfc26ce4-938b-4c8a-9f67-6a4c3f450b79",
+                "resourcePath": "views\\d2bff359-4b0f-4efe-9d8e-badd367308fe.yy",
+                "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "d4ea3367-e1de-445b-a2b8-52bacec5351c",
+            "Value": {
+                "id": "eb100838-93e5-4584-a289-6c6749635b10",
+                "resourcePath": "scripts\\dotobj_new_group\\dotobj_new_group.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "db5fbbc5-9c8e-4958-bb7d-c9fc4ef8e490",
             "Value": {
                 "id": "ff2d1b7c-9431-4684-aad2-90adf96ff8b0",
@@ -351,10 +759,10 @@
             }
         },
         {
-            "Key": "dcd58b46-b703-45fa-b985-fa6936d6a2f1",
+            "Key": "df3df4ea-60cd-47f5-ab0f-1136e88cdbd5",
             "Value": {
-                "id": "6d0292cc-fb8f-4b88-a9bf-85ebffe9bda6",
-                "resourcePath": "scripts\\vertex_buffer_remap_uvs\\vertex_buffer_remap_uvs.yy",
+                "id": "23e574b9-777b-4d0f-ad0c-48a9b20e3d62",
+                "resourcePath": "scripts\\dotobj_new_external_sprite\\dotobj_new_external_sprite.yy",
                 "resourceType": "GMScript"
             }
         },
@@ -375,6 +783,46 @@
             }
         },
         {
+            "Key": "e9832845-1004-4a68-8a7f-f22087da6db9",
+            "Value": {
+                "id": "c606c6b4-4272-4ea2-9030-5f4397079339",
+                "resourcePath": "datafiles_yy\\textures\\sponza_column_c_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "eab97444-6f43-4487-885c-05ea8c110d53",
+            "Value": {
+                "id": "02df193e-51cc-47f8-b2c5-3b1901859516",
+                "resourcePath": "datafiles_yy\\textures\\sponza_curtain_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "ebdee33f-f0e3-412c-b514-758d82ba0d0c",
+            "Value": {
+                "id": "face2b66-674d-49cc-99bb-abba89e8720f",
+                "resourcePath": "datafiles_yy\\textures\\sponza_details_diff.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "f00c013b-8ff6-4c69-8505-46b114678cec",
+            "Value": {
+                "id": "b5234a21-78e5-4ba3-9fed-874880fb7c82",
+                "resourcePath": "datafiles_yy\\textures\\chain_texture_ddn.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
+            "Key": "f0910fb6-cbf9-4d35-9fba-4feb12a0adfb",
+            "Value": {
+                "id": "7667c335-135d-43fb-8ec6-b9dd05c7d253",
+                "resourcePath": "datafiles_yy\\textures\\chain_texture.png.yy",
+                "resourceType": "GMIncludedFile"
+            }
+        },
+        {
             "Key": "f418569b-3bdd-4706-a0e4-364317f54032",
             "Value": {
                 "id": "9433033b-22af-48c7-af67-872aaed31acd",
@@ -391,24 +839,28 @@
             }
         },
         {
-            "Key": "fec2b785-80ff-4337-a457-dc043991bbb1",
+            "Key": "f91592d8-1351-42bf-a62e-4e0c407cec5c",
             "Value": {
-                "id": "068b9120-62b7-463c-82ba-6520e0bf7b7b",
-                "resourcePath": "sprites\\spr_forces_texture_to_have_unpredictable_uvs\\spr_forces_texture_to_have_unpredictable_uvs.yy",
-                "resourceType": "GMSprite"
+                "id": "610e86b6-6f30-4267-8c26-7c50f62c6fc4",
+                "resourcePath": "datafiles_yy\\textures\\sponza_details_spec.png.yy",
+                "resourceType": "GMIncludedFile"
             }
         }
     ],
     "script_order": [
         "30d72bd4-2c4c-4ae9-b8a3-ed830490c8a8",
-        "c8673924-8984-4c9f-8af9-fcb6a17890d4",
+        "2bd01f9e-e34e-41b0-b7ed-94f8df37d6de",
         "6e5c2081-9c63-4dc9-b06b-021dbbce231f",
-        "93491c9e-be22-40da-a25f-cb7a37b4fa12",
         "bb785071-b7e8-4c65-ba8b-f1ed2df8d08b",
-        "83ba96b6-3282-4d1f-8cab-c0fb2c164c6a",
-        "dcd58b46-b703-45fa-b985-fa6936d6a2f1",
-        "b261830e-c49a-4c06-a330-b034ea5d3f71",
-        "b8069647-d149-402d-8710-44fdfebcfb1e"
+        "c8673924-8984-4c9f-8af9-fcb6a17890d4",
+        "93491c9e-be22-40da-a25f-cb7a37b4fa12",
+        "b2770699-73d2-4726-8772-fac969c9a26b",
+        "b1a0c366-bb74-4a28-b320-231130c2c7ec",
+        "d4ea3367-e1de-445b-a2b8-52bacec5351c",
+        "6a26e4dd-fa78-41b9-8bc3-04d534820b01",
+        "130d84f2-6aef-4986-be65-146b1fcb8f45",
+        "c196d219-61e7-4fa6-b666-4bb902382d5c",
+        "df3df4ea-60cd-47f5-ab0f-1136e88cdbd5"
     ],
     "tutorial": ""
 }

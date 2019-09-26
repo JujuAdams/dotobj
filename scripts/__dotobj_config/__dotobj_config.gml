@@ -1,3 +1,4 @@
+#macro DOTOBJ_OUTPUT_DEBUG         true  //Outputs extra debug info (this is useful to check the library is working properly!)
 #macro DOTOBJ_OUTPUT_WARNINGS      true  //Outputs warning messages to the console
 #macro DOTOBJ_OUTPUT_LOAD_TIME     true  //Outputs the amount of time taken to load a .obj file to the console
 #macro DOTOBJ_OUTPUT_COMMENTS      false //Outputs comments found in .obj files to the console

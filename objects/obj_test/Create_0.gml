@@ -2,30 +2,36 @@
 //Note that we're not using normals!
 vertex_format_begin();
 vertex_format_add_position_3d();     //              12
+vertex_format_add_normal();          //            + 12
 vertex_format_add_colour();          //            +  4
 vertex_format_add_texcoord();        //            +  8
-vertex_format = vertex_format_end(); //vertex size = 24
+vertex_format = vertex_format_end(); //vertex size = 36
 
-materials_map = ds_map_create();
-dotobj_load_material_from_file(materials_map, "sponza.mtl");
-dotobj_load_from_file("sponza_modified.obj", vertex_format, false, true, true, true, true);
+//Initialise dotobj. This creates some globally scoped maps, and a default material
+dotobj_init();
 
-//Load our .obj from disk
-//We want to ignore normals but keep the texture coordinates
-//Additionally, GameMaker has its y-axis (V-component) of texture coordinates upside down so we need to fix that
-//Also some .obj files have their triangles defined the opposite way round which intereferes with culling, so we need to fix that too
-vertex_buffer = dotobj_load_from_file("plato.obj", vertex_format, false, true, true, true);
+//Load materials from file
+//This will also load in images from disk (from the "textures" folder in Included Files)
+dotobj_material_load_file("sponza.mtl");
 
-//GameMaker's atlased sprites often don't match normalised texture coordinates that are used in .obj files
-//This script remaps the .obj UVs to GameMaker's internal UVs
-vertex_buffer = vertex_buffer_remap_uvs(vertex_buffer, vertex_format, sprite_get_uvs(spr_texture, 0), 24, 16, true);
+//Load our .obj from disk. This might take a while!
+//The script returns a dotobj model (in reality, an array) that we can draw in the Draw event
+model_sponza = dotobj_model_load_file("sponza.obj", vertex_format, true, true, true, true);
 
-//Rowan made the platypus a little small and was using a different coordinate system, so let's fix that
-//N.B. If you rotate/scale a vertex buffer then you should also correct the normals
-var _matrix = matrix_build(0, 0, 0,   0, 0, 0,   80, -80, 80);
-vertex_buffer = vertex_buffer_transform(vertex_buffer, vertex_format, _matrix, 24, 0, true);
+//Mouse lock variables (press F3 to lock the mouse and use mouselook)
+mouse_lock = false;
+mouse_lock_timer = 0;
 
-//Couple of variables to track rotation of the model
-rotation_x = 0;
-rotation_y = 0;
-rotation_z = 0;
+//Some variables to track the camera
+cam_x     = 0;
+cam_y     = 0;
+cam_z     = 0;
+cam_yaw   = 0;
+cam_pitch = 0;
+cam_dx    = -dcos(cam_pitch)*dsin(cam_yaw);
+cam_dy    = -dsin(cam_pitch);
+cam_dz    =  dcos(cam_pitch)*dcos(cam_yaw);
+
+//Smoothed fps_real variable
+fps_smoothed = 60;
+show_info = true;
