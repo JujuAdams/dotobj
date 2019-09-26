@@ -8,7 +8,7 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 
 &nbsp;
 
-**`dotobj` currently supports:**
+**dotobj currently supports:**
 
 1. Per vertex position, texture coordinates, and normals
 
@@ -34,7 +34,7 @@ GameMaker Studio 2.2.3 allows you to import assets, including scripts and shader
 
 &nbsp;
 
-**Please note that `dotobj` doesn't support the following features:**
+**Please note that dotobj doesn't support the following features:**
 
 1. Smoothing groups
 
