@@ -52,4 +52,4 @@ GameMaker Studio 2.2.3 allows you to import assets, including scripts and shader
 
 4. Freeform curve/surface geometry (NURBs/Bezier curves etc.)
 
-*Rare to see this in gamedev and getting GameMaker to generates surfaces is not going to be a pleasant process. This will probably never be implemented.*
+*Rare to see this in gamedev and getting GameMaker to generate surfaces is not going to be a pleasant process. This will probably never be implemented.*
