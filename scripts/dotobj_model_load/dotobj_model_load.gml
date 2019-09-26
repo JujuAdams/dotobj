@@ -233,7 +233,7 @@ repeat(_buffer_size)
                         }
                         
                         //Create a new group and give it a blank mesh
-                        var _group_array      = dotobj_new_group(_model_array, _group_name, 0);
+                        var _group_array      = dotobj_new_group(_model_array, _group_name, _meta_line);
                         var _mesh_array       = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
                         var _mesh_vertex_list = _mesh_array[eDotObjMesh.VertexList];
                     break;
@@ -252,7 +252,7 @@ repeat(_buffer_size)
                         if (DOTOBJ_OBJECTS_ARE_GROUPS)
                         {
                             //If we want to parse objects as groups, create a new group and give it a blank mesh
-                            var _group_array      = dotobj_new_group(_model_array, _group_name, 0);
+                            var _group_array      = dotobj_new_group(_model_array, _group_name, _meta_line);
                             var _mesh_array       = dotobj_new_mesh(_group_array, __DOTOBJ_DEFAULT_MATERIAL_NAME);
                             var _mesh_vertex_list = _mesh_array[eDotObjMesh.VertexList];
                         }

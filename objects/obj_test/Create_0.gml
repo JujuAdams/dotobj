@@ -24,9 +24,9 @@ mouse_lock_timer = 0;
 
 //Some variables to track the camera
 cam_x     = 0;
-cam_y     = 0;
+cam_y     = 120;
 cam_z     = 0;
-cam_yaw   = 0;
+cam_yaw   = -60;
 cam_pitch = 0;
 cam_dx    = -dcos(cam_pitch)*dsin(cam_yaw);
 cam_dy    = -dsin(cam_pitch);
