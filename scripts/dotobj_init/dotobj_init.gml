@@ -12,7 +12,7 @@ global.__dotobj_material_library[? __DOTOBJ_DEFAULT_MATERIAL_NAME] = _array;
 
 //Always date your work!
 #macro __DOTOBJ_VERSION                    "4.0.0"
-#macro __DOTOBJ_DATE                       "2019/9/25"
+#macro __DOTOBJ_DATE                       "2019/9/26"
 
 //Some strings to use for defaults. Change these if you so desire.
 #macro __DOTOBJ_DEFAULT_GROUP              "__dotobj_group__"
