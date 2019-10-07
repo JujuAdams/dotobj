@@ -34,12 +34,12 @@
 /// 
 /// Returns: A vertex buffer, or an array of vertex buffers if "useBuffer" is <true>
 
-var _filename          = argument[0];
-var _vformat           = argument[1];
-var _write_normals     = argument[2];
-var _write_texcoords   = argument[3];
-var _flip_texcoords    = argument[4];
-var _reverse_triangles = argument[5];
+var _filename          = argument0;
+var _vformat           = argument1;
+var _write_normals     = argument2;
+var _write_texcoords   = argument3;
+var _flip_texcoords    = argument4;
+var _reverse_triangles = argument5;
 
 var _buffer = buffer_load(_filename);
 var _result = dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, _flip_texcoords, _reverse_triangles);
