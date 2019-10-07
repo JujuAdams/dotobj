@@ -34,34 +34,33 @@ repeat(ds_list_size(_group_list))
             
             //If a material cannot be found, it'll return <undefined>
             //Again, we need to check for this to avoid crashes
-            if (is_array(_material_array))
+            if (!is_array(_material_array)) _material_array = global.__dotobj_material_library[? __DOTOBJ_DEFAULT_MATERIAL_NAME];
+            
+            //Find the texture for the material
+            var _diffuse_texture_array = _material_array[eDotObjMaterial.DiffuseMap];
+            
+            if (is_array(_diffuse_texture_array))
             {
-                //Find the texture for the material
-                var _diffuse_texture_array = _material_array[eDotObjMaterial.DiffuseMap];
+                //If the texture is an array then that means it's using a diffuse map
+                //We get the texture pointer for the texture...
+                var _diffuse_texture_pointer = _diffuse_texture_array[eDotObjTexture.Pointer];
+                    
+                //...then submit the vertex buffer using the texture
+                vertex_submit(_vertex_buffer, pr_trianglelist, _diffuse_texture_pointer);
+            }
+            else
+            {
+                //If the texture *isn't* an array then that means it's using a flat diffuse colour
+                //We get the texture pointer for the texture...
+                var _diffuse_colour = _material_array[eDotObjMaterial.Diffuse];
+                    
+                //If the diffuse colour is undefined then render the mesh in whatever default we've set
+                if (_diffuse_colour == undefined) _diffuse_colour = DOTOBJ_DEFAULT_DIFFUSE_RGB;
                 
-                if (is_array(_diffuse_texture_array))
-                {
-                    //If the texture is an array then that means it's using a diffuse map
-                    //We get the texture pointer for the texture...
-                    var _diffuse_texture_pointer = _diffuse_texture_array[eDotObjTexture.Pointer];
-                    
-                    //...then submit the vertex buffer using the texture
-                    vertex_submit(_vertex_buffer, pr_trianglelist, _diffuse_texture_pointer);
-                }
-                else
-                {
-                    //If the texture *isn't* an array then that means it's using a flat diffuse colour
-                    //We get the texture pointer for the texture...
-                    var _diffuse_colour = _material_array[eDotObjMaterial.Diffuse];
-                    
-                    //If the diffuse colour is undefined then render the mesh in whatever default we've set
-                    if (_diffuse_colour == undefined) _diffuse_colour = DOTOBJ_DEFAULT_DIFFUSE_RGB;
-                    
-                    //Hijack the fog system to force the blend colour, and submit the vertex buffer
-                    gpu_set_fog(true, _diffuse_colour, 0, 0);
-                    vertex_submit(_vertex_buffer, pr_trianglelist, -1);
-                    gpu_set_fog(false, c_fuchsia, 0, 0);
-                }
+                //Hijack the fog system to force the blend colour, and submit the vertex buffer
+                gpu_set_fog(true, _diffuse_colour, 0, 0);
+                vertex_submit(_vertex_buffer, pr_trianglelist, -1);
+                gpu_set_fog(false, c_fuchsia, 0, 0);
             }
         }
         

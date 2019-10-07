@@ -41,12 +41,12 @@
 
 if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
 
-var _buffer            = argument[0];
-var _vformat           = argument[1];
-var _write_normals     = argument[2];
-var _write_texcoords   = argument[3];
-var _flip_texcoords    = argument[4];
-var _reverse_triangles = argument[5];
+var _buffer            = argument0;
+var _vformat           = argument1;
+var _write_normals     = argument2;
+var _write_texcoords   = argument3;
+var _flip_texcoords    = argument4;
+var _reverse_triangles = argument5;
 
 //Create some variables to track errors
 var _vec4_error            = false;
@@ -523,7 +523,7 @@ repeat(ds_list_size(_group_list))
             if (_t_index == "") _t_index = 0;
             
             _v_index = 3*floor(real(_v_index));
-            _n_index = 2*floor(real(_n_index));
+            _n_index = 3*floor(real(_n_index));
             _t_index = 2*floor(real(_t_index));
             
             //Some .obj file use negative references to look at data recently defined. This isn't supported!
