@@ -523,7 +523,7 @@ repeat(ds_list_size(_group_list))
             if (_t_index == "") _t_index = 0;
             
             _v_index = 3*floor(real(_v_index));
-            _n_index = 2*floor(real(_n_index));
+            _n_index = 3*floor(real(_n_index));
             _t_index = 2*floor(real(_t_index));
             
             //Some .obj file use negative references to look at data recently defined. This isn't supported!
