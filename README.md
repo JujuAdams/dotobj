@@ -2,7 +2,7 @@
 
 ### @jujuadams
 
-Lightweight .obj 3D model loader written in native GML. Can load from external files or from buffers. This example does not show off complex renderering or PBR, it only demonstrates the loading capabilities of the library.
+Lightweight .obj/.mtl 3D model loader written in native GML. Can load from external files or from buffers. This example does not show off complex renderering or PBR, it only demonstrates the loading capabilities of the library.
 
 Details on the .obj format can be found here: http://paulbourke.net/dataformats/obj/
 
