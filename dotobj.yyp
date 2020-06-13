@@ -831,6 +831,14 @@
             }
         },
         {
+            "Key": "f765791e-1d1a-4031-a040-0ae7391da876",
+            "Value": {
+                "id": "6254a5c6-9ba5-4848-99d9-6383650cff97",
+                "resourcePath": "shaders\\shd_simple_lighting\\shd_simple_lighting.yy",
+                "resourceType": "GMShader"
+            }
+        },
+        {
             "Key": "f85efd3d-bcec-4ec0-8226-da808afda79d",
             "Value": {
                 "id": "33312b0d-cda1-40ee-83bc-9b8a58cf80cc",

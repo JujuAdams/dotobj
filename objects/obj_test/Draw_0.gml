@@ -28,7 +28,9 @@ matrix_set(matrix_view, matrix_build_lookat(cam_x, cam_y, cam_z,
 matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_width/room_height, 1, 3000));
 
 //Finally, draw the model
+shader_set(shd_simple_lighting);
 dotobj_model_draw_diffuse(model_sponza);
+shader_reset();
 
 //Reset draw state
 matrix_set(matrix_world     , matrix_build_identity()); //Juuuust in case

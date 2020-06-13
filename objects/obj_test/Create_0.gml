@@ -1,5 +1,4 @@
 //Define the vertex format we want to use
-//Note that we're not using normals!
 vertex_format_begin();
 vertex_format_add_position_3d();     //              12
 vertex_format_add_normal();          //            + 12
