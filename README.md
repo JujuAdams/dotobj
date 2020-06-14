@@ -1,6 +1,10 @@
 <h1 align="center">dotobj 4.1.0</h1>
 
-### @jujuadams
+<p align="center">.obj/.mtl loader, written in native GML, for GameMaker Studio 2 </p>
+
+<p align="center"><b>@jujuadams</b></p>
+
+&nbsp;
 
 Lightweight .obj/.mtl 3D model loader written in native GML. Can load from external files or from buffers. This example does not show off complex renderering or PBR, it only demonstrates the loading capabilities of the library.
 
