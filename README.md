@@ -1,6 +1,6 @@
-<h1 align="center">dotobj 4.1.0</h1>
+<h1 align="center">dotobj 5.0.0</h1>
 
-<p align="center">.obj/.mtl loader, written in native GML, for GameMaker Studio 2 </p>
+<p align="center">.obj/.mtl loader, written in native GML, for GameMaker Studio 2.3</p>
 
 <p align="center"><b>@jujuadams</b></p>
 
@@ -29,8 +29,6 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 5. UV flipping and winding-order reversal to handle engine quirks
 
 6. N-gon faces
-
-7. Custom vertex buffer formats
 
 &nbsp;
 
