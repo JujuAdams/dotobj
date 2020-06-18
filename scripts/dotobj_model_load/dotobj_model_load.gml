@@ -1,25 +1,21 @@
 /// Turns an ASCII .obj file, stored in a buffer, into a series of vertex buffers stored in a tree-like heirachy.
 /// @jujuadams    contact@jujuadams.com
 /// 
-/// @param buffer          Buffer to read from
-/// @param vertexFormat    Vertex format to use. See below for details on what vertex formats are supported
-/// @param writeNormals    Whether to write normals into the vertex buffer. Set this to <false> if your vertex format does not contain normals
-/// @param writeUVs        Whether to write texture coordinates into the vertex buffer. Set this to <false> if your vertex format does not contain texture coordinates
-/// @param flipUVs         Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct for DirectX / OpenGL idiosyncrasies
-/// @param reverseTris     Whether to reverse the triangle definition order to be compatible with the culling mode of your choice (clockwise/counter-clockwise)
+/// @param buffer        Buffer to read from
+/// @param flipUVs       Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct for DirectX / OpenGL idiosyncrasies
+/// @param reverseTris   Whether to reverse the triangle definition order to be compatible with the culling mode of your choice (clockwise/counter-clockwise)
 /// 
 /// Returns: A dotobj model (a struct)
 ///          This model can be drawn using the submit() method e.g. sponza_model.submit();
 /// 
 /// 
 /// 
-/// This script expects the vertex format to be set up as follows:
+/// This script uses a vertex format laid out as follows:
 /// - 3D Position
 /// - Normal
 /// - Colour
 /// - Texture Coordinate
-/// If your preferred vertex format does not have normals or texture coordinates,
-/// use the "writeNormals" and/or "writeTexcoords" to toggle writing that data.
+/// If a model has missing data, then a suitable default value will be used instead
 /// 
 /// .obj format documentation can be found here:
 /// http://paulbourke.net/dataformats/obj/
@@ -40,7 +36,7 @@
 /// - Line primitives
 /// - Separate in-file LOD
 
-function dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, _flip_texcoords, _reverse_triangles)
+function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
 {
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
 
@@ -436,7 +432,7 @@ function dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, 
             ++_meta_vertex_buffers;
             var _vbuff = vertex_create_buffer();
             _mesh_struct.vertex_buffer = _vbuff;
-            vertex_begin(_vbuff, _vformat);
+            vertex_begin(_vbuff, global.__dotobj_pnct_vertex_format);
         
             //Iterate over all the vertices
             var _i = 0;
@@ -547,26 +543,23 @@ function dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, 
                 vertex_position_3d(_vbuff, _vx, _vy, _vz);
             
                 //Write the normal
-                if (_write_normals) 
+                if (_n_index >= 0)
                 {
-                    if (_n_index >= 0)
+                    _nx = _normal_list[| _n_index  ]; //Normal X
+                    _ny = _normal_list[| _n_index+1]; //Normal Y
+                    _nz = _normal_list[| _n_index+2]; //Normal Z
+                    
+                    //If we have some invalid data, log the warning, then default to (0,0,0)
+                    if ((_nx == undefined) || (_ny == undefined) || (_nz == undefined))
                     {
-                        _nx = _normal_list[| _n_index  ]; //Normal X
-                        _ny = _normal_list[| _n_index+1]; //Normal Y
-                        _nz = _normal_list[| _n_index+2]; //Normal Z
-                
-                        //If we have some invalid data, log the warning, then default to (0,0,0)
-                        if ((_nx == undefined) || (_ny == undefined) || (_nz == undefined))
-                        {
-                            ++_missing_normals;
-                            _nx = 0;
-                            _ny = 0;
-                            _nz = 0;
-                        }
+                        ++_missing_normals;
+                        _nx = 0;
+                        _ny = 0;
+                        _nz = 0;
                     }
-                
-                    vertex_normal(_vbuff, _nx, _ny, _nz);
                 }
+                
+                vertex_normal(_vbuff, _nx, _ny, _nz);
             
                 //Write the colour
                 _cr = _colour_list[| _v_index  ]*255; //Red
@@ -576,28 +569,25 @@ function dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, 
                 vertex_colour(_vbuff, make_colour_rgb(_cr, _cg, _cb), _ca);
             
                 //Write the UVs
-                if (_write_texcoords)
+                if (_t_index >= 0) 
                 {
-                    if (_t_index >= 0) 
+                    _tx = _texture_list[| _t_index  ]; //U
+                    _ty = _texture_list[| _t_index+1]; //V
+                    
+                    //If we have some invalid data, log the warning, then default to (0,0)
+                    if ((_tx == undefined) || (_ty == undefined))
                     {
-                        _tx = _texture_list[| _t_index  ]; //U
-                        _ty = _texture_list[| _t_index+1]; //V
-                
-                        //If we have some invalid data, log the warning, then default to (0,0)
-                        if ((_tx == undefined) || (_ty == undefined))
-                        {
-                            ++_missing_uvs;
-                            _tx = 0;
-                            _ty = 0;
-                        }
-                        else
-                        {
-                            if (_flip_texcoords) _ty = 1 - _ty;
-                        }
+                        ++_missing_uvs;
+                        _tx = 0;
+                        _ty = 0;
                     }
-                
-                    vertex_texcoord(_vbuff, _tx, _ty);
+                    else
+                    {
+                        if (_flip_texcoords) _ty = 1 - _ty;
+                    }
                 }
+                
+                vertex_texcoord(_vbuff, _tx, _ty);
             }
         
             //Once we've finished iterating over the triangles, finish our vertex buffer

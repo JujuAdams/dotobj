@@ -9,8 +9,7 @@
 /// - Normal
 /// - Colour
 /// - Texture Coordinate
-/// If your preferred vertex format does not have normals or texture coordinates,
-/// use the "writeNormals" and/or "writeTexcoords" to toggle writing that data.
+/// If a model has missing data, then a suitable default value will be used instead
 /// 
 /// The .obj format does not natively support vertex colours; vertex colours will
 /// default to white and 100% alpha. If you use a custom exporter that supports
@@ -21,20 +20,17 @@
 /// range (0,0) -> (1,1). Please use another script to remap texture coordinates
 /// to GameMaker's atlased UV space.
 /// 
-/// @param filename        File to read from
-/// @param vertexFormat    Vertex format to use. See above for details on what vertex formats are supported
-/// @param writeNormals    Whether to write normals into the vertex buffer. Set this to <false> if your vertex format does not contain normals
-/// @param writeUVs        Whether to write texture coordinates into the vertex buffer. Set this to <false> if your vertex format does not contain texture coordinates
-/// @param flipUVs         Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct for DirectX / OpenGL idiosyncrasies
-/// @param reverseTris     Whether to reverse the triangle definition order to be compatible with the culling mode of your choice (clockwise/counter-clockwise)
+/// @param filename      File to read from
+/// @param flipUVs       Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct for DirectX / OpenGL idiosyncrasies
+/// @param reverseTris   Whether to reverse the triangle definition order to be compatible with the culling mode of your choice (clockwise/counter-clockwise)
 /// 
-/// Returns: A vertex buffer, or an array of vertex buffers if "useBuffer" is <true>
+/// Returns: A dotobj model (a struct)
 ///          This model can be drawn using the submit() method e.g. sponza_model.submit();
 
-function dotobj_model_load_file(_filename, _vformat, _write_normals, _write_texcoords, _flip_texcoords, _reverse_triangles)
+function dotobj_model_load_file(_filename, _flip_texcoords, _reverse_triangles)
 {
     var _buffer = buffer_load(_filename);
-    var _result = dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, _flip_texcoords, _reverse_triangles);
+    var _result = dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles);
     buffer_delete(_buffer);
 
     return _result;

@@ -19,7 +19,15 @@ function dotobj_init()
     #macro __DOTOBJ_DEFAULT_MATERIAL_LIBRARY   "__dotobj_library__"
     #macro __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC  "__dotobj_material__"
     #macro __DOTOBJ_DEFAULT_MATERIAL_NAME      (__DOTOBJ_DEFAULT_MATERIAL_LIBRARY + "." + __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC)
-
+    
+    //Define the vertex formats we want to use
+    vertex_format_begin();
+    vertex_format_add_position_3d();                          //              12
+    vertex_format_add_normal();                               //            + 12
+    vertex_format_add_colour();                               //            +  4
+    vertex_format_add_texcoord();                             //            +  8
+    global.__dotobj_pnct_vertex_format = vertex_format_end(); //vertex size = 36
+    
     #endregion
 }
 
@@ -141,7 +149,7 @@ function dotobj_class_mesh(_group, _name) constructor
                 var _diffuse_colour = _material_struct.diffuse;
                     
                 //If the diffuse colour is undefined then render the mesh in whatever default we've set
-                if (_diffuse_colour == undefined) _diffuse_colour = DOTOBJ_DEFAULT_DIFFUSE_RGB;
+                if (_diffuse_colour == undefined) _diffuse_colour = DOTOBJ_DEFAULT_VERTEX_COLOR;
                 
                 //Hijack the fog system to force the blend colour, and submit the vertex buffer
                 gpu_set_fog(true, _diffuse_colour, 0, 0);
