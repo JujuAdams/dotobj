@@ -12,7 +12,7 @@ Details on the .obj format can be found here: http://paulbourke.net/dataformats/
 
 &nbsp;
 
-<p align="center"><img src="https://i.imgur.com/dNOezZk.png" style="display:block; margin:auto;"><i>Look! It's Sponza! In GameMaker!</i></p>
+<p align="center"><img src="https://raw.githubusercontent.com/JujuAdams/dotobj/master/dotobj_5_0_0_sponza.png" style="display:block; margin:auto;"><i>Look! It's Sponza! In GameMaker!</i></p>
 
 &nbsp;
 
