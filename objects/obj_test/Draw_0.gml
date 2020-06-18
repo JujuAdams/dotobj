@@ -29,7 +29,7 @@ matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_w
 
 //Finally, draw the model
 shader_set(shd_simple_lighting);
-dotobj_model_draw_diffuse(model_sponza);
+model_sponza.submit();
 shader_reset();
 
 //Reset draw state
