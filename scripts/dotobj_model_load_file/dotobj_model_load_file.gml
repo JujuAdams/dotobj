@@ -21,10 +21,6 @@
 /// range (0,0) -> (1,1). Please use another script to remap texture coordinates
 /// to GameMaker's atlased UV space.
 /// 
-/// .obj files sometimes contain multiple groups. For some specific applications,
-/// it's useful to export each group as a separate vertex buffer. Set the optional
-/// "useArray" argument to <true> to return an array of vertex buffers.
-/// 
 /// @param filename        File to read from
 /// @param vertexFormat    Vertex format to use. See above for details on what vertex formats are supported
 /// @param writeNormals    Whether to write normals into the vertex buffer. Set this to <false> if your vertex format does not contain normals
@@ -33,12 +29,13 @@
 /// @param reverseTris     Whether to reverse the triangle definition order to be compatible with the culling mode of your choice (clockwise/counter-clockwise)
 /// 
 /// Returns: A vertex buffer, or an array of vertex buffers if "useBuffer" is <true>
+///          This model can be drawn using the submit() method e.g. sponza_model.submit();
 
 function dotobj_model_load_file(_filename, _vformat, _write_normals, _write_texcoords, _flip_texcoords, _reverse_triangles)
 {
-	var _buffer = buffer_load(_filename);
-	var _result = dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, _flip_texcoords, _reverse_triangles);
-	buffer_delete(_buffer);
+    var _buffer = buffer_load(_filename);
+    var _result = dotobj_model_load(_buffer, _vformat, _write_normals, _write_texcoords, _flip_texcoords, _reverse_triangles);
+    buffer_delete(_buffer);
 
-	return _result;
+    return _result;
 }

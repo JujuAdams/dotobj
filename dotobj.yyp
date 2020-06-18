@@ -6,7 +6,6 @@
     {"id":{"name":"dotobj_material_load_file","path":"scripts/dotobj_material_load_file/dotobj_material_load_file.yy",},"order":3,},
     {"id":{"name":"dotobj_model_load","path":"scripts/dotobj_model_load/dotobj_model_load.yy",},"order":4,},
     {"id":{"name":"dotobj_model_load_file","path":"scripts/dotobj_model_load_file/dotobj_model_load_file.yy",},"order":5,},
-    {"id":{"name":"dotobj_model_draw_diffuse","path":"scripts/dotobj_model_draw_diffuse/dotobj_model_draw_diffuse.yy",},"order":6,},
     {"id":{"name":"shd_simple_lighting","path":"shaders/shd_simple_lighting/shd_simple_lighting.yy",},"order":4,},
     {"id":{"name":"obj_init","path":"objects/obj_init/obj_init.yy",},"order":5,},
     {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},"order":6,},

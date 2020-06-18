@@ -9,13 +9,14 @@ vertex_format = vertex_format_end(); //vertex size = 36
 //Initialise dotobj. This creates some globally scoped maps, and a default material
 dotobj_init();
 
-//Load materials from file
-//This will also load in images from disk (from the "textures" folder in Included Files)
-dotobj_material_load_file("sponza.mtl");
-
 //Load our .obj from disk. This might take a while!
-//The script returns a dotobj model (in reality, an array) that we can draw in the Draw event
+//The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
+//If the model references a material (.mtl) file then that will be loaded as well
 model_sponza = dotobj_model_load_file("sponza.obj", vertex_format, true, true, true, true);
+
+//If you want to manually load material (.mtl) files then you can do so using this function:
+//    dotobj_material_load_file("sponza.mtl");
+//As mentioned above, dotobj_model_load_file() will try to load material files automatically
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;
