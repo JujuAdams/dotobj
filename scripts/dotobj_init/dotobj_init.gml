@@ -63,6 +63,17 @@ function dotobj_class_model() constructor
             ++_g;
         }
     }
+    
+    freeze = function()
+    {
+        //Call the freeze() method for all groups (which calls the freeze() method for all meshes in those groups)
+        var _g = 0;
+        repeat(ds_list_size(group_list))
+        {
+            group_map[? group_list[| _g]].freeze();
+            ++_g;
+        }
+    }
 }
 
 
@@ -89,6 +100,17 @@ function dotobj_class_group(_model, _name, _line) constructor
         repeat(ds_list_size(mesh_list))
         {
              mesh_list[| _m].submit();
+            ++_m;
+        }
+    }
+    
+    freeze = function()
+    {
+        //Call the freeze() method for meshes
+        var _m = 0;
+        repeat(ds_list_size(mesh_list))
+        {
+             mesh_list[| _m].freeze();
             ++_m;
         }
     }
@@ -133,6 +155,7 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
     group_name    = _group.name;
     vertex_list   = ds_list_create();
     vertex_buffer = undefined;
+    frozen        = false;
     material      = _name;
     has_tangents  = _has_tangents;
     
@@ -177,7 +200,21 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
             }
         }
     }
-
+    
+    freeze = function()
+    {
+        //If a mesh failed to create a vertex buffer then it'll hold the value <undefined>
+        //We need to check for this to avoid crashes
+        if (vertex_buffer != undefined)
+        {
+            if (!frozen)
+            {
+                frozen = true;
+                vertex_freeze(vertex_buffer);
+            }
+        }
+    }
+    
     ds_list_add(_group.mesh_list, self);
 }
 
