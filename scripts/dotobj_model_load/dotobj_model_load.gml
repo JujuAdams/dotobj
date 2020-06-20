@@ -562,14 +562,14 @@ function dotobj_model_load(_buffer)
                             _in_v3 = 1 - _in_v3;
                         }
                         
-                        //Find the position/texture vectores from point 1 to point 2
+                        //Find the position/texture vectors from point 1 to point 2
                         var _x1 = _in_x2 - _in_x1;
                         var _y1 = _in_y2 - _in_y1;
                         var _z1 = _in_z2 - _in_z1;
                         var _u1 = _in_u2 - _in_u1;
                         var _v1 = _in_v2 - _in_v1;
                         
-                        //Find the position/texture vectores from point 1 to point 3
+                        //Find the position/texture vectors from point 1 to point 3
                         var _x2 = _in_x3 - _in_x1;
                         var _y2 = _in_y3 - _in_y1;
                         var _z2 = _in_z3 - _in_z1;

@@ -55,6 +55,7 @@ function dotobj_class_model() constructor
     
     submit = function()
     {
+        //Call the submit() method for all groups (which calls the submit() method for all meshes in those groups)
         var _g = 0;
         repeat(ds_list_size(group_list))
         {
@@ -83,6 +84,7 @@ function dotobj_class_group(_model, _name, _line) constructor
     
     submit = function()
     {
+        //Call the submit() method for meshes
         var _m = 0;
         repeat(ds_list_size(mesh_list))
         {
@@ -144,7 +146,7 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
             var _material_struct = global.__dotobj_material_library[? material];
             
             //If a material cannot be found, it'll return <undefined>
-            //Again, we need to check for this to avoid crashes
+            //We use a fallback default material if we can't one for this mesh
             if (!is_struct(_material_struct)) _material_struct = global.__dotobj_material_library[? __DOTOBJ_DEFAULT_MATERIAL_NAME];
             
             //Find the texture for the material

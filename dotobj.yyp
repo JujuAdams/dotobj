@@ -8,12 +8,12 @@
     {"id":{"name":"dotobj_model_load","path":"scripts/dotobj_model_load/dotobj_model_load.yy",},"order":8,},
     {"id":{"name":"dotobj_set_flip_texcoord_v","path":"scripts/dotobj_set_flip_texcoord_v/dotobj_set_flip_texcoord_v.yy",},"order":2,},
     {"id":{"name":"dotobj_model_load_file","path":"scripts/dotobj_model_load_file/dotobj_model_load_file.yy",},"order":9,},
-    {"id":{"name":"shd_simple_lighting","path":"shaders/shd_simple_lighting/shd_simple_lighting.yy",},"order":4,},
-    {"id":{"name":"obj_init","path":"objects/obj_init/obj_init.yy",},"order":5,},
+    {"id":{"name":"shd_simple_lighting","path":"shaders/shd_simple_lighting/shd_simple_lighting.yy",},"order":55,},
+    {"id":{"name":"obj_loading_screen","path":"objects/obj_loading_screen/obj_loading_screen.yy",},"order":56,},
     {"id":{"name":"dotobj_set_reverse_triangles","path":"scripts/dotobj_set_reverse_triangles/dotobj_set_reverse_triangles.yy",},"order":3,},
-    {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},"order":6,},
-    {"id":{"name":"rm_init","path":"rooms/rm_init/rm_init.yy",},"order":7,},
-    {"id":{"name":"rm_main","path":"rooms/rm_main/rm_main.yy",},"order":8,},
+    {"id":{"name":"obj_test","path":"objects/obj_test/obj_test.yy",},"order":58,},
+    {"id":{"name":"rm_loading_screen","path":"rooms/rm_loading_screen/rm_loading_screen.yy",},"order":57,},
+    {"id":{"name":"rm_main","path":"rooms/rm_main/rm_main.yy",},"order":59,},
   ],
   "Options": [
     {"name":"Switch","path":"options/switch/options_switch.yy",},
@@ -38,7 +38,7 @@
     "children": [],
   },
   "RoomOrder": [
-    {"name":"rm_init","path":"rooms/rm_init/rm_init.yy",},
+    {"name":"rm_loading_screen","path":"rooms/rm_loading_screen/rm_loading_screen.yy",},
     {"name":"rm_main","path":"rooms/rm_main/rm_main.yy",},
   ],
   "Folders": [
