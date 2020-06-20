@@ -4,7 +4,10 @@ dotobj_init();
 //Load our .obj from disk. This might take a while!
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
 //If the model references a material (.mtl) file then that will be loaded as well
-model_sponza = dotobj_model_load_file("sponza.obj", true, true);
+dotobj_set_flip_texcoord_v(true);
+dotobj_set_reverse_triangles(true);
+dotobj_set_write_tangents(true, false);
+model_sponza = dotobj_model_load_file("sponza.obj");
 
 //If you want to manually load material (.mtl) files then you can do so using this function:
 //    dotobj_material_load_file("sponza.mtl");

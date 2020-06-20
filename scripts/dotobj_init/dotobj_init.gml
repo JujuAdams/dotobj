@@ -4,15 +4,21 @@ function dotobj_init()
     global.__dotobj_mtl_file_loaded  = ds_map_create();
     global.__dotobj_material_library = ds_map_create();
     global.__dotobj_sprite_map       = ds_map_create();
-
+    
+    //State variables
+    global.__dotobj_flip_texcoord_v    = false;
+    global.__dotobj_reverse_triangles  = false;
+    global.__dotobj_write_tangents     = false;
+    global.__dotobj_force_tangent_calc = false;
+    
     //Create a default material
     dotobj_ensure_material(__DOTOBJ_DEFAULT_MATERIAL_LIBRARY, __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC);
 
     #region Internal macros
 
     //Always date your work!
-    #macro __DOTOBJ_VERSION  "5.0.0"
-    #macro __DOTOBJ_DATE     "2020/06/18"
+    #macro __DOTOBJ_VERSION  "6.0.0"
+    #macro __DOTOBJ_DATE     "2020/06/20"
 
     //Some strings to use for defaults. Change these if you so desire.
     #macro __DOTOBJ_DEFAULT_GROUP              "__dotobj_group__"
@@ -27,6 +33,15 @@ function dotobj_init()
     vertex_format_add_colour();                               //            +  4
     vertex_format_add_texcoord();                             //            +  8
     global.__dotobj_pnct_vertex_format = vertex_format_end(); //vertex size = 36
+    
+    //Define the vertex formats we want to use
+    vertex_format_begin();
+    vertex_format_add_position_3d();                                   //        12
+    vertex_format_add_normal();                                        //      + 12
+    vertex_format_add_colour();                                        //      +  4
+    vertex_format_add_texcoord();                                      //      +  8
+    vertex_format_add_custom(vertex_type_float4, vertex_usage_normal); //      + 16    //I don't think vertex_usage_tangent works...
+    global.__dotobj_pncttan_vertex_format = vertex_format_end(); //vertex size = 52
     
     #endregion
 }
@@ -104,7 +119,8 @@ function dotobj_ensure_group(_model, _name, _line)
 
 /// @param group
 /// @param name
-function dotobj_class_mesh(_group, _name) constructor
+/// @param hasTangents
+function dotobj_class_mesh(_group, _name, _has_tangents) constructor
 {
     //Meshes are children of groups. Meshes contain a single vertex buffer that drawn via
     //used with vertex_submit(). A mesh has an associated vertex list (really a list of
@@ -116,6 +132,7 @@ function dotobj_class_mesh(_group, _name) constructor
     vertex_list   = ds_list_create();
     vertex_buffer = undefined;
     material      = _name;
+    has_tangents  = _has_tangents;
     
     submit = function()
     {
