@@ -303,7 +303,11 @@ function dotobj_class_texture(_sprite, _index, _filename) constructor
 /// @param filename
 function dotobj_add_external_sprite(_filename)
 {
-    if (ds_map_exists(global.__dotobj_sprite_map, _filename)) return global.__dotobj_sprite_map[? _filename];
+    if (ds_map_exists(global.__dotobj_sprite_map, _filename))
+    {
+        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_add_external_sprite(): Reusing \"" + string(_filename) + "\"");
+        return global.__dotobj_sprite_map[? _filename];
+    }
     
     if (!file_exists(_filename))
     {
