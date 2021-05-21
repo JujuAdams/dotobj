@@ -1,9 +1,6 @@
 //Remind the user to run using YYC, but only if they're not debugging
 if (!code_is_compiled() && !debug_mode) show_error("It is strongly recommended you run this example using YYC.\n ", false);
 
-//Initialise dotobj. This creates some globally scoped maps, and a default material
-dotobj_init();
-
 //Load our .obj from disk. This might take a while!
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
 //If the model references a material (.mtl) file then that will be loaded as well

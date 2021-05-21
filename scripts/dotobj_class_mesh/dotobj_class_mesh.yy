@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "dotobj",
-    "path": "folders/dotobj.yy",
+    "name": "Classes",
+    "path": "folders/dotobj/Classes.yy",
   },
   "resourceVersion": "1.0",
-  "name": "dotobj_init",
+  "name": "dotobj_class_mesh",
   "tags": [],
   "resourceType": "GMScript",
 }

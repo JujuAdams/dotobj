@@ -1,6 +1,3 @@
-//Initialise dotobj. This creates some globally scoped maps, and a default material
-dotobj_init();
-
 //dotobj allows you to optionally point filenames to textures stored within your game
 //This is useful for a little extra security, or if you want to reduce how many Included Files you have lying around
 //Sprites should always have "Separate Texture Page" enabled for the sake of texture coordinates lining up
