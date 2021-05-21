@@ -9,7 +9,6 @@ dotobj_sprite_add_internal("textures\\planet_tex_arid.png", spr_planet_tex_arid)
 //If the model references a material (.mtl) file then that will be loaded as well
 dotobj_set_flip_texcoord_v(true);
 dotobj_set_reverse_triangles(true);
-dotobj_set_write_tangents(true, false);
 model_planet = dotobj_model_load_file("planet.obj");
 model_planet.freeze();
 
