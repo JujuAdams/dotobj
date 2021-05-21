@@ -62,7 +62,7 @@ function __DotobjEnsureGroup(_model, _name, _line)
     if (variable_struct_exists(_model.groups_struct, _name))
     {
         if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjEnsureGroup(): Warning! Group \"" + string(_name) + "\" has the same name as another group. (ln=" + string(_line) + ")");
-        return _model.groups_struct[? _name];
+        return _model.groups_struct[$ _name];
     }
     else
     {

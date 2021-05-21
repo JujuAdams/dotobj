@@ -9,7 +9,7 @@ DotobjSpriteAddInternal("textures\\planet_tex_arid.png", sprPlanetTexArid);
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
 DotobjSetReverseTriangles(true);
-model_planet = DotobjModelLoadFile("planet.obj");
+model_planet = DotobjModelLoadFile("planet_3dsmax.obj");
 model_planet.Freeze();
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
