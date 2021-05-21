@@ -14,7 +14,7 @@ function dotobj_class_group(_model, _name, _line) constructor
     name      = _name;
     mesh_list = ds_list_create();
     
-    submit = function()
+    static submit = function()
     {
         //Call the submit() method for meshes
         var _m = 0;
@@ -25,7 +25,7 @@ function dotobj_class_group(_model, _name, _line) constructor
         }
     }
     
-    freeze = function()
+    static freeze = function()
     {
         //Call the freeze() method for meshes
         var _m = 0;

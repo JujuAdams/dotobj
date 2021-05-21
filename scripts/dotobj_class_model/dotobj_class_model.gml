@@ -3,7 +3,7 @@ function dotobj_class_model() constructor
     group_map  = ds_map_create();
     group_list = ds_list_create();
     
-    submit = function()
+    static submit = function()
     {
         //Call the submit() method for all groups (which calls the submit() method for all meshes in those groups)
         var _g = 0;
@@ -14,7 +14,7 @@ function dotobj_class_model() constructor
         }
     }
     
-    freeze = function()
+    static freeze = function()
     {
         //Call the freeze() method for all groups (which calls the freeze() method for all meshes in those groups)
         var _g = 0;

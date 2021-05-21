@@ -17,7 +17,9 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
     material      = _name;
     has_tangents  = _has_tangents;
     
-    submit = function()
+    ds_list_add(_group.mesh_list, self);
+    
+    static submit = function()
     {
         //If a mesh failed to create a vertex buffer then it'll hold the value <undefined>
         //We need to check for this to avoid crashes
@@ -59,7 +61,7 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
         }
     }
     
-    freeze = function()
+    static freeze = function()
     {
         //If a mesh failed to create a vertex buffer then it'll hold the value <undefined>
         //We need to check for this to avoid crashes
@@ -72,6 +74,4 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
             }
         }
     }
-    
-    ds_list_add(_group.mesh_list, self);
 }
