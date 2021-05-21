@@ -422,7 +422,7 @@ function dotobj_model_load(_buffer)
             var _mesh_vertexes_array = _mesh_struct.vertexes_array;
             var _mesh_material       = _mesh_struct.material;
             
-            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(array_length(_mesh_vertexes_array)/3) + " triangles");
+            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(array_length(_mesh_vertexes_array)) + " vertexes (" + string(array_length(_mesh_vertexes_array)/3) + " triangles)");
         
             //Check if this mesh is empty
             if (array_length(_mesh_vertexes_array) <= 0)
@@ -873,7 +873,7 @@ function dotobj_model_load(_buffer)
     }
 
     //If we want to report the load time, do it!
-    if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("dotobj_model_load(): lines=" + string(_meta_line) + ", vertex buffers=" + string(_meta_vertex_buffers) + ", triangles=" + string(_meta_triangles) + ". Time to load was " + string((get_timer() - _timer)/1000) + "ms");
+    if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("dotobj_model_load(): lines=" + string(_meta_line) + ", groups=" + string(array_length(_groups_array)) + ", vertex buffers=" + string(_meta_vertex_buffers) + ", triangles=" + string(_meta_triangles) + ". Time to load was " + string((get_timer() - _timer)/1000) + "ms");
 
     //Return our data
     return _model_struct;
