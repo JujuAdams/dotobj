@@ -304,17 +304,25 @@ function dotobj_class_texture(_sprite, _index, _filename) constructor
 function dotobj_add_external_sprite(_filename)
 {
     if (ds_map_exists(global.__dotobj_sprite_map, _filename)) return global.__dotobj_sprite_map[? _filename];
-
-    var _sprite = sprite_add(_filename, 1, false, false, 0, 0);
-    if (_sprite > 0)
+    
+    if (!file_exists(_filename))
     {
-        global.__dotobj_sprite_map[? _filename] = _sprite;
-        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_add_external_sprite(): Loaded \"" + string(_filename) + "\" (spr=" + string(_sprite) + ")");
+        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_add_external_sprite(): Warning! \"" + string(_filename) + "\" could not be found");
     }
     else
     {
-        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_add_external_sprite(): Warning! Failed to load \"" + string(_filename) + "\"");
+        var _sprite = sprite_add(_filename, 1, false, false, 0, 0);
+        if (_sprite > 0)
+        {
+            global.__dotobj_sprite_map[? _filename] = _sprite;
+            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_add_external_sprite(): Loaded \"" + string(_filename) + "\" (spr=" + string(_sprite) + ")");
+        }
+        else
+        {
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_add_external_sprite(): Warning! Failed to load \"" + string(_filename) + "\"");
+            show_message("\"" + string(_filename) + "\"");
+        }
     }
-
+    
     return _sprite;
 }
