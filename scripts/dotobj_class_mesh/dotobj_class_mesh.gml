@@ -11,7 +11,7 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
     //any .obj file that uses them.
     
     group_name    = _group.name;
-    vertex_list   = ds_list_create();
+    vertex_list   = [];
     vertex_buffer = undefined;
     frozen        = false;
     material      = _name;

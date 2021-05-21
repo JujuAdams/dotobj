@@ -201,11 +201,11 @@ function dotobj_model_load(_buffer)
                             {
                                 if (!_reverse_triangles)
                                 {
-                                    ds_list_add(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
+                                    array_push(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
                                 }
                                 else
                                 {
-                                    ds_list_add(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
+                                    array_push(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
                                 }
                             
                                 ++_f;
@@ -311,7 +311,7 @@ function dotobj_model_load(_buffer)
                             //Then build a full material name from that
                             var _material_name = _material_library + "." + _material_specific;
                         
-                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && ds_list_empty(_mesh_vertex_list))
+                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertex_list) <= 0))
                             {
                                 //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material
                                 _mesh_struct.material = _material_name;
@@ -422,10 +422,10 @@ function dotobj_model_load(_buffer)
             var _mesh_vertex_list = _mesh_struct.vertex_list;
             var _mesh_material    = _mesh_struct.material;
             
-            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(ds_list_size(_mesh_vertex_list)/3) + " triangles");
+            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(array_length(_mesh_vertex_list)/3) + " triangles");
         
             //Check if this mesh is empty
-            if (ds_list_size(_mesh_vertex_list) <= 0)
+            if (array_length(_mesh_vertex_list) <= 0)
             {
                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Group \"" + string(_group_name) + "\" mesh " + string(_mesh) + " has no triangles");
                 ++_mesh;
@@ -457,10 +457,10 @@ function dotobj_model_load(_buffer)
                     
                     //Iterate over all the vertices
                     var _i = 0;
-                    repeat(ds_list_size(_mesh_vertex_list))
+                    repeat(array_length(_mesh_vertex_list))
                     {
                         //Get the vertex string, and find the first slash
-                        var _vertex_string = _mesh_vertex_list[| _i];
+                        var _vertex_string = _mesh_vertex_list[_i];
                         _i++;
                         var _slash_count = string_count("/", _vertex_string);
                         
@@ -623,7 +623,7 @@ function dotobj_model_load(_buffer)
             
             //Iterate over all the vertices
             var _i = 0;
-            repeat(ds_list_size(_mesh_vertex_list))
+            repeat(array_length(_mesh_vertex_list))
             {
                 //Reset our lookup indexes
                 var _v_index = undefined;
@@ -648,7 +648,7 @@ function dotobj_model_load(_buffer)
                 //     This can definitely be improved in terms of speed!
             
                 //Get the vertex string, and count how many slashes it contains
-                var _vertex_string = _mesh_vertex_list[| _i];
+                var _vertex_string = _mesh_vertex_list[_i];
                 _i++;
                 var _slash_count = string_count("/", _vertex_string);
                 
@@ -837,7 +837,6 @@ function dotobj_model_load(_buffer)
             vertex_end(_vbuff);
         
             //Clean up memory for meshes
-            ds_list_destroy(_mesh_vertex_list);
             _mesh_struct.vertex_list = undefined;
             
             //Move to the next mesh
