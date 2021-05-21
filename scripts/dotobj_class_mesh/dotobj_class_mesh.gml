@@ -51,7 +51,7 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
                 var _diffuse_colour = _material_struct.diffuse;
                     
                 //If the diffuse colour is undefined then render the mesh in whatever default we've set
-                if (_diffuse_colour == undefined) _diffuse_colour = DOTOBJ_DEFAULT_VERTEX_COLOR;
+                if (_diffuse_colour == undefined) _diffuse_colour = c_white;
                 
                 //Hijack the fog system to force the blend colour, and submit the vertex buffer
                 gpu_set_fog(true, _diffuse_colour, 0, 0);
