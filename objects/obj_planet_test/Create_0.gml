@@ -7,12 +7,11 @@ dotobj_init();
 dotobj_set_flip_texcoord_v(true);
 dotobj_set_reverse_triangles(true);
 dotobj_set_write_tangents(true, false);
-model_sponza = dotobj_model_load_file("sponza.obj");
-model_sponza.freeze(); //Wise to freeze your models as well
 
-//If you want to manually load material (.mtl) files then you can do so using this function:
-//    dotobj_material_load_file("sponza.mtl");
-//As mentioned above, dotobj_model_load_file() will try to load material files automatically
+dotobj_sprite_add_internal("textures\\planet_tex_arid.png", spr_planet_tex_arid);
+
+model_planet = dotobj_model_load_file("planet.obj");
+model_planet.freeze();
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;

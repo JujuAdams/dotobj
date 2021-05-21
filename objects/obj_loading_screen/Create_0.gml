@@ -1,6 +1,3 @@
-//Remind the user to run using YYC, but only if they're not debugging
-if (!code_is_compiled() && !debug_mode) show_error("It is strongly recommended you run this example using YYC.\n ", false);
-
 //Force anti-aliasing to the maxxxxx
 display_reset(8, true);
 

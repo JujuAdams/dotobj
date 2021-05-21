@@ -3,7 +3,7 @@ gpu_set_ztestenable(true);
 gpu_set_zwriteenable(true);
 
 //Clockwise faces are backfaces. We want to cull these so we're drawing less
-gpu_set_cullmode(cull_clockwise);
+gpu_set_cullmode(cull_noculling);
 
 //Interpolation is set <on> in Windows graphics options so this code isn't needed
 //gpu_set_tex_filter(true);
@@ -19,7 +19,8 @@ gpu_set_tex_mip_filter(tf_anisotropic);
 gpu_set_tex_max_aniso(16);
 
 //Set our view + projection matrices
-var _old_view       = matrix_get(matrix_view);
+var _old_world      = matrix_get(matrix_world); 
+var _old_view       = matrix_get(matrix_view); 
 var _old_projection = matrix_get(matrix_projection);
 
 matrix_set(matrix_view, matrix_build_lookat(cam_x, cam_y, cam_z,
@@ -28,14 +29,15 @@ matrix_set(matrix_view, matrix_build_lookat(cam_x, cam_y, cam_z,
 matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_width/room_height, 1, 3000));
 
 //Finally, draw the model
-shader_set(shd_simple_lighting);
-model_sponza.submit();
+shader_set(shd_fullbright);
+matrix_set(matrix_world, matrix_build(0,0,0, 0,0,0, 10, 10, 10));
+model_planet.submit();
 shader_reset();
 
 //Reset draw state
-matrix_set(matrix_world     , matrix_build_identity()); //Juuuust in case
-matrix_set(matrix_view      , _old_view              );
-matrix_set(matrix_projection, _old_projection        );
+matrix_set(matrix_world     , _old_world     );
+matrix_set(matrix_view      , _old_view      );
+matrix_set(matrix_projection, _old_projection);
 gpu_set_ztestenable(false);
 gpu_set_zwriteenable(false);
 gpu_set_cullmode(cull_noculling);
