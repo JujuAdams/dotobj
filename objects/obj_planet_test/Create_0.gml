@@ -1,15 +1,18 @@
 //Initialise dotobj. This creates some globally scoped maps, and a default material
 dotobj_init();
 
+//dotobj allows you to optionally point filenames to textures stored within your game
+//This is useful for a little extra security, or if you want to reduce how many Included Files you have lying around
+//Sprites should always have "Separate Texture Page" enabled for the sake of texture coordinates lining up
+//You should also define filename->sprite relationships before loading materials (or models)
+dotobj_sprite_add_internal("textures\\planet_tex_arid.png", spr_planet_tex_arid);
+
 //Load our .obj from disk. This might take a while!
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
 //If the model references a material (.mtl) file then that will be loaded as well
 dotobj_set_flip_texcoord_v(true);
 dotobj_set_reverse_triangles(true);
 dotobj_set_write_tangents(true, false);
-
-dotobj_sprite_add_internal("textures\\planet_tex_arid.png", spr_planet_tex_arid);
-
 model_planet = dotobj_model_load_file("planet.obj");
 model_planet.freeze();
 
