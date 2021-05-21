@@ -30,7 +30,7 @@
     "path": "dotobj.yyp",
   },
   "resourceVersion": "1.0",
-  "name": "objPlanet3DSMaxTest4",
+  "name": "objPlanet3DSMaxTest",
   "tags": [],
   "resourceType": "GMObject",
 }
