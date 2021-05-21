@@ -5,6 +5,8 @@ pipe = DotobjPipeCreate();
 pipe.AddShader({ shader: shdPipeDiffMap,  diffuseMap:  "gm_BaseTexture" });
 pipe.AddShader({ shader: shdPipeDiffFlat, diffuseFlat: "u_vDiffuse"     });
 pipe.AddShader({ shader: shdPipeDiffMapDissMap,  diffuseMap:  "gm_BaseTexture",  dissolveMap:  "u_sDissolve" });
+pipe.AddShader({ shader: shdPipeDiffMap,  diffuseMap:  "gm_BaseTexture",  normalMap: "" }, true);
+pipe.AddShader({ shader: shdPipeDiffMapDissMap,  diffuseMap:  "gm_BaseTexture",  dissolveMap:  "u_sDissolve",  normalMap: "" }, true);
 
 //Load our .obj from disk. This might take a while!
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event

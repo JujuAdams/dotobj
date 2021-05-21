@@ -15,13 +15,34 @@ enum __DOTOBJ_SHADER_SUPPORT
     //a.k.a. "bump"
     NORMAL_MAP    =  64,
     
-    __MAX = __DOTOBJ_SHADER_SUPPORT.NORMAL_MAP,
+    EMISSIVE_FLAT = 128,
+    EMISSIVE_MAP  = 256,
+    
+    __MAX = __DOTOBJ_SHADER_SUPPORT.EMISSIVE_MAP,
+}
+
+enum __DOTOBJ_SHADER_DATA
+{
+    SHADER,
+    DIFFUSE_FLAT,
+    DIFFUSE_MAP,
+    DISSOLVE_FLAT,
+    DISSOLVE_MAP,
+    SPECULAR_FLAT,
+    SPECULAR_MAP,
+    NORMAL_MAP,
+    EMISSIVE_FLAT,
+    EMISSIVE_MAP,
+    __SIZE
 }
 
 function DotobjClassPipe() constructor
 {
-    shaders = {};
-    AddShader({ shader: shdDotobjFullbright }, true);
+    var _fallback_shader_data = array_create(__DOTOBJ_SHADER_DATA.__SIZE, -1);
+    _fallback_shader_data[@ __DOTOBJ_SHADER_DATA.SHADER     ] = shdDotobjFullbright;
+    _fallback_shader_data[@ __DOTOBJ_SHADER_DATA.DIFFUSE_MAP] = "gm_BaseTexture";
+    
+    shaders = array_create(2*__DOTOBJ_SHADER_SUPPORT.__MAX - 1, _fallback_shader_data);
     
     static AddShader = function()
     {
@@ -36,23 +57,30 @@ function DotobjClassPipe() constructor
         var _id = 0;
         var _shader = _definition.shader;
         
+        var _shader_data = array_create(__DOTOBJ_SHADER_DATA.__SIZE, -1);
+        _shader_data[@ __DOTOBJ_SHADER_DATA.SHADER] = _shader;
+        
         //Diffuse
         if (variable_struct_exists(_definition, "diffuseFlat"))
         {
             var _uniform = shader_get_uniform(_shader, _definition.diffuseFlat);
             if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"diffuseFlat\" uniform for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.diffuseFlat, "\"");
+            _shader_data[@ __DOTOBJ_SHADER_DATA.DIFFUSE_FLAT] = _uniform;
             
-            _definition.diffuseFlat = _uniform;
             _id |= __DOTOBJ_SHADER_SUPPORT.DIFFUSE_FLAT;
         }
         
         if (variable_struct_exists(_definition, "diffuseMap"))
         {
-            if (_definition.diffuseMap != "gm_BaseTexture")
-            { 
+            if (_definition.diffuseMap == "gm_BaseTexture")
+            {
+                _shader_data[@ __DOTOBJ_SHADER_DATA.DIFFUSE_MAP] = "gm_BaseTexture";
+            }
+            else
+            {
                 var _uniform = shader_get_sampler_index(_shader, _definition.diffuseMap);
                 if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"diffuseMap\" sampler for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.diffuseMap, "\"");
-                _definition.diffuseMap = _uniform;
+                _shader_data[@ __DOTOBJ_SHADER_DATA.DIFFUSE_MAP] = _uniform;
             }
             
             _id |= __DOTOBJ_SHADER_SUPPORT.DIFFUSE_MAP;
@@ -63,18 +91,22 @@ function DotobjClassPipe() constructor
         {
             var _uniform = shader_get_uniform(_shader, _definition.dissolveFlat);
             if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"dissolveFlat\" uniform for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.dissolveFlat, "\"");
+            _shader_data[@ __DOTOBJ_SHADER_DATA.DISSOLVE_FLAT] = _uniform;
             
-            _definition.dissolveFlat = _uniform;
             _id |= __DOTOBJ_SHADER_SUPPORT.DISSOLVE_FLAT;
         }
         
         if (variable_struct_exists(_definition, "dissolveMap"))
         {
-            if (_definition.dissolveMap != "gm_BaseTexture")
+            if (_definition.dissolveMap == "gm_BaseTexture")
+            {
+                _shader_data[@ __DOTOBJ_SHADER_DATA.DISSOLVE_MAP] = "gm_BaseTexture";
+            }
+            else
             {
                 var _uniform = shader_get_sampler_index(_shader, _definition.dissolveMap);
                 if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"dissolveMap\" sampler for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.dissolveMap, "\"");
-                _definition.dissolveMap = _uniform;
+                _shader_data[@ __DOTOBJ_SHADER_DATA.DISSOLVE_MAP] = _uniform;
             }
             
             _id |= __DOTOBJ_SHADER_SUPPORT.DISSOLVE_MAP;
@@ -85,18 +117,22 @@ function DotobjClassPipe() constructor
         {
             var _uniform = shader_get_uniform(_shader, _definition.specularFlat);
             if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"specularFlat\" uniform for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.specularFlat, "\"");
+            _shader_data[@ __DOTOBJ_SHADER_DATA.SPECULAR_FLAT] = _uniform;
             
-            _definition.specularFlat = _uniform;
             _id |= __DOTOBJ_SHADER_SUPPORT.SPECULAR_FLAT;
         }
         
         if (variable_struct_exists(_definition, "specularMap"))
         {
-            if (_definition.specularMap != "gm_BaseTexture")
+            if (_definition.specularMap == "gm_BaseTexture")
+            {
+                _shader_data[@ __DOTOBJ_SHADER_DATA.SPECULAR_MAP] = "gm_BaseTexture";
+            }
+            else
             {
                 var _uniform = shader_get_sampler_index(_shader, _definition.specularMap);
                 if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"specularMap\" sampler for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.specularMap, "\"");
-                _definition.specularMap = _uniform;
+                _shader_data[@ __DOTOBJ_SHADER_DATA.SPECULAR_MAP] = _uniform;
             }
             
             _id |= __DOTOBJ_SHADER_SUPPORT.SPECULAR_MAP;
@@ -105,14 +141,44 @@ function DotobjClassPipe() constructor
         //Normal
         if (variable_struct_exists(_definition, "normalMap"))
         {
-            if (_definition.normalMap != "gm_BaseTexture")
+            if (_definition.normalMap == "gm_BaseTexture")
+            {
+                _shader_data[@ __DOTOBJ_SHADER_DATA.NORMAL_MAP] = "gm_BaseTexture";
+            }
+            else
             {
                 var _uniform = shader_get_sampler_index(_shader, _definition.normalMap);
                 if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"normalMap\" sampler for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.normalMap, "\"");
-                _definition.normalMap = _uniform;
+                _shader_data[@ __DOTOBJ_SHADER_DATA.NORMAL_MAP] = _uniform;
             }
             
             _id |= __DOTOBJ_SHADER_SUPPORT.NORMAL_MAP;
+        }
+        
+        //Emissive
+        if (variable_struct_exists(_definition, "emissiveFlat"))
+        {
+            var _uniform = shader_get_uniform(_shader, _definition.emissiveFlat);
+            if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"emissiveFlat\" uniform for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.emissiveFlat, "\"");
+            _shader_data[@ __DOTOBJ_SHADER_DATA.EMISSIVE_FLAT] = _uniform;
+            
+            _id |= __DOTOBJ_SHADER_SUPPORT.EMISSIVE_FLAT;
+        }
+        
+        if (variable_struct_exists(_definition, "emissiveMap"))
+        {
+            if (_definition.emissiveMap == "gm_BaseTexture")
+            {
+                _shader_data[@ __DOTOBJ_SHADER_DATA.EMISSIVE_MAP] = "gm_BaseTexture";
+            }
+            else
+            {
+                var _uniform = shader_get_sampler_index(_shader, _definition.emissiveMap);
+                if (!_skipVerification && (_uniform < 0)) __DotobjError("Could not resolve \"emissiveMap\" sampler for shader \"", shader_get_name(_shader), "\", was looking for \"", _definition.emissiveMap, "\"");
+                _shader_data[@ __DOTOBJ_SHADER_DATA.EMISSIVE_MAP] = _uniform;
+            }
+            
+            _id |= __DOTOBJ_SHADER_SUPPORT.EMISSIVE_MAP;
         }
         
         //Check for conflicts
@@ -131,6 +197,11 @@ function DotobjClassPipe() constructor
             __DotobjError("Cannot bind \"specularFlat\" and \"specularMap\" in the same shader definition.\nPlease make two separate calls to .AddShader() if your shader supports both rendering configurations.");
         }
         
-        shaders[$ _id] = _definition;
+        if (((_id & __DOTOBJ_SHADER_SUPPORT.EMISSIVE_FLAT) > 0) && ((_id & __DOTOBJ_SHADER_SUPPORT.EMISSIVE_MAP) > 0))
+        {
+            __DotobjError("Cannot bind \"emissiveFlat\" and \"emissiveMap\" in the same shader definition.\nPlease make two separate calls to .AddShader() if your shader supports both rendering configurations.");
+        }
+        
+        shaders[@ _id] = _shader_data;
     }
 }

@@ -10,7 +10,7 @@ void main()
     vec4 colour = v_vColour*texture2D(gm_BaseTexture, v_vTexcoord);
     
     vec4 dissolve = texture2D(u_sDissolve, v_vTexcoord);
-    if (length(dissolve.rgb) < 0.5) discard;
+    if (length(dissolve.rgb) < (254.0/255.0)) discard;
     
     vec3 lightColour = vec3(0.3);
     lightColour += 0.2*vec3(0.3, 0.5, 1.0)*max(0.0, dot(normalize(v_vNormal), normalize(vec3( 0.0, -1.0, -0.5))));
