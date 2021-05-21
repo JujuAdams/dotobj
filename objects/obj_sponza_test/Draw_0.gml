@@ -30,7 +30,7 @@ matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_w
 
 //Finally, draw the model
 shader_set(shd_simple_lighting);
-model_sponza.submit(); 
+model_sponza.Submit(); 
 shader_reset();
 
 //Reset draw state
