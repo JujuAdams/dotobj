@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "(System)",
-    "path": "folders/dotobj/(System).yy",
+    "name": "Shaders",
+    "path": "folders/dotobj/Shaders.yy",
   },
   "resourceVersion": "1.0",
-  "name": "DotobjClassTexture",
+  "name": "DotobjClassPipe",
   "tags": [],
   "resourceType": "GMScript",
 }

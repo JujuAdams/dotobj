@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "dotobj",
-    "path": "folders/dotobj.yy",
+    "name": "(System)",
+    "path": "folders/dotobj/(System).yy",
   },
   "resourceVersion": "1.0",
   "name": "__DotobjSystem",

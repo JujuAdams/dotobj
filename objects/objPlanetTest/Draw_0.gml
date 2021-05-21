@@ -29,7 +29,7 @@ matrix_set(matrix_view, matrix_build_lookat(cam_x, cam_y, cam_z,
 matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_width/room_height, 1, 3000));
 
 //Finally, draw the model
-shader_set(shd_fullbright);
+shader_set(shdDotobjFullbright);
 matrix_set(matrix_world, matrix_build(0,0,0, 0,0,0, 10, 10, 10));
 model_planet.Submit();
 shader_reset();

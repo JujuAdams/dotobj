@@ -5,7 +5,7 @@
     "path": "dotobj.yyp",
   },
   "resourceVersion": "1.0",
-  "name": "shd_fullbright",
+  "name": "shdSimpleLighting",
   "tags": [],
   "resourceType": "GMShader",
 }

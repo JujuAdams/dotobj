@@ -30,7 +30,7 @@
     "path": "dotobj.yyp",
   },
   "resourceVersion": "1.0",
-  "name": "obj_planet_test",
+  "name": "objPlanetTest",
   "tags": [],
   "resourceType": "GMObject",
 }

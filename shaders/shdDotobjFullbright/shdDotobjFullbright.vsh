@@ -13,5 +13,6 @@ void main()
     v_vColour   = in_Colour;
     v_vTexcoord = in_TextureCoord;
     
+    //Not used, but we need to reference in_Normal to avoid optimisation removing it from the attributes
     vec3 dummy = in_Normal;
 }

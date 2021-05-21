@@ -15,18 +15,29 @@ function DotobjClassGroup(_model, _name, _line) constructor
     
     static Submit = function()
     {
-        //Call the submit() method for meshes
+        //Call the Submit() method for meshes
         var _m = 0;
         repeat(array_length(meshes_array))
         {
-             meshes_array[_m].Submit();
+            meshes_array[_m].Submit();
+            ++_m;
+        }
+    }
+    
+    static SubmitUsingPipe = function(_pipe)
+    {
+        //Call the SubmitUsingPipe() method for meshes
+        var _m = 0;
+        repeat(array_length(meshes_array))
+        {
+             meshes_array[_m].SubmitUsingPipe(_pipe);
             ++_m;
         }
     }
     
     static Freeze = function()
     {
-        //Call the freeze() method for meshes
+        //Call the Freeze() method for meshes
         var _m = 0;
         repeat(array_length(meshes_array))
         {

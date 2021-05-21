@@ -47,8 +47,23 @@ __DotobjEnsureMaterial(__DOTOBJ_DEFAULT_MATERIAL_LIBRARY, __DOTOBJ_DEFAULT_MATER
 
 
 
-/// @param filename
+function __DotobjError()
+{
+    var _string = "dotobj:\n";
+    var _i = 0;
+    repeat(argument_count)
+    {
+        _string += string(argument[_i]);
+        ++_i;
+    }
+    
+    show_error(_string + "\n ", true);
+    return _string;
+}
 
+
+
+/// @param filename
 function __DotobjAddExternalSprite(_filename)
 {
     var _sprite = -1;
