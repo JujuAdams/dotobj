@@ -23,18 +23,24 @@ function dotobj_material_load(_library_name, _buffer)
 
     //And let's iterate over the entire buffer, byte-by-byte
     var _line_started = false;
-    var _value_read_start   = 0;
-    var _i = 0;
-    repeat(_buffer_size)
+    var _value_read_start = 0;
+    var _b = 0;
+    repeat(_buffer_size + 1)
     {
         //Grab a value
-        var _value = buffer_read(_buffer, buffer_u8);
-        ++_i;
-    
+        if (_b < _buffer_size)
+        {
+            var _value = buffer_read(_buffer, buffer_u8);
+            ++_b;
+        }
+        else
+        {
+            var _value = 0;
+        }
+        
         if (!_line_started)
         {
             //If we haven't found a valid starting character yet (i.e. a character that has ASCII code > 32)...
-        
             if (_value > 32)
             {
                 //If we find a valid starting character, update the line-start position and start reading the line!
@@ -44,10 +50,10 @@ function dotobj_material_load(_library_name, _buffer)
         }
         else
         {
-            if ((_value == 10) || (_value == 13) || (_value == 32) || (_i >= _buffer_size))
+            if ((_value == 0) || (_value == 10) || (_value == 13) || (_value == 32))
             {
                 //Put in a null character at the breaking character so we can easily read the value
-                if (_i < _buffer_size) buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0);
+                if (_value != 0) buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0);
             
                 //Jump back to the where the value started, then read it in as a string
                 buffer_seek(_buffer, buffer_seek_start, _value_read_start);
