@@ -404,24 +404,21 @@ function dotobj_model_load(_buffer)
     
     //Iterate over all the groups we've found
     //If we're not returning arrays, the group map should only contain one group
-    var _group_map  = _model_struct.group_map;
     var _group_list = _model_struct.group_list;
 
     var _g = 0;
-    repeat(ds_list_size(_group_list))
+    repeat(array_length(_group_list))
     {
-        var _group_name = _group_list[| _g];
-    
         //Find our list of faces for this group
-        var _group_struct    = _group_map[? _group_name];
+        var _group_struct    = _group_list[_g];
         var _group_line      = _group_struct.line;
         var _group_name      = _group_struct.name;
         var _group_mesh_list = _group_struct.mesh_list;
     
         var _mesh = 0;
-        repeat(ds_list_size(_group_mesh_list))
+        repeat(array_length(_group_mesh_list))
         {
-            var _mesh_struct      = _group_mesh_list[| _mesh];
+            var _mesh_struct      = _group_mesh_list[_mesh];
             var _mesh_vertex_list = _mesh_struct.vertex_list;
             var _mesh_material    = _mesh_struct.material;
             

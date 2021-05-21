@@ -17,7 +17,7 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
     material      = _name;
     has_tangents  = _has_tangents;
     
-    ds_list_add(_group.mesh_list, self);
+    array_push(_group.mesh_list, self);
     
     static submit = function()
     {
