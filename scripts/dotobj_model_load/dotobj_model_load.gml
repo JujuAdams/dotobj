@@ -63,10 +63,10 @@ function dotobj_model_load(_buffer)
 
     //Create a model for us to fill
     //We add a default group and default mesh to the model for use later during parsing
-    var _model_struct     = new dotobj_class_model();
-    var _group_struct     = dotobj_ensure_group(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
-    var _mesh_struct      = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
-    var _mesh_vertex_list = _mesh_struct.vertex_list;
+    var _model_struct        = new dotobj_class_model();
+    var _group_struct        = dotobj_ensure_group(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
+    var _mesh_struct         = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+    var _mesh_vertexes_array = _mesh_struct.vertexes_array;
 
     //Handle materials
     var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
@@ -201,11 +201,11 @@ function dotobj_model_load(_buffer)
                             {
                                 if (!_reverse_triangles)
                                 {
-                                    array_push(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
+                                    array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
                                 }
                                 else
                                 {
-                                    array_push(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
+                                    array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
                                 }
                             
                                 ++_f;
@@ -228,9 +228,9 @@ function dotobj_model_load(_buffer)
                             }
                         
                             //Create a new group and give it a blank mesh
-                            var _group_struct     = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
-                            var _mesh_struct      = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
-                            var _mesh_vertex_list = _mesh_struct.vertex_list;
+                            var _group_struct        = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
+                            var _mesh_struct         = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+                            var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                         break;
                     
                         case "o": //Object definition
@@ -247,9 +247,9 @@ function dotobj_model_load(_buffer)
                             if (DOTOBJ_OBJECTS_ARE_GROUPS)
                             {
                                 //If we want to parse objects as groups, create a new group and give it a blank mesh
-                                var _group_struct     = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
-                                var _mesh_struct      = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
-                                var _mesh_vertex_list = _mesh_struct.vertex_list;
+                                var _group_struct        = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
+                                var _mesh_struct         = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+                                var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                             else if (DOTOBJ_OUTPUT_WARNINGS)
                             {
@@ -311,7 +311,7 @@ function dotobj_model_load(_buffer)
                             //Then build a full material name from that
                             var _material_name = _material_library + "." + _material_specific;
                         
-                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertex_list) <= 0))
+                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertexes_array) <= 0))
                             {
                                 //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material
                                 _mesh_struct.material = _material_name;
@@ -319,8 +319,8 @@ function dotobj_model_load(_buffer)
                             else
                             {
                                 //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
-                                var _mesh_struct = new dotobj_class_mesh(_group_struct, _material_name, _write_tangents);
-                                var _mesh_vertex_list = _mesh_struct.vertex_list;
+                                var _mesh_struct         = new dotobj_class_mesh(_group_struct, _material_name, _write_tangents);
+                                var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                         break;
                     
@@ -404,28 +404,28 @@ function dotobj_model_load(_buffer)
     
     //Iterate over all the groups we've found
     //If we're not returning arrays, the group map should only contain one group
-    var _group_list = _model_struct.group_list;
+    var _groups_array = _model_struct.groups_array;
 
     var _g = 0;
-    repeat(array_length(_group_list))
+    repeat(array_length(_groups_array))
     {
         //Find our list of faces for this group
-        var _group_struct    = _group_list[_g];
-        var _group_line      = _group_struct.line;
-        var _group_name      = _group_struct.name;
-        var _group_mesh_list = _group_struct.mesh_list;
+        var _group_struct       = _groups_array[_g];
+        var _group_line         = _group_struct.line;
+        var _group_name         = _group_struct.name;
+        var _group_meshes_array = _group_struct.meshes_array;
     
         var _mesh = 0;
-        repeat(array_length(_group_mesh_list))
+        repeat(array_length(_group_meshes_array))
         {
-            var _mesh_struct      = _group_mesh_list[_mesh];
-            var _mesh_vertex_list = _mesh_struct.vertex_list;
-            var _mesh_material    = _mesh_struct.material;
+            var _mesh_struct         = _group_meshes_array[_mesh];
+            var _mesh_vertexes_array = _mesh_struct.vertexes_array;
+            var _mesh_material       = _mesh_struct.material;
             
-            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(array_length(_mesh_vertex_list)/3) + " triangles");
+            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(array_length(_mesh_vertexes_array)/3) + " triangles");
         
             //Check if this mesh is empty
-            if (array_length(_mesh_vertex_list) <= 0)
+            if (array_length(_mesh_vertexes_array) <= 0)
             {
                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Group \"" + string(_group_name) + "\" mesh " + string(_mesh) + " has no triangles");
                 ++_mesh;
@@ -457,10 +457,10 @@ function dotobj_model_load(_buffer)
                     
                     //Iterate over all the vertices
                     var _i = 0;
-                    repeat(array_length(_mesh_vertex_list))
+                    repeat(array_length(_mesh_vertexes_array))
                     {
                         //Get the vertex string, and find the first slash
-                        var _vertex_string = _mesh_vertex_list[_i];
+                        var _vertex_string = _mesh_vertexes_array[_i];
                         _i++;
                         var _slash_count = string_count("/", _vertex_string);
                         
@@ -623,7 +623,7 @@ function dotobj_model_load(_buffer)
             
             //Iterate over all the vertices
             var _i = 0;
-            repeat(array_length(_mesh_vertex_list))
+            repeat(array_length(_mesh_vertexes_array))
             {
                 //Reset our lookup indexes
                 var _v_index = undefined;
@@ -648,7 +648,7 @@ function dotobj_model_load(_buffer)
                 //     This can definitely be improved in terms of speed!
             
                 //Get the vertex string, and count how many slashes it contains
-                var _vertex_string = _mesh_vertex_list[_i];
+                var _vertex_string = _mesh_vertexes_array[_i];
                 _i++;
                 var _slash_count = string_count("/", _vertex_string);
                 
@@ -837,7 +837,7 @@ function dotobj_model_load(_buffer)
             vertex_end(_vbuff);
         
             //Clean up memory for meshes
-            _mesh_struct.vertex_list = undefined;
+            _mesh_struct.vertexes_array = undefined;
             
             //Move to the next mesh
             ++_mesh;

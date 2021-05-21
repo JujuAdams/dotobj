@@ -10,14 +10,14 @@ function dotobj_class_mesh(_group, _name, _has_tangents) constructor
     //come from the .mtl library files. Material libraries (.mtl) must be loaded before
     //any .obj file that uses them.
     
-    group_name    = _group.name;
-    vertex_list   = [];
-    vertex_buffer = undefined;
-    frozen        = false;
-    material      = _name;
-    has_tangents  = _has_tangents;
+    group_name     = _group.name;
+    vertexes_array = [];
+    vertex_buffer  = undefined;
+    frozen         = false;
+    material       = _name;
+    has_tangents   = _has_tangents;
     
-    array_push(_group.mesh_list, self);
+    array_push(_group.meshes_array, self);
     
     static submit = function()
     {
