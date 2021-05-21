@@ -1,8 +1,10 @@
 <h1 align="center">dotobj 5.1.0</h1>
 
-<p align="center">.obj/.mtl loader, written in native GML, for GameMaker Studio 2.3</p>
+<p align="center">.obj/.mtl loader, written in native GML, for GameMaker Studio 2.3 by <b>@jujuadams</b></p>
 
-<p align="center"><b>@jujuadams</b></p>
+<p align="center"><a href="https://github.com/JujuAdams/dotobj/releases/">Download the .yymps</a></p>
+
+<p align="center">Chat about dotobj on the <a href="https://discord.gg/8krYCqr">Discord server</a></p>
 
 &nbsp;
 
