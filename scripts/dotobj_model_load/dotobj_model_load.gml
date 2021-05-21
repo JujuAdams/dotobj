@@ -1,9 +1,7 @@
 /// Turns an ASCII .obj file, stored in a buffer, into a series of vertex buffers stored in a tree-like heirachy.
 /// @jujuadams    contact@jujuadams.com
 /// 
-/// @param buffer        Buffer to read from
-/// @param flipUVs       Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct for DirectX / OpenGL idiosyncrasies
-/// @param reverseTris   Whether to reverse the triangle definition order to be compatible with the culling mode of your choice (clockwise/counter-clockwise)
+/// @param buffer   Buffer to read from
 /// 
 /// Returns: A dotobj model (a struct)
 ///          This model can be drawn using the submit() method e.g. sponza_model.submit();
@@ -36,7 +34,7 @@
 /// - Line primitives
 /// - Separate in-file LOD
 
-function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
+function dotobj_model_load(_buffer)
 {
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
 
@@ -49,6 +47,11 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
     var _missing_normals       = 0;
     var _missing_uvs           = 0;
     var _negative_references   = 0;
+    
+    var _flip_texcoords           = global.__dotobj_flip_texcoord_v;
+    var _reverse_triangles        = global.__dotobj_reverse_triangles;
+    var _write_tangents           = global.__dotobj_write_tangents;
+    var _force_calculate_tangents = global.__dotobj_force_tangent_calc;
 
 
     //Create some lists to store the .obj file's data
@@ -60,10 +63,10 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
 
     //Create a model for us to fill
     //We add a default group and default mesh to the model for use later during parsing
-    var _model_struct     = new dotobj_class_model();
-    var _group_struct     = dotobj_ensure_group(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
-    var _mesh_struct      = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME);
-    var _mesh_vertex_list = _mesh_struct.vertex_list;
+    var _model_struct        = new dotobj_class_model();
+    var _group_struct        = dotobj_ensure_group(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
+    var _mesh_struct         = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+    var _mesh_vertexes_array = _mesh_struct.vertexes_array;
 
     //Handle materials
     var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
@@ -198,11 +201,11 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                             {
                                 if (!_reverse_triangles)
                                 {
-                                    ds_list_add(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
+                                    array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
                                 }
                                 else
                                 {
-                                    ds_list_add(_mesh_vertex_list, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
+                                    array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
                                 }
                             
                                 ++_f;
@@ -225,9 +228,9 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                             }
                         
                             //Create a new group and give it a blank mesh
-                            var _group_struct     = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
-                            var _mesh_struct      = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME);
-                            var _mesh_vertex_list = _mesh_struct.vertex_list;
+                            var _group_struct        = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
+                            var _mesh_struct         = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+                            var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                         break;
                     
                         case "o": //Object definition
@@ -244,9 +247,9 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                             if (DOTOBJ_OBJECTS_ARE_GROUPS)
                             {
                                 //If we want to parse objects as groups, create a new group and give it a blank mesh
-                                var _group_struct     = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
-                                var _mesh_struct      = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME);
-                                var _mesh_vertex_list = _mesh_struct.vertex_list;
+                                var _group_struct        = dotobj_ensure_group(_model_struct, _group_name, _meta_line);
+                                var _mesh_struct         = new dotobj_class_mesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+                                var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                             else if (DOTOBJ_OUTPUT_WARNINGS)
                             {
@@ -308,7 +311,7 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                             //Then build a full material name from that
                             var _material_name = _material_library + "." + _material_specific;
                         
-                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && ds_list_empty(_mesh_vertex_list))
+                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertexes_array) <= 0))
                             {
                                 //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material
                                 _mesh_struct.material = _material_name;
@@ -316,8 +319,8 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                             else
                             {
                                 //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
-                                var _mesh_struct = new dotobj_class_mesh(_group_struct, _material_name);
-                                var _mesh_vertex_list = _mesh_struct.vertex_list;
+                                var _mesh_struct         = new dotobj_class_mesh(_group_struct, _material_name, _write_tangents);
+                                var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                         break;
                     
@@ -386,34 +389,43 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
         //If we've hit a \n or \r character then increment our line counter
         if ((_value == 10) || (_value == 13)) _meta_line++;
     }
-
+    
+    //If we're writing tangents, initialise those lists
+    if (_write_tangents)
+    {
+        var _tangent_list   = ds_list_create();
+        var _bitangent_list = ds_list_create();
+        
+        //Each list should be the same size as the position list - we have one tangent vector and one bitangent vector for every position
+        //(Tangents/Bitangents are stored as vec3, like positions, so this all lines up nicely)
+        _tangent_list[|   ds_list_size(_position_list)-1] = 0;
+        _bitangent_list[| ds_list_size(_position_list)-1] = 0;
+    }
+    
     //Iterate over all the groups we've found
     //If we're not returning arrays, the group map should only contain one group
-    var _group_map  = _model_struct.group_map;
-    var _group_list = _model_struct.group_list;
+    var _groups_array = _model_struct.groups_array;
 
     var _g = 0;
-    repeat(ds_list_size(_group_list))
+    repeat(array_length(_groups_array))
     {
-        var _group_name = _group_list[| _g];
-    
         //Find our list of faces for this group
-        var _group_struct    = _group_map[? _group_name];
-        var _group_line      = _group_struct.line;
-        var _group_name      = _group_struct.name;
-        var _group_mesh_list = _group_struct.mesh_list;
+        var _group_struct       = _groups_array[_g];
+        var _group_line         = _group_struct.line;
+        var _group_name         = _group_struct.name;
+        var _group_meshes_array = _group_struct.meshes_array;
     
         var _mesh = 0;
-        repeat(ds_list_size(_group_mesh_list))
+        repeat(array_length(_group_meshes_array))
         {
-            var _mesh_struct      = _group_mesh_list[| _mesh];
-            var _mesh_vertex_list = _mesh_struct.vertex_list;
-            var _mesh_material    = _mesh_struct.material;
-        
-            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(ds_list_size(_mesh_vertex_list)/3) + " triangles");
+            var _mesh_struct         = _group_meshes_array[_mesh];
+            var _mesh_vertexes_array = _mesh_struct.vertexes_array;
+            var _mesh_material       = _mesh_struct.material;
+            
+            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("dotobj_model_load(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(array_length(_mesh_vertexes_array)) + " vertexes (" + string(array_length(_mesh_vertexes_array)/3) + " triangles)");
         
             //Check if this mesh is empty
-            if (ds_list_size(_mesh_vertex_list) <= 0)
+            if (array_length(_mesh_vertexes_array) <= 0)
             {
                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Group \"" + string(_group_name) + "\" mesh " + string(_mesh) + " has no triangles");
                 ++_mesh;
@@ -427,29 +439,197 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Material \"" + _mesh_material + "\" doesn't exist for group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + ", using default material instead");
                 _material_struct = global.__dotobj_material_library[? __DOTOBJ_DEFAULT_MATERIAL_NAME];
             }
-        
+            
+            //Calculate tangents/bitangents for every point that this group uses
+            var _write_null_tangent = false;
+            if (_write_tangents)
+            {
+                var _material_struct = global.__dotobj_material_library[? _mesh_material];
+                if ((_material_struct.normal_map == undefined) && !_force_calculate_tangents)
+                {
+                    _write_null_tangent = true;
+                }
+                else
+                {
+                    //To make tangent/bitangent calculation easier, we're going to unpack our position/texture indexes into a list
+                    //Really, we should be building this list as we parse the .obj file, but that's an optimisation for another day...
+                    var _unpacked_mesh_vertex_list = ds_list_create();
+                    
+                    //Iterate over all the vertices
+                    var _i = 0;
+                    repeat(array_length(_mesh_vertexes_array))
+                    {
+                        //Get the vertex string, and find the first slash
+                        var _vertex_string = _mesh_vertexes_array[_i];
+                        _i++;
+                        var _slash_count = string_count("/", _vertex_string);
+                        
+                        if (_slash_count == 0)
+                        {
+                            //If there are no slashes in the string, then it's a simple vertex position definition
+                            //We can't calculate a tangent without texture coordinates, bail
+                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_group_name) + "\" has no texture information, tangent cannot be computed");
+                            ds_list_add(_unpacked_mesh_vertex_list, undefined, undefined);
+                            continue;
+                        }
+                        else if (_slash_count == 1)
+                        {
+                            //If there's one slash in the string, then it's a position + texture coordinate definition
+                            _v_index = string_copy(  _vertex_string, 1, string_pos("/", _vertex_string)-1);
+                            _t_index = string_delete(_vertex_string, 1, string_pos("/", _vertex_string)  );
+                        }
+                        else if (_slash_count == 2)
+                        {
+                            //If there're two slashes in the string, then it could be one of two things...
+                            
+                            var _double_slash_count = string_count("//", _vertex_string);
+                            if (_double_slash_count == 0)
+                            {
+                                //If we find no double slashes then this is a position + UV + normal defintion
+                                _v_index       = string_copy(  _vertex_string, 1, string_pos( "/", _vertex_string)-1);
+                                _vertex_string = string_delete(_vertex_string, 1, string_pos( "/", _vertex_string)  );
+                                _t_index       = string_copy(  _vertex_string, 1, string_pos( "/", _vertex_string)-1);
+                            }
+                            else if (_double_slash_count == 1)
+                            {
+                                //If we find a single double slash then this is a position + normal defintion
+                                //We can't calculate a tangent without texture coordinates, bail
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_group_name) + "\" has no texture information, tangent cannot be computed");
+                                ds_list_add(_unpacked_mesh_vertex_list, undefined, undefined);
+                                continue;
+                            }
+                            else
+                            {
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_group_name) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
+                                ds_list_add(_unpacked_mesh_vertex_list, undefined, undefined);
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_group_name) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
+                            ds_list_add(_unpacked_mesh_vertex_list, undefined, undefined);
+                            continue;
+                        }
+                        
+                        //Store the position and texture index in our unpacked list
+                        ds_list_add(_unpacked_mesh_vertex_list, real(_v_index), real(_t_index));
+                    }
+                    
+                    //Iterate over all the vertices again, this time FOR REAL
+                    var _i = 0;
+                    repeat(ds_list_size(_unpacked_mesh_vertex_list) div 6) //Triangles are defined as 3 points, and each point has a position and texture index
+                    {
+                        //Extract our position indexes
+                        var _pos_index_1 = _unpacked_mesh_vertex_list[| _i  ];
+                        var _pos_index_2 = _unpacked_mesh_vertex_list[| _i+2];
+                        var _pos_index_3 = _unpacked_mesh_vertex_list[| _i+4];
+                        
+                        //Extract our texture indexes
+                        var _tex_index_1 = _unpacked_mesh_vertex_list[| _i+1];
+                        var _tex_index_2 = _unpacked_mesh_vertex_list[| _i+3];
+                        var _tex_index_3 = _unpacked_mesh_vertex_list[| _i+5];
+                        
+                        //Fetch position/texture data for point 1
+                        var _in_x1 = _position_list[| _pos_index_1  ]; //X
+                        var _in_y1 = _position_list[| _pos_index_1+1]; //Y
+                        var _in_z1 = _position_list[| _pos_index_1+2]; //Z
+                        var _in_u1 = _texture_list[|  _tex_index_1  ]; //U
+                        var _in_v1 = _texture_list[|  _tex_index_1+1]; //V
+                        
+                        //Fetch position/texture data for point 2
+                        var _in_x2 = _position_list[| _pos_index_2  ]; //X
+                        var _in_y2 = _position_list[| _pos_index_2+1]; //Y
+                        var _in_z2 = _position_list[| _pos_index_2+2]; //Z
+                        var _in_u2 = _texture_list[|  _tex_index_2  ]; //U
+                        var _in_v2 = _texture_list[|  _tex_index_2+1]; //V
+                        
+                        //Fetch position/texture data for point 3
+                        var _in_x3 = _position_list[| _pos_index_3  ]; //X
+                        var _in_y3 = _position_list[| _pos_index_3+1]; //Y
+                        var _in_z3 = _position_list[| _pos_index_3+2]; //Z
+                        var _in_u3 = _texture_list[|  _tex_index_3  ]; //U
+                        var _in_v3 = _texture_list[|  _tex_index_3+1]; //V
+                        
+                        //Not sure if this is needed, but it's in here just in case
+                        if (_flip_texcoords)
+                        {
+                            _in_v1 = 1 - _in_v1;
+                            _in_v2 = 1 - _in_v2;
+                            _in_v3 = 1 - _in_v3;
+                        }
+                        
+                        //Find the position/texture vectors from point 1 to point 2
+                        var _x1 = _in_x2 - _in_x1;
+                        var _y1 = _in_y2 - _in_y1;
+                        var _z1 = _in_z2 - _in_z1;
+                        var _u1 = _in_u2 - _in_u1;
+                        var _v1 = _in_v2 - _in_v1;
+                        
+                        //Find the position/texture vectors from point 1 to point 3
+                        var _x2 = _in_x3 - _in_x1;
+                        var _y2 = _in_y3 - _in_y1;
+                        var _z2 = _in_z3 - _in_z1;
+                        var _u2 = _in_u3 - _in_u1;
+                        var _v2 = _in_v3 - _in_v1;
+                        
+                        //Uuh... Not sure what this bit does...
+                        var _r = _u1*_v2 - _u2*_v1;
+                        if (_r != 0)
+                        {
+                            //Speeeeeeed
+                            _r = 1/_r;
+                            
+                            //Update the tangents I guess?
+                            _tangent_list[|   _pos_index_1] += (_v2*_x1 - _v1*_x2) * _r;
+                            _tangent_list[|   _pos_index_2] += (_v2*_y1 - _v1*_y2) * _r;
+                            _tangent_list[|   _pos_index_3] += (_v2*_z1 - _v1*_z2) * _r;
+                            
+                            //And the bitangents too, why not
+                            _bitangent_list[| _pos_index_1] += (_u1*_x2 - _u2*_x1) * _r;
+                            _bitangent_list[| _pos_index_2] += (_u1*_y2 - _u2*_y1) * _r;
+                            _bitangent_list[| _pos_index_3] += (_u1*_z2 - _u2*_z1) * _r;
+                        }
+                        //else
+                        //{
+                        //    //I don't think this warning is meaningful
+                        //    //We get (r==0) values when texture coordinates for a triangle are degenerate, and
+                        //    // in those situations we probably want to not adjust the position's tangent/bitangent
+                        //    if (DOTOBJ_OUTPUT_WARNINGS)
+                        //    {
+                        //        show_debug_message("dotobj_model_load(): WARNING! (r == 0), input values follow:");
+                        //        show_debug_message("                     " + string(_in_u1) + ", " + string(_in_v1));
+                        //        show_debug_message("                     " + string(_in_u2) + ", " + string(_in_v2));
+                        //        show_debug_message("                     " + string(_in_u3) + ", " + string(_in_v3));
+                        //        show_debug_message("                     -->");
+                        //        show_debug_message("                     " + string(_u1) + ", " + string(_v1));
+                        //        show_debug_message("                     " + string(_u2) + ", " + string(_v2));
+                        //        show_debug_message("                     -->");
+                        //        show_debug_message("                     " + string(_u1*_v2) + " - " + string(_u2*_v1));
+                        //    }
+                        //}
+                        
+                        //Next triangle!
+                        _i += 6;
+                    }
+                }
+            }
+            
             //Create a vertex buffer for this mesh
             ++_meta_vertex_buffers;
             var _vbuff = vertex_create_buffer();
             _mesh_struct.vertex_buffer = _vbuff;
-            vertex_begin(_vbuff, global.__dotobj_pnct_vertex_format);
-        
+            vertex_begin(_vbuff, _write_tangents? global.__dotobj_pncttan_vertex_format : global.__dotobj_pnct_vertex_format);
+            
             //Iterate over all the vertices
             var _i = 0;
-            repeat(ds_list_size(_mesh_vertex_list))
+            repeat(array_length(_mesh_vertexes_array))
             {
-                //N.B. This whole vertex decoding thing that uses strings can probably be done earlier by parsing data as it comes out of the buffer
-                //     This can definitely be improved in terms of speed!
-            
-                //Get the vertex string, and count how many slashes it contains
-                var _vertex_string = _mesh_vertex_list[| _i++];
-                var _slash_count = string_count("/", _vertex_string);
-            
                 //Reset our lookup indexes
-                var _v_index = -1;
-                var _t_index = -1;
-                var _n_index = -1;
-            
+                var _v_index = undefined;
+                var _t_index = undefined;
+                var _n_index = undefined;
+                
                 //Reset our vertex data
                 var _vx = undefined; //X
                 var _vy = undefined; //Y
@@ -463,20 +643,28 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                 var _nx = 0;         //Normal X
                 var _ny = 0;         //Normal Y
                 var _nz = 0;         //Normal Z
+                
+                //N.B. This whole vertex decoding thing that uses strings can probably be done earlier by parsing data as it comes out of the buffer
+                //     This can definitely be improved in terms of speed!
             
+                //Get the vertex string, and count how many slashes it contains
+                var _vertex_string = _mesh_vertexes_array[_i];
+                _i++;
+                var _slash_count = string_count("/", _vertex_string);
+                
                 if (_slash_count == 0)
                 {
                     //If there are no slashes in the string, then it's a simple vertex position definition
                     _v_index = _vertex_string;
-                    _t_index = -1;
-                    _n_index = -1;
+                    _t_index = undefined;
+                    _n_index = undefined;
                 }
                 else if (_slash_count == 1)
                 {
                     //If there's one slash in the string, then it's a position + texture coordinate definition
                     _v_index = string_copy(  _vertex_string, 1, string_pos("/", _vertex_string)-1);
                     _t_index = string_delete(_vertex_string, 1, string_pos("/", _vertex_string)  );
-                    _n_index = -1;
+                    _n_index = undefined;
                 }
                 else if (_slash_count == 2)
                 {
@@ -493,10 +681,10 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                     }
                     else if (_double_slash_count == 1)
                     {
-                        //If we find a single double slashes then this is a position + normal defintion
+                        //If we find a single double slash then this is a position + normal defintion
                         _vertex_string = string_replace(_vertex_string, "//", "/" );
                         _v_index       = string_copy(   _vertex_string, 1, string_pos("/", _vertex_string)-1);
-                        _t_index       = -1;
+                        _t_index       = undefined;
                         _n_index       = string_delete( _vertex_string, 1, string_pos("/", _vertex_string)  );
                     }
                     else
@@ -510,28 +698,33 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                     if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_group_name) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
                     continue;
                 }
-            
+                
+                if ((_v_index == "") || (_v_index == undefined))
+                {
+                    ++_missing_positions;
+                    continue;
+                }
+                
                 //If we've got any blank strings set the indices to 0
-                if (_v_index == "") _v_index = 0;
-                if (_n_index == "") _n_index = 0;
-                if (_t_index == "") _t_index = 0;
-            
-                _v_index = 3*floor(real(_v_index));
-                _n_index = 3*floor(real(_n_index));
-                _t_index = 2*floor(real(_t_index));
-            
+                if ((_n_index == "") || (_n_index == undefined)) _n_index = 0;
+                if ((_t_index == "") || (_t_index == undefined)) _t_index = 0;
+                
                 //Some .obj file use negative references to look at data recently defined. This isn't supported!
                 if ((_v_index < 0) || (_n_index < 0) || (_t_index < 0))
                 {
                     ++_negative_references;
                     continue;
                 }
-            
+                
+                _v_index = 3*floor(real(_v_index));
+                _n_index = 3*floor(real(_n_index));
+                _t_index = 2*floor(real(_t_index));
+                
                 //Write the position
                 _vx = _position_list[| _v_index  ]; //X
                 _vy = _position_list[| _v_index+1]; //Y
                 _vz = _position_list[| _v_index+2]; //Z
-            
+                
                 //If we have some invalid data, log the warning, and move on to the next vertex
                 //(Incidentally, if the position data is broken then the colour data will be broken too)
                 if ((_vx == undefined) || (_vy == undefined) || (_vz == undefined))
@@ -588,15 +781,64 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
                 }
                 
                 vertex_texcoord(_vbuff, _tx, _ty);
+                
+                //Write the tangent, including handedness
+                if (_write_tangents)
+                {
+                    if (_write_null_tangent)
+                    {
+                        vertex_float4(_vbuff, 0, 0, 0, 0);
+                    }
+                    else
+                    {
+                        //Fetch our tangent/bitangent values for this position
+                        var _tx = _tangent_list[| _v_index  ];
+                        var _ty = _tangent_list[| _v_index+1];
+                        var _tz = _tangent_list[| _v_index+2];
+                        
+                        var _bx = _bitangent_list[| _v_index  ];
+                        var _by = _bitangent_list[| _v_index+1];
+                        var _bz = _bitangent_list[| _v_index+2];
+                        
+                        //"Gram-Schmidt orthogonalize"... apparently
+                        //        dot = normal.tangent
+                        //    tangent = tangent - normal*dot
+                        //    tangent = normalize(tangent)
+                        var _dot = dot_product_3d(_nx, _ny, _nz,   _tx, _ty, _tz);
+                        _tx -= _nx * _dot;
+                        _ty -= _ny * _dot;
+                        _tz -= _nz * _dot;
+                        
+                        var _length = sqrt(_tx*_tx + _ty*_ty + _tz*_tz);
+                        if (_length > 0)
+                        {
+                            _tx /= _length;
+                            _ty /= _length;
+                            _tz /= _length;
+                        }
+                
+                        //Figure out the handedness of the bitangent
+                        //    cross = n x tan1
+                        //      dot = cross . tan2
+                        //     hand = (dot < 0)? -1 : 1
+                        var _cross_x = _ny*_tz - _nz*_ty;
+                        var _cross_y = _nz*_tx - _nx*_tz;
+                        var _cross_z = _nx*_ty - _ny*_tx;
+                        var _dot = dot_product_3d(_cross_x, _cross_y, _cross_z, _bx, _by, _bz)
+                        var _handedness = (_dot < 0)? -1 : 1;
+                        
+                        //Actually write the data!
+                        vertex_float4(_vbuff, _tx, _ty, _tz, _handedness);
+                    }
+                }
             }
-        
+            
             //Once we've finished iterating over the triangles, finish our vertex buffer
             vertex_end(_vbuff);
         
             //Clean up memory for meshes
-            ds_list_destroy(_mesh_vertex_list);
-            _mesh_struct.vertex_list = undefined;
-        
+            _mesh_struct.vertexes_array = undefined;
+            
             //Move to the next mesh
             ++_mesh;
         }
@@ -611,6 +853,12 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
     ds_list_destroy(_normal_list   );
     ds_list_destroy(_texture_list  );
     ds_list_destroy(_line_data_list);
+    
+    if (_write_tangents)
+    {
+        ds_list_destroy(_tangent_list);
+        ds_list_destroy(_bitangent_list);
+    }
 
     //Return to the old tell position for the buffer
     buffer_seek(_buffer, buffer_seek_start, _old_tell);
@@ -625,7 +873,7 @@ function dotobj_model_load(_buffer, _flip_texcoords, _reverse_triangles)
     }
 
     //If we want to report the load time, do it!
-    if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("dotobj_model_load(): lines=" + string(_meta_line) + ", vertex buffers=" + string(_meta_vertex_buffers) + ", triangles=" + string(_meta_triangles) + ". Time to load was " + string((get_timer() - _timer)/1000) + "ms");
+    if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("dotobj_model_load(): lines=" + string(_meta_line) + ", groups=" + string(array_length(_groups_array)) + ", vertex buffers=" + string(_meta_vertex_buffers) + ", triangles=" + string(_meta_triangles) + ". Time to load was " + string((get_timer() - _timer)/1000) + "ms");
 
     //Return our data
     return _model_struct;

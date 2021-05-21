@@ -6,7 +6,7 @@
     "path": "folders/dotobj.yy",
   },
   "resourceVersion": "1.0",
-  "name": "dotobj_init",
+  "name": "dotobj_set_flip_texcoord_v",
   "tags": [],
   "resourceType": "GMScript",
 }
