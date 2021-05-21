@@ -2,10 +2,10 @@
 //if (!code_is_compiled() && !debug_mode) show_error("It is strongly recommended you run this example using YYC.\n ", false);
 
 pipe = DotobjPipeCreate();
-pipe.AddShader({ shader: shdPipeDiffMap,  diffuseMap:  "gm_BaseTexture" });
-pipe.AddShader({ shader: shdPipeDiffFlat, diffuseFlat: "u_vDiffuse"     });
-pipe.AddShader({ shader: shdPipeDiffMapDissMap,  diffuseMap:  "gm_BaseTexture",  dissolveMap:  "u_sDissolve" });
-pipe.AddShader({ shader: shdPipeDiffMap,  diffuseMap:  "gm_BaseTexture",  normalMap: "" }, true);
+pipe.AddShader({ shader: shdPipeDiffMap,         diffuseMap:  "gm_BaseTexture"                                               });
+pipe.AddShader({ shader: shdPipeDiffFlat,        diffuseFlat: "u_vDiffuse"                                                   });
+pipe.AddShader({ shader: shdPipeDiffMapDissMap,  diffuseMap:  "gm_BaseTexture",  dissolveMap:  "u_sDissolve"                 });
+pipe.AddShader({ shader: shdPipeDiffMap,         diffuseMap:  "gm_BaseTexture",  normalMap:    ""                            }, true);
 pipe.AddShader({ shader: shdPipeDiffMapDissMap,  diffuseMap:  "gm_BaseTexture",  dissolveMap:  "u_sDissolve",  normalMap: "" }, true);
 
 //Load our .obj from disk. This might take a while!
