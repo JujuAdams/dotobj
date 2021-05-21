@@ -629,9 +629,9 @@ function dotobj_model_load(_buffer)
             repeat(ds_list_size(_mesh_vertex_list))
             {
                 //Reset our lookup indexes
-                var _v_index = -1;
-                var _t_index = -1;
-                var _n_index = -1;
+                var _v_index = undefined;
+                var _t_index = undefined;
+                var _n_index = undefined;
                 
                 //Reset our vertex data
                 var _vx = undefined; //X
@@ -659,15 +659,15 @@ function dotobj_model_load(_buffer)
                 {
                     //If there are no slashes in the string, then it's a simple vertex position definition
                     _v_index = _vertex_string;
-                    _t_index = -1;
-                    _n_index = -1;
+                    _t_index = undefined;
+                    _n_index = undefined;
                 }
                 else if (_slash_count == 1)
                 {
                     //If there's one slash in the string, then it's a position + texture coordinate definition
                     _v_index = string_copy(  _vertex_string, 1, string_pos("/", _vertex_string)-1);
                     _t_index = string_delete(_vertex_string, 1, string_pos("/", _vertex_string)  );
-                    _n_index = -1;
+                    _n_index = undefined;
                 }
                 else if (_slash_count == 2)
                 {
@@ -687,7 +687,7 @@ function dotobj_model_load(_buffer)
                         //If we find a single double slash then this is a position + normal defintion
                         _vertex_string = string_replace(_vertex_string, "//", "/" );
                         _v_index       = string_copy(   _vertex_string, 1, string_pos("/", _vertex_string)-1);
-                        _t_index       = -1;
+                        _t_index       = undefined;
                         _n_index       = string_delete( _vertex_string, 1, string_pos("/", _vertex_string)  );
                     }
                     else
@@ -701,16 +701,17 @@ function dotobj_model_load(_buffer)
                     if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("dotobj_model_load(): Warning! Triangle " + string(_i) + " for group \"" + string(_group_name) + "\" has an unsupported number of slashes (" + string(_slash_count) + ")");
                     continue;
                 }
-            
+                
+                if ((_v_index == "") || (_v_index == undefined))
+                {
+                    ++_missing_positions;
+                    continue;
+                }
+                
                 //If we've got any blank strings set the indices to 0
-                if (_v_index == "") _v_index = 0;
-                if (_n_index == "") _n_index = 0;
-                if (_t_index == "") _t_index = 0;
-            
-                _v_index = 3*floor(real(_v_index));
-                _n_index = 3*floor(real(_n_index));
-                _t_index = 2*floor(real(_t_index));
-            
+                if ((_n_index == "") || (_n_index == undefined)) _n_index = 0;
+                if ((_t_index == "") || (_t_index == undefined)) _t_index = 0;
+                
                 //Some .obj file use negative references to look at data recently defined. This isn't supported!
                 if ((_v_index < 0) || (_n_index < 0) || (_t_index < 0))
                 {
@@ -718,11 +719,15 @@ function dotobj_model_load(_buffer)
                     continue;
                 }
                 
+                _v_index = 3*floor(real(_v_index));
+                _n_index = 3*floor(real(_n_index));
+                _t_index = 2*floor(real(_t_index));
+                
                 //Write the position
                 _vx = _position_list[| _v_index  ]; //X
                 _vy = _position_list[| _v_index+1]; //Y
                 _vz = _position_list[| _v_index+2]; //Z
-            
+                
                 //If we have some invalid data, log the warning, and move on to the next vertex
                 //(Incidentally, if the position data is broken then the colour data will be broken too)
                 if ((_vx == undefined) || (_vy == undefined) || (_vz == undefined))
