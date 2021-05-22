@@ -8,7 +8,7 @@ varying vec3 v_vPosition;
 varying vec3 v_vNormal;
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
-varying vec4 v_vDummy;
+varying mat3 v_mTBN;
 
 void main()
 {
@@ -20,6 +20,10 @@ void main()
     v_vColour   = in_Colour0;
     v_vTexcoord = in_TextureCoord;
     
-    //Not used, but we need to have a reference to avoid optimisation removing it from the attributes
-    v_vDummy = in_Colour1;
+	vec4 tangent = vec4(in_Colour1.xyz, 0.0);
+	vec4 bitangent = vec4(cross(in_Normal, in_Colour1.xyz) * in_Colour1.w, 0.0);
+    vec3 N = (gm_Matrices[MATRIX_WORLD]*vec4(in_Normal, 0.0)).xyz;
+	vec3 T = (gm_Matrices[MATRIX_WORLD]*tangent).xyz;
+	vec3 B = (gm_Matrices[MATRIX_WORLD]*bitangent).xyz;
+	v_mTBN = mat3(T, B, N);
 }

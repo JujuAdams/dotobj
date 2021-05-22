@@ -1,11 +1,14 @@
 attribute vec3 in_Position;
 attribute vec3 in_Normal;
-attribute vec4 in_Colour;
+attribute vec4 in_Colour0;
 attribute vec2 in_TextureCoord;
+attribute vec4 in_Colour1;
 
 varying vec3 v_vPosition;
 varying vec3 v_vNormal;
 varying vec4 v_vColour;
+varying vec2 v_vDummy;
+varying vec4 v_vDummy2;
 
 void main()
 {
@@ -14,8 +17,9 @@ void main()
     
     v_vPosition = wsPos.xyz;
     v_vNormal   = (gm_Matrices[MATRIX_WORLD]*vec4(in_Normal, 0.0)).xyz;
-    v_vColour   = in_Colour;
+    v_vColour   = in_Colour0;
     
-    //Not used, but we need to reference in_TextureCoord to avoid optimisation removing it from the attributes
-    vec2 dummy = in_TextureCoord;
+    //Not used, but we need to have a reference to avoid optimisation removing it from the attributes
+    v_vDummy  = in_TextureCoord;
+    v_vDummy2 = in_Colour1;
 }

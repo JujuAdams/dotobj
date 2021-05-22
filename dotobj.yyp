@@ -25,6 +25,7 @@
     {"id":{"name":"DotobjModelLoadFile","path":"scripts/DotobjModelLoadFile/DotobjModelLoadFile.yy",},"order":6,},
     {"id":{"name":"shdSimpleLighting","path":"shaders/shdSimpleLighting/shdSimpleLighting.yy",},"order":0,},
     {"id":{"name":"objLoadingScreen","path":"objects/objLoadingScreen/objLoadingScreen.yy",},"order":2,},
+    {"id":{"name":"shdPipeDiffMapNormMap","path":"shaders/shdPipeDiffMapNormMap/shdPipeDiffMapNormMap.yy",},"order":4,},
     {"id":{"name":"DotobjSetReverseTriangles","path":"scripts/DotobjSetReverseTriangles/DotobjSetReverseTriangles.yy",},"order":1,},
     {"id":{"name":"DotobjClassPipe","path":"scripts/DotobjClassPipe/DotobjClassPipe.yy",},"order":1,},
     {"id":{"name":"objSponzaTest","path":"objects/objSponzaTest/objSponzaTest.yy",},"order":4,},

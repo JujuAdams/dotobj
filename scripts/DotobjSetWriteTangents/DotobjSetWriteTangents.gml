@@ -3,6 +3,6 @@
 
 function DotobjSetWriteTangents(_state, _force_calc)
 {
-    global.__dotobjWriteTangents     = _state;
+    global.__dotobjWriteTangents    = _state;
     global.__dotobjForceTangentCalc = _force_calc;
 }

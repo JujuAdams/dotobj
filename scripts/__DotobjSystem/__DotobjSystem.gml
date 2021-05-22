@@ -12,10 +12,10 @@
 
 //Define the vertex formats we want to use
 vertex_format_begin();
-vertex_format_add_position_3d();                          //              12
-vertex_format_add_normal();                               //            + 12
-vertex_format_add_colour();                               //            +  4
-vertex_format_add_texcoord();                             //            +  8
+vertex_format_add_position_3d();                       //              12
+vertex_format_add_normal();                            //            + 12
+vertex_format_add_colour();                            //            +  4
+vertex_format_add_texcoord();                          //            +  8
 global.__dotobjPNCTVertexFormat = vertex_format_end(); //vertex size = 36
     
 //Define the vertex formats we want to use
@@ -24,7 +24,7 @@ vertex_format_add_position_3d();                                   //        12
 vertex_format_add_normal();                                        //      + 12
 vertex_format_add_colour();                                        //      +  4
 vertex_format_add_texcoord();                                      //      +  8
-vertex_format_add_custom(vertex_type_float4, vertex_usage_normal); //      + 16    //I don't think vertex_usage_tangent works...
+vertex_format_add_custom(vertex_type_float4, vertex_usage_colour); //      + 16    //I don't think vertex_usage_tangent works...
 global.__dotobjPNCTTanVertexFormat = vertex_format_end(); //vertex size = 52
 
 

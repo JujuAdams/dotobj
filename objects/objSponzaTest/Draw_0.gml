@@ -1,3 +1,7 @@
+shader_set(shdPipeDiffMapNormMap);
+shader_set_uniform_f(shader_get_uniform(shdPipeDiffMapNormMap, "u_fNoNormalMap"), (current_time mod 1000) < 500);
+shader_reset();
+
 //Turn on z-writing and z-testing so we're ready for 3D rendering
 gpu_set_ztestenable(true);
 gpu_set_zwriteenable(true);
