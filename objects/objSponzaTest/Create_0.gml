@@ -1,23 +1,11 @@
 //Remind the user to run using YYC, but only if they're not debugging
 //if (!code_is_compiled() && !debug_mode) show_error("It is strongly recommended you run this example using YYC.\n ", false);
 
-pipe = DotobjPipeCreate();
-pipe.AddShader({ shader: shdPipeDiffMap,         diffuseMap:  "gm_BaseTexture"                                               });
-pipe.AddShader({ shader: shdPipeDiffMapNormMap,  diffuseMap:  "gm_BaseTexture",  normalMap: "u_sNormal"                      }, true);
-pipe.AddShader({ shader: shdPipeDiffFlat,        diffuseFlat: "u_vDiffuse"                                                   });
-pipe.AddShader({ shader: shdPipeDiffMapDissMap,  diffuseMap:  "gm_BaseTexture",  dissolveMap:  "u_sDissolve"                 });
-pipe.AddShader({ shader: shdPipeDiffMapDissMap,  diffuseMap:  "gm_BaseTexture",  dissolveMap:  "u_sDissolve",  normalMap: "" }, true);
-
-shader_set(shdPipeDiffMapNormMap);
-shader_set_uniform_f(shader_get_uniform(shdPipeDiffMapNormMap, "u_fNoNormalMap"), 1.0);
-shader_reset();
-
 //Load our .obj from disk. This might take a while!
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
 DotobjSetReverseTriangles(true);
-DotobjSetWriteTangents(true, true);
 model_sponza = DotobjModelLoadFile("sponza.obj");
 model_sponza.Freeze(); //Wise to freeze your models as well
 

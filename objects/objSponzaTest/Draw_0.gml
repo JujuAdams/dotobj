@@ -1,7 +1,3 @@
-shader_set(shdPipeDiffMapNormMap);
-shader_set_uniform_f(shader_get_uniform(shdPipeDiffMapNormMap, "u_fNoNormalMap"), (current_time mod 1000) < 500);
-shader_reset();
-
 //Turn on z-writing and z-testing so we're ready for 3D rendering
 gpu_set_ztestenable(true);
 gpu_set_zwriteenable(true);
@@ -33,7 +29,7 @@ matrix_set(matrix_view, matrix_build_lookat(cam_x, cam_y, cam_z,
 matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_width/room_height, 1, 3000));
 
 //Finally, draw the model
-model_sponza.SubmitUsingPipe(pipe); 
+model_sponza.Submit(); 
 
 //Reset draw state
 matrix_set(matrix_world     , _old_world     );

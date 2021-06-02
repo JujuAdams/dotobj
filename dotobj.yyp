@@ -1,6 +1,5 @@
 {
   "resources": [
-    {"id":{"name":"DotobjPipeCreate","path":"scripts/DotobjPipeCreate/DotobjPipeCreate.yy",},"order":2,},
     {"id":{"name":"DotobjClassModel","path":"scripts/DotobjClassModel/DotobjClassModel.yy",},"order":1,},
     {"id":{"name":"shdPipeDiffFlat","path":"shaders/shdPipeDiffFlat/shdPipeDiffFlat.yy",},"order":2,},
     {"id":{"name":"__DotobjConfig","path":"scripts/__DotobjConfig/__DotobjConfig.yy",},"order":0,},
@@ -8,7 +7,7 @@
     {"id":{"name":"DotobjSetWriteTangents","path":"scripts/DotobjSetWriteTangents/DotobjSetWriteTangents.yy",},"order":2,},
     {"id":{"name":"__DotobjSystem","path":"scripts/__DotobjSystem/__DotobjSystem.yy",},"order":0,},
     {"id":{"name":"DotobjClassMesh","path":"scripts/DotobjClassMesh/DotobjClassMesh.yy",},"order":3,},
-    {"id":{"name":"shdDotobjFullbright","path":"shaders/shdDotobjFullbright/shdDotobjFullbright.yy",},"order":0,},
+    {"id":{"name":"shdDotobjFullbright","path":"shaders/shdDotobjFullbright/shdDotobjFullbright.yy",},"order":2,},
     {"id":{"name":"DotobjMaterialLoad","path":"scripts/DotobjMaterialLoad/DotobjMaterialLoad.yy",},"order":3,},
     {"id":{"name":"DotobjSpriteAddInternal","path":"scripts/DotobjSpriteAddInternal/DotobjSpriteAddInternal.yy",},"order":7,},
     {"id":{"name":"objMayaTest2","path":"objects/objMayaTest2/objMayaTest2.yy",},"order":8,},
@@ -27,7 +26,6 @@
     {"id":{"name":"objLoadingScreen","path":"objects/objLoadingScreen/objLoadingScreen.yy",},"order":2,},
     {"id":{"name":"shdPipeDiffMapNormMap","path":"shaders/shdPipeDiffMapNormMap/shdPipeDiffMapNormMap.yy",},"order":4,},
     {"id":{"name":"DotobjSetReverseTriangles","path":"scripts/DotobjSetReverseTriangles/DotobjSetReverseTriangles.yy",},"order":1,},
-    {"id":{"name":"DotobjClassPipe","path":"scripts/DotobjClassPipe/DotobjClassPipe.yy",},"order":1,},
     {"id":{"name":"objSponzaTest","path":"objects/objSponzaTest/objSponzaTest.yy",},"order":4,},
     {"id":{"name":"rmLoadingScreen","path":"rooms/rmLoadingScreen/rmLoadingScreen.yy",},"order":3,},
     {"id":{"name":"objPlanet3DSMaxTest","path":"objects/objPlanet3DSMaxTest/objPlanet3DSMaxTest.yy",},"order":6,},
@@ -62,8 +60,7 @@
   "Folders": [
     {"folderPath":"folders/dotobj.yy","order":0,"resourceVersion":"1.0","name":"dotobj","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/dotobj/Loaders.yy","order":1,"resourceVersion":"1.0","name":"Loaders","tags":[],"resourceType":"GMFolder",},
-    {"folderPath":"folders/dotobj/(System).yy","order":3,"resourceVersion":"1.0","name":"(System)","tags":[],"resourceType":"GMFolder",},
-    {"folderPath":"folders/dotobj/Shaders.yy","order":2,"resourceVersion":"1.0","name":"Shaders","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/dotobj/(System).yy","order":4,"resourceVersion":"1.0","name":"(System)","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Test Shaders.yy","order":1,"resourceVersion":"1.0","name":"Test Shaders","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [

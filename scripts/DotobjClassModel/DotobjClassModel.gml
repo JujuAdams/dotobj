@@ -14,17 +14,6 @@ function DotobjClassModel() constructor
         }
     }
     
-    static SubmitUsingPipe = function(_pipe)
-    {
-        //Call the SubmitUsingPipe() method for all groups (which calls the SubmitUsingPipe() method for all meshes in those groups)
-        var _g = 0;
-        repeat(array_length(groups_array))
-        {
-            groups_array[_g].SubmitUsingPipe(_pipe);
-            ++_g;
-        }
-    }
-    
     static Freeze = function()
     {
         //Call the Freeze() method for all groups (which calls the Freeze() method for all meshes in those groups)
