@@ -551,13 +551,9 @@ function DotobjModelLoad(_buffer)
                         var _in_u3 = _texture_list[|  _tex_index_3  ]; //U
                         var _in_v3 = _texture_list[|  _tex_index_3+1]; //V
                         
-                        //Not sure if this is needed, but it's in here just in case
-                        //if (_flip_texcoords)
-                        //{
-                        //    _in_v1 = 1 - _in_v1;
-                        //    _in_v2 = 1 - _in_v2;
-                        //    _in_v3 = 1 - _in_v3;
-                        //}
+                        show_debug_message("p1 = " + string(_in_x1) + "," + string(_in_y1) + "," + string(_in_z1) + ", uvs = " + string(_in_u1) + "," + string(_in_v1));
+                        show_debug_message("p2 = " + string(_in_x2) + "," + string(_in_y2) + "," + string(_in_z2) + ", uvs = " + string(_in_u2) + "," + string(_in_v2));
+                        show_debug_message("p3 = " + string(_in_x3) + "," + string(_in_y3) + "," + string(_in_z3) + ", uvs = " + string(_in_u3) + "," + string(_in_v3));
                         
                         //Find the position/texture vectors from point 1 to point 2
                         var _x1 = _in_x2 - _in_x1;
@@ -588,8 +584,8 @@ function DotobjModelLoad(_buffer)
                             var _by = (_u1*_y2 - _u2*_y1) * _r
                             var _bz = (_u1*_z2 - _u2*_z1) * _r
                             
-                            //show_debug_message("t = " + string(_tx) + "," + string(_ty) + "," + string(_tz));
-                            //show_debug_message("b = " + string(_bx) + "," + string(_by) + "," + string(_bz));
+                            show_debug_message("t = " + string(_tx) + "," + string(_ty) + "," + string(_tz));
+                            show_debug_message("b = " + string(_bx) + "," + string(_by) + "," + string(_bz));
                             
                             //Update the tangents I guess?
                             _tangent_list[|   _pos_index_1] += _tx;
@@ -811,9 +807,9 @@ function DotobjModelLoad(_buffer)
                         var _by = _bitangent_list[| _v_index+1];
                         var _bz = _bitangent_list[| _v_index+2];
                         
-                        //show_debug_message("in normal     = " + string(_nx) + "," + string(_ny) + "," + string(_nz));
-                        //show_debug_message("in tangent    = " + string(_tx) + "," + string(_ty) + "," + string(_tz));
-                        //show_debug_message("in bitangent  = " + string(_bx) + "," + string(_by) + "," + string(_bz));
+                        show_debug_message("in normal     = " + string(_nx) + "," + string(_ny) + "," + string(_nz));
+                        show_debug_message("in tangent    = " + string(_tx) + "," + string(_ty) + "," + string(_tz));
+                        show_debug_message("in bitangent  = " + string(_bx) + "," + string(_by) + "," + string(_bz));
                         
                         //"Gram-Schmidt orthogonalize"... apparently
                         //        dot = normal.tangent
@@ -845,7 +841,7 @@ function DotobjModelLoad(_buffer)
                         //Actually write the data!
                         vertex_float4(_vbuff, _tx, _ty, _tz, _handedness);
                         
-                        //show_debug_message("out tangent = " + string(_tx) + "," + string(_ty) + "," + string(_tz) + ", handedness = " + string(_handedness));
+                        show_debug_message("out tangent = " + string(_tx) + "," + string(_ty) + "," + string(_tz) + ", handedness = " + string(_handedness));
                     }
                 }
             }

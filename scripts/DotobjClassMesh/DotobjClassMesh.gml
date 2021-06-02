@@ -210,7 +210,7 @@ function DotobjClassMesh(_group, _name, _has_tangents) constructor
                     texture_set_stage(_stage, _dissolve_texture_pointer);
                 }
             }
-            else
+            else if (_dissolve_value != undefined)
             {
                 shader_set_uniform_f(_shader_data[__DOTOBJ_SHADER_DATA.DISSOLVE_FLAT], _dissolve_value);
             }
@@ -227,7 +227,7 @@ function DotobjClassMesh(_group, _name, _has_tangents) constructor
                     texture_set_stage(_stage, _specular_texture_pointer);
                 }
             }
-            else
+            else if (_specular_colour != undefined)
             {
                 shader_set_uniform_f(_shader_data[__DOTOBJ_SHADER_DATA.SPECULAR_FLAT], colour_get_red(_specular_colour)/255, colour_get_green(_specular_colour)/255, colour_get_blue(_specular_colour)/255);
             }
@@ -257,7 +257,7 @@ function DotobjClassMesh(_group, _name, _has_tangents) constructor
                     texture_set_stage(_stage, _emissive_texture_pointer);
                 }
             }
-            else
+            else if (_emissive_colour != undefined)
             {
                 shader_set_uniform_f(_shader_data[__DOTOBJ_SHADER_DATA.EMISSIVE_FLAT], colour_get_red(_emissive_colour)/255, colour_get_green(_emissive_colour)/255, colour_get_blue(_emissive_colour)/255);
             }
