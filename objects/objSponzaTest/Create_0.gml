@@ -6,7 +6,6 @@ if (!code_is_compiled() && !debug_mode) show_error("It is strongly recommended y
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
 DotobjSetReverseTriangles(true);
-DotobjSetWireframe(true);
 model_sponza = DotobjModelLoadFile("sponza.obj");
 model_sponza.Freeze(); //Wise to freeze your models as well
 
