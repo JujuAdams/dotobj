@@ -30,9 +30,7 @@ matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_w
 
 //Finally, draw the model
 matrix_set(matrix_world, matrix_build(0,0,0, 0,0,0, 10, 10, 10));
-shader_set(shdFlatColour);
 model_planet.Submit();
-shader_reset();
 
 //Reset draw state
 matrix_set(matrix_world     , _old_world     );
