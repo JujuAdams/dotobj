@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Settings",
-    "path": "folders/dotobj/Settings.yy",
+    "name": "dotobj",
+    "path": "folders/dotobj.yy",
   },
   "resourceVersion": "1.0",
-  "name": "DotobjSetFlipTexcoordV",
+  "name": "dotobj_set_flip_texcoord_v",
   "tags": [],
   "resourceType": "GMScript",
 }

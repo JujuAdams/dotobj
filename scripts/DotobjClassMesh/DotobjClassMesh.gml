@@ -2,7 +2,7 @@
 /// @param name
 /// @param hasTangents
 
-function DotobjClassMesh(_group, _name, _has_tangents) constructor
+function DotobjClassMesh(_group, _name, _has_tangents, _primitive) constructor
 {
     //Meshes are children of groups. Meshes contain a single vertex buffer that drawn via
     //used with vertex_submit(). A mesh has an associated vertex list (really a list of
@@ -16,6 +16,7 @@ function DotobjClassMesh(_group, _name, _has_tangents) constructor
     frozen         = false;
     material       = _name;
     has_tangents   = _has_tangents;
+    primitive      = _primitive;
     
     array_push(_group.meshes_array, self);
     
@@ -42,7 +43,7 @@ function DotobjClassMesh(_group, _name, _has_tangents) constructor
                 var _diffuse_texture_pointer = _diffuse_texture_struct.pointer;
                     
                 //...then submit the vertex buffer using the texture
-                vertex_submit(vertex_buffer, pr_trianglelist, _diffuse_texture_pointer);
+                vertex_submit(vertex_buffer, primitive, _diffuse_texture_pointer);
             }
             else
             {
@@ -55,7 +56,7 @@ function DotobjClassMesh(_group, _name, _has_tangents) constructor
                 
                 //Hijack the fog system to force the blend colour, and submit the vertex buffer
                 gpu_set_fog(true, _diffuse_colour, 0, 0);
-                vertex_submit(vertex_buffer, pr_trianglelist, -1);
+                vertex_submit(vertex_buffer, primitive, -1);
                 gpu_set_fog(false, c_fuchsia, 0, 0);
             }
         }

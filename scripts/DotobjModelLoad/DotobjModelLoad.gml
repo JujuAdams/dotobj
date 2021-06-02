@@ -65,7 +65,8 @@ function DotobjModelLoad(_buffer)
     //We add a default group and default mesh to the model for use later during parsing
     var _model_struct        = new DotobjClassModel();
     var _group_struct        = __DotobjEnsureGroup(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
-    var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+    var _mesh_primitive      = global.__dotobjWireframe? pr_linelist : pr_trianglelist;
+    var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive);
     var _mesh_vertexes_array = _mesh_struct.vertexes_array;
 
     //Handle materials
@@ -229,7 +230,7 @@ function DotobjModelLoad(_buffer)
                         
                             //Create a new group and give it a blank mesh
                             var _group_struct        = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                            var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+                            var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive);
                             var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                         break;
                     
@@ -248,7 +249,7 @@ function DotobjModelLoad(_buffer)
                             {
                                 //If we want to parse objects as groups, create a new group and give it a blank mesh
                                 var _group_struct        = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                                var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents);
+                                var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive);
                                 var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                             else if (DOTOBJ_OUTPUT_WARNINGS)
@@ -319,7 +320,7 @@ function DotobjModelLoad(_buffer)
                             else
                             {
                                 //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
-                                var _mesh_struct         = new DotobjClassMesh(_group_struct, _material_name, _write_tangents);
+                                var _mesh_struct         = new DotobjClassMesh(_group_struct, _material_name, _write_tangents, _mesh_primitive);
                                 var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                         break;
@@ -421,6 +422,7 @@ function DotobjModelLoad(_buffer)
             var _mesh_struct         = _group_meshes_array[_mesh];
             var _mesh_vertexes_array = _mesh_struct.vertexes_array;
             var _mesh_material       = _mesh_struct.material;
+            var _mesh_primitive      = _mesh_struct.primitive; 
             
             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + " uses material \"" + _mesh_material + "\" and has " + string(array_length(_mesh_vertexes_array)) + " vertexes (" + string(array_length(_mesh_vertexes_array)/3) + " triangles)");
         
@@ -634,7 +636,14 @@ function DotobjModelLoad(_buffer)
             
             //Iterate over all the vertices
             var _i = 0;
-            repeat(array_length(_mesh_vertexes_array))
+            var _line_counter = 0;
+            
+            var _repeat_count = array_length(_mesh_vertexes_array);
+            
+            //Add extra repeats for line writing
+            if (_mesh_primitive) _repeat_count *= 2;
+            
+            repeat(_repeat_count)
             {
                 //Reset our lookup indexes
                 var _v_index = undefined;
@@ -655,14 +664,39 @@ function DotobjModelLoad(_buffer)
                 var _ny = 0;         //Normal Y
                 var _nz = 0;         //Normal Z
                 
+                //Do some shenanigans to get lines to write fully
+                if (_mesh_primitive)
+                {
+                    if (_line_counter == 2)
+                    {
+                        _i--;
+                    }
+                    else if (_line_counter == 4)
+                    {
+                        _i--;
+                    }
+                    else if (_line_counter == 5)
+                    {
+                        _i -= 3;
+                    }
+                    else if (_line_counter == 6)
+                    {
+                        _line_counter = 0;
+                        _i += 2;
+                    }
+                    
+                    _line_counter++;
+                }
+                
                 //N.B. This whole vertex decoding thing that uses strings can probably be done earlier by parsing data as it comes out of the buffer
                 //     This can definitely be improved in terms of speed!
             
                 //Get the vertex string, and count how many slashes it contains
+                show_debug_message(_i);
                 var _vertex_string = _mesh_vertexes_array[_i];
                 _i++;
-                var _slash_count = string_count("/", _vertex_string);
                 
+                var _slash_count = string_count("/", _vertex_string);
                 if (_slash_count == 0)
                 {
                     //If there are no slashes in the string, then it's a simple vertex position definition
@@ -745,6 +779,8 @@ function DotobjModelLoad(_buffer)
                 }
             
                 vertex_position_3d(_vbuff, _vx, _vy, _vz);
+                
+                show_debug_message("    " + string(_vx) + ", " + string(_vy) + ", " + string(_vz));
             
                 //Write the normal
                 if (_n_index >= 0)
