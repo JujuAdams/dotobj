@@ -641,7 +641,7 @@ function DotobjModelLoad(_buffer)
             var _repeat_count = array_length(_mesh_vertexes_array);
             
             //Add extra repeats for line writing
-            if (_mesh_primitive) _repeat_count *= 2;
+            if (_mesh_primitive == pr_linelist) _repeat_count *= 2;
             
             repeat(_repeat_count)
             {
@@ -665,7 +665,7 @@ function DotobjModelLoad(_buffer)
                 var _nz = 0;         //Normal Z
                 
                 //Do some shenanigans to get lines to write fully
-                if (_mesh_primitive)
+                if (_mesh_primitive == pr_linelist)
                 {
                     if (_line_counter == 2)
                     {
