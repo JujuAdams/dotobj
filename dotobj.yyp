@@ -1,7 +1,7 @@
 {
   "resources": [
     {"id":{"name":"DotobjClassModel","path":"scripts/DotobjClassModel/DotobjClassModel.yy",},"order":1,},
-    {"id":{"name":"objWireframeTest1","path":"objects/objWireframeTest1/objWireframeTest1.yy",},"order":8,},
+    {"id":{"name":"objWireframeTest","path":"objects/objWireframeTest/objWireframeTest.yy",},"order":8,},
     {"id":{"name":"__DotobjConfig","path":"scripts/__DotobjConfig/__DotobjConfig.yy",},"order":0,},
     {"id":{"name":"shdFlatColour","path":"shaders/shdFlatColour/shdFlatColour.yy",},"order":11,},
     {"id":{"name":"DotobjSetWriteTangents","path":"scripts/DotobjSetWriteTangents/DotobjSetWriteTangents.yy",},"order":2,},

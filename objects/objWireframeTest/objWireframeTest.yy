@@ -30,7 +30,7 @@
     "path": "dotobj.yyp",
   },
   "resourceVersion": "1.0",
-  "name": "objWireframeTest1",
+  "name": "objWireframeTest",
   "tags": [],
   "resourceType": "GMObject",
 }
