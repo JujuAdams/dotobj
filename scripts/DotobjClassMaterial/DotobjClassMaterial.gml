@@ -31,6 +31,18 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
     global.__dotobjMaterialLibrary[? _name] = self;
 
     if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjClassMaterial(): Created material \"" + string(_name) + "\"");
+    
+    static SetDiffuseMap = function(_texture)
+    {
+        diffuse_map = _texture;
+        return self;
+    }
+    
+    static SetNormalMap = function(_texture)
+    {
+        normal_map = _texture;
+        return self;
+    }
 }
 
 

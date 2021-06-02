@@ -1,8 +1,8 @@
-/// @param group
-/// @param name
+/// @param materialName
 /// @param hasTangents
+/// @param primitive
 
-function DotobjClassMesh(_group, _name, _has_tangents, _primitive) constructor
+function DotobjClassMesh(_material_name, _has_tangents, _primitive) constructor
 {
     //Meshes are children of groups. Meshes contain a single vertex buffer that drawn via
     //used with vertex_submit(). A mesh has an associated vertex list (really a list of
@@ -10,15 +10,13 @@ function DotobjClassMesh(_group, _name, _has_tangents, _primitive) constructor
     //come from the .mtl library files. Material libraries (.mtl) must be loaded before
     //any .obj file that uses them.
     
-    group_name     = _group.name;
+    group_name     = undefined;
     vertexes_array = [];
     vertex_buffer  = undefined;
     frozen         = false;
-    material       = _name;
+    material       = _material_name;
     has_tangents   = _has_tangents;
     primitive      = _primitive;
-    
-    array_push(_group.meshes_array, self);
     
     static Submit = function()
     {
@@ -74,5 +72,30 @@ function DotobjClassMesh(_group, _name, _has_tangents, _primitive) constructor
                 vertex_freeze(vertex_buffer);
             }
         }
+    }
+    
+    static Duplicate = function()
+    {
+        var _new_mesh = new DotobjClassMesh(material, has_tangents, primitive);
+        
+        _new_mesh.vertex_buffer = vertex_buffer;
+        _new_mesh.frozen        = frozen;
+        
+        return _new_mesh;
+    }
+    
+    static AddTo = function(_group)
+    {
+        group_name = _group.name;
+        array_push(_group.meshes_array, self);
+        
+        return self;
+    }
+    
+    static SetMaterial = function(_library_name, _material_name)
+    {
+        material = string(_library_name) + "." + string(_material_name);
+        
+        return self;
     }
 }

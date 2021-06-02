@@ -2,9 +2,9 @@
 /// @param index
 /// @param filename
 
-function DotobjClassTexture(_sprite, _index, _filename) constructor
+function DotobjClassTexture(_sprite, _index) constructor
 {
-    filename          = _filename;
+    filename          = undefined;
     sprite            = _sprite;
     index             = _index;
     pointer           = sprite_get_texture(_sprite, _index);

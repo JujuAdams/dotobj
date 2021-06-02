@@ -66,9 +66,9 @@ function DotobjModelLoad(_buffer)
     var _model_struct        = new DotobjClassModel();
     var _group_struct        = __DotobjEnsureGroup(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
     var _mesh_primitive      = global.__dotobjWireframe? pr_linelist : pr_trianglelist;
-    var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive);
+    var _mesh_struct         = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
     var _mesh_vertexes_array = _mesh_struct.vertexes_array;
-
+    
     //Handle materials
     var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
     var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
@@ -230,7 +230,7 @@ function DotobjModelLoad(_buffer)
                         
                             //Create a new group and give it a blank mesh
                             var _group_struct        = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                            var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive);
+                            var _mesh_struct         = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
                             var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                         break;
                     
@@ -249,7 +249,7 @@ function DotobjModelLoad(_buffer)
                             {
                                 //If we want to parse objects as groups, create a new group and give it a blank mesh
                                 var _group_struct        = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                                var _mesh_struct         = new DotobjClassMesh(_group_struct, __DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive);
+                                var _mesh_struct         = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
                                 var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                             else if (DOTOBJ_OUTPUT_WARNINGS)
@@ -320,7 +320,7 @@ function DotobjModelLoad(_buffer)
                             else
                             {
                                 //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
-                                var _mesh_struct         = new DotobjClassMesh(_group_struct, _material_name, _write_tangents, _mesh_primitive);
+                                var _mesh_struct         = (new DotobjClassMesh(_material_name, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
                                 var _mesh_vertexes_array = _mesh_struct.vertexes_array;
                             }
                         break;

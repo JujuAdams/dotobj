@@ -12,6 +12,8 @@ function DotobjClassModel() constructor
             groups_array[_g].Submit();
             ++_g;
         }
+        
+        return self;
     }
     
     static Freeze = function()
@@ -23,5 +25,43 @@ function DotobjClassModel() constructor
             groups_array[_g].Freeze();
             ++_g;
         }
+        
+        return self;
+    }
+    
+    static Duplicate = function()
+    {
+        var _new_model = new DotobjClassModel();
+        
+        var _i = 0;
+        repeat(array_length(groups_array))
+        {
+            groups_array[_i].Duplicate().AddTo(_new_model);
+            ++_i;
+        }
+        
+        return _new_model;
+    }
+    
+    static SetMaterialForMeshes = function(_library_name, _material_name)
+    {
+        var _i = 0;
+        repeat(array_length(groups_array))
+        {
+            groups_array[_i].SetMaterialForMeshes(_library_name, _material_name);
+            ++_i;
+        }
+        
+        return self;
+    }
+    
+    static GetFirstMesh = function()
+    {
+        if (array_length(groups_array) <= 0) return undefined;
+        
+        var _group = groups_array[0];
+        if (array_length(_group.meshes_array) <= 0) return undefined;
+        
+        return _group.meshes_array[0];
     }
 }
