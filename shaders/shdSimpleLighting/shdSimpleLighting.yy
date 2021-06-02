@@ -1,8 +1,8 @@
 {
   "type": 1,
   "parent": {
-    "name": "Test Shaders",
-    "path": "folders/Test Shaders.yy",
+    "name": "dotobj",
+    "path": "dotobj.yyp",
   },
   "resourceVersion": "1.0",
   "name": "shdSimpleLighting",
