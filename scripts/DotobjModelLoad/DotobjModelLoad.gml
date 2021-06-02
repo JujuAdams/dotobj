@@ -692,7 +692,6 @@ function DotobjModelLoad(_buffer)
                 //     This can definitely be improved in terms of speed!
             
                 //Get the vertex string, and count how many slashes it contains
-                show_debug_message(_i);
                 var _vertex_string = _mesh_vertexes_array[_i];
                 _i++;
                 
@@ -779,8 +778,6 @@ function DotobjModelLoad(_buffer)
                 }
             
                 vertex_position_3d(_vbuff, _vx, _vy, _vz);
-                
-                show_debug_message("    " + string(_vx) + ", " + string(_vy) + ", " + string(_vz));
             
                 //Write the normal
                 if (_n_index >= 0)
