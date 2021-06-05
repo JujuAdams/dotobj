@@ -84,6 +84,17 @@ function DotobjClassMesh(_material_name, _has_tangents, _primitive) constructor
         return _new_mesh;
     }
     
+    static Destroy = function()
+    {
+        if (vertex_buffer != undefined)
+        {
+            vertex_delete_buffer(vertex_buffer);
+            vertex_buffer = undefined;
+        }
+        
+        return undefined;
+    }
+    
     static AddTo = function(_group)
     {
         group_name = _group.name;

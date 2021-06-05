@@ -43,6 +43,21 @@ function DotobjClassModel() constructor
         return _new_model;
     }
     
+    static Destroy = function()
+    {
+        var _g = 0;
+        repeat(array_length(groups_array))
+        {
+            groups_array[_g].Destroy();
+            ++_g;
+        }
+        
+        groups_struct = {};
+        groups_array  = [];
+        
+        return undefined;
+    }
+    
     static SetMaterialForMeshes = function(_library_name, _material_name)
     {
         var _i = 0;

@@ -50,6 +50,20 @@ function DotobjClassGroup(_name, _line) constructor
         return _new_group;
     }
     
+    static Destroy = function()
+    {
+        var _m = 0;
+        repeat(array_length(meshes_array))
+        {
+            meshes_array[_m].Destroy();
+            ++_m;
+        }
+        
+        meshes_array = [];
+        
+        return undefined;
+    }
+    
     static AddTo = function(_model)
     {
         _model.groups_struct[$ name] = self;
