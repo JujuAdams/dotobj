@@ -37,7 +37,7 @@
 function DotobjModelLoad(_buffer)
 {
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
-
+    
     //Create some variables to track errors
     var _vec4_error            = false;
     var _texture_depth_error   = false;
@@ -63,16 +63,26 @@ function DotobjModelLoad(_buffer)
 
     //Create a model for us to fill
     //We add a default group and default mesh to the model for use later during parsing
-    var _model_struct        = new DotobjClassModel();
-    var _group_struct        = __DotobjEnsureGroup(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
-    var _mesh_primitive      = global.__dotobjWireframe? pr_linelist : pr_trianglelist;
-    var _mesh_struct         = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
-    var _mesh_vertexes_array = _mesh_struct.vertexes_array;
+    var _model_struct = new DotobjClassModel();
+    _model_struct.sha1 = buffer_sha1(_buffer, 0, buffer_get_size(_buffer));
+    
+    var _group_struct   = __DotobjEnsureGroup(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
+    var _mesh_struct    = (new DotobjClassMesh()).AddTo(_group_struct);
+    var _mesh_primitive = global.__dotobjWireframe? pr_linelist : pr_trianglelist;
+    
+    with(_mesh_struct)
+    {
+        material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+        has_tangents = _write_tangents;
+        primitive    = _mesh_primitive;
+        var _mesh_vertexes_array = vertexes_array;
+    }
     
     //Handle materials
     var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
     var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
-
+    _model_struct.material_library = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
+    
     //We keep a list of data per line
     var _line_data_list = ds_list_create();
 
@@ -229,9 +239,16 @@ function DotobjModelLoad(_buffer)
                             }
                         
                             //Create a new group and give it a blank mesh
-                            var _group_struct        = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                            var _mesh_struct         = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
-                            var _mesh_vertexes_array = _mesh_struct.vertexes_array;
+                            var _group_struct = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
+                            var _mesh_struct  = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
+                            
+                            with(_mesh_struct)
+                            {
+                                material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                has_tangents = _write_tangents;
+                                primitive    = _mesh_primitive;
+                                var _mesh_vertexes_array = vertexes_array;
+                            }
                         break;
                     
                         case "o": //Object definition
@@ -248,9 +265,16 @@ function DotobjModelLoad(_buffer)
                             if (DOTOBJ_OBJECTS_ARE_GROUPS)
                             {
                                 //If we want to parse objects as groups, create a new group and give it a blank mesh
-                                var _group_struct        = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                                var _mesh_struct         = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
-                                var _mesh_vertexes_array = _mesh_struct.vertexes_array;
+                                var _group_struct = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
+                                var _mesh_struct  = (new DotobjClassMesh()).AddTo(_group_struct);
+                                
+                                with(_mesh_struct)
+                                {
+                                    material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                    has_tangents = _write_tangents;
+                                    primitive    = _mesh_primitive;
+                                    var _mesh_vertexes_array = vertexes_array;
+                                }
                             }
                             else if (DOTOBJ_OUTPUT_WARNINGS)
                             {
@@ -294,6 +318,7 @@ function DotobjModelLoad(_buffer)
                             }
                             
                             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Requires \"" + _material_library + "\"");
+                            _model_struct.material_library = _material_library;
                             DotobjMaterialLoadFile(_material_library);
                             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Set material library to \"" + _material_library + "\"");
                         break;
@@ -320,8 +345,14 @@ function DotobjModelLoad(_buffer)
                             else
                             {
                                 //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
-                                var _mesh_struct         = (new DotobjClassMesh(_material_name, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
-                                var _mesh_vertexes_array = _mesh_struct.vertexes_array;
+                                var _mesh_struct = (new DotobjClassMesh()).AddTo(_group_struct);
+                                with(_mesh_struct)
+                                {
+                                    material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                    has_tangents = _write_tangents;
+                                    primitive    = _mesh_primitive;
+                                    var _mesh_vertexes_array = vertexes_array;
+                                }
                             }
                         break;
                     

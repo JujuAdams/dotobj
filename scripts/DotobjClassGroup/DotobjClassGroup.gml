@@ -1,13 +1,13 @@
 /// @param name
 /// @param line
 
-function DotobjClassGroup(_name, _line) constructor
+function DotobjClassGroup() constructor
 {
     //Groups collect together meshes. Most groups will only have a single mesh!
     //The DOTOBJ_OBJECTS_ARE_GROUPS macro allows for objects to be read as groups.
     
-    line         = _line;
-    name         = _name;
+    line         = 0;
+    name         = undefined;
     meshes_array = [];
     
     static Submit = function()
@@ -38,7 +38,12 @@ function DotobjClassGroup(_name, _line) constructor
     
     static Duplicate = function()
     {
-        var _new_group = new DotobjClassGroup(name, line);
+        var _new_group = new DotobjClassGroup();
+        with(_new_group)
+        {
+            name = other.name;
+            line = other.line;
+        }
         
         var _i = 0;
         repeat(array_length(meshes_array))
@@ -48,6 +53,40 @@ function DotobjClassGroup(_name, _line) constructor
         }
         
         return _new_group;
+    }
+    
+    static Serialize = function(_buffer)
+    {
+        buffer_write(_buffer, buffer_string, name);
+        buffer_write(_buffer, buffer_u32,    line);
+        
+        var _size = array_length(meshes_array);
+        buffer_write(_buffer, buffer_u16, _size);
+        var _i = 0;
+        repeat(_size)
+        {
+            meshes_array[_i].Serialize(_buffer);
+            ++_i;
+        }
+        
+        return self;
+    }
+    
+    static Deserialize = function(_buffer)
+    {
+        name = buffer_read(_buffer, buffer_string);
+        line = buffer_read(_buffer, buffer_u32);
+        
+        repeat(buffer_read(_buffer, buffer_u16))
+        {
+            with(new DotobjClassMesh())
+            {
+                Deserialize(_buffer);
+                AddTo(other);
+            }
+        }
+        
+        return self;
     }
     
     static Destroy = function()
@@ -83,8 +122,6 @@ function DotobjClassGroup(_name, _line) constructor
         
         return self;
     }
-    
-    if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjClassGroup(): Created group \"" + string(_name) + "\"");
 }
 
 
@@ -104,8 +141,17 @@ function __DotobjEnsureGroup(_model, _name, _line)
     }
     else
     {
-        var _group = new DotobjClassGroup(_name, _line);
-        _group.AddTo(_model);
+        var _group = new DotobjClassGroup();
+        with(_group)
+        {
+            name = _name;
+            line = _line;
+            
+            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjClassGroup(): Created group \"" + string(name) + "\"");
+            
+            AddTo(_model);
+        }
+        
         return _group;
     }
 }

@@ -2,7 +2,7 @@
 /// @param hasTangents
 /// @param primitive
 
-function DotobjClassMesh(_material_name, _has_tangents, _primitive) constructor
+function DotobjClassMesh() constructor
 {
     //Meshes are children of groups. Meshes contain a single vertex buffer that drawn via
     //used with vertex_submit(). A mesh has an associated vertex list (really a list of
@@ -14,9 +14,9 @@ function DotobjClassMesh(_material_name, _has_tangents, _primitive) constructor
     vertexes_array = [];
     vertex_buffer  = undefined;
     frozen         = false;
-    material       = _material_name;
-    has_tangents   = _has_tangents;
-    primitive      = _primitive;
+    material       = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+    has_tangents   = false;
+    primitive      = pr_trianglelist;
     
     static Submit = function()
     {
@@ -71,17 +71,60 @@ function DotobjClassMesh(_material_name, _has_tangents, _primitive) constructor
                 frozen = true;
                 vertex_freeze(vertex_buffer);
             }
-        }
+        }                                         
     }
     
     static Duplicate = function()
     {
-        var _new_mesh = new DotobjClassMesh(material, has_tangents, primitive);
-        
-        _new_mesh.vertex_buffer = vertex_buffer;
-        _new_mesh.frozen        = frozen;
+        var _new_mesh = new DotobjClassMesh();
+        with(_new_mesh)
+        {
+            material      = other.material;
+            has_tangents  = other.has_tangents;
+            primitive     = other.primitive;
+            vertex_buffer = other.vertex_buffer;
+            frozen        = other.frozen;
+        }
         
         return _new_mesh;
+    }
+    
+    static Serialize = function(_buffer)
+    {
+        buffer_write(_buffer, buffer_string, material);
+        buffer_write(_buffer, buffer_bool,   has_tangents);
+        buffer_write(_buffer, buffer_u8,     primitive);
+        
+        var _vbuff = buffer_create_from_vertex_buffer(vertex_buffer, buffer_fixed, 1);
+        var _vbuff_size = buffer_get_size(_vbuff);
+        buffer_write(_buffer, buffer_u32, _vbuff_size);
+        
+        buffer_resize(_buffer, buffer_get_size(_buffer) + _vbuff_size);
+        buffer_copy(_vbuff, 0, _vbuff_size, _buffer, buffer_tell(_buffer));
+        buffer_seek(_buffer, buffer_seek_relative, _vbuff_size);
+        
+        buffer_delete(_vbuff);
+        
+        return self;
+    }
+    
+    static Deserialize = function(_buffer)
+    {
+        material     = buffer_read(_buffer, buffer_string);
+        has_tangents = buffer_read(_buffer, buffer_bool);
+        primitive    = buffer_read(_buffer, buffer_u8);
+        
+        var _vbuff_size = buffer_read(_buffer, buffer_u32);
+        
+        var _vbuff = buffer_create(_vbuff_size, buffer_fixed, 1);
+        buffer_copy(_buffer, buffer_tell(_buffer), _vbuff_size, _vbuff, 0);
+        buffer_seek(_buffer, buffer_seek_relative, _vbuff_size);
+        
+        vertex_buffer = vertex_create_buffer_from_buffer(_vbuff, has_tangents? global.__dotobjPNCTTanVertexFormat : global.__dotobjPNCTVertexFormat);
+        
+        buffer_delete(_vbuff);
+        
+        return self;
     }
     
     static Destroy = function()

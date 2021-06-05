@@ -1,7 +1,9 @@
 function DotobjClassModel() constructor
 {
-    groups_struct = {};
-    groups_array  = [];
+    sha1             = undefined;
+    groups_struct    = {};
+    groups_array     = [];
+    material_library = "";
     
     static Submit = function()
     {
@@ -41,6 +43,68 @@ function DotobjClassModel() constructor
         }
         
         return _new_model;
+    }
+    
+    static SaveRaw = function(_filename)
+    {
+        var _buffer = buffer_create(1024, buffer_grow, 1);
+        Serialize(_buffer);
+        buffer_save_ext(_buffer, _filename, 0, buffer_tell(_buffer));
+        buffer_delete(_buffer);
+        
+        return self;
+    }
+    
+    static Serialize = function(_buffer)
+    {
+        buffer_write(_buffer, buffer_string, "dotobj @jujuadams");
+        buffer_write(_buffer, buffer_string, __DOTOBJ_VERSION);
+        buffer_write(_buffer, buffer_string, sha1);
+        buffer_write(_buffer, buffer_string, material_library);
+        
+        var _size = array_length(groups_array);
+        buffer_write(_buffer, buffer_u16, _size);
+        var _i = 0;
+        repeat(_size)
+        {
+            groups_array[_i].Serialize(_buffer);
+            ++_i;
+        }
+        
+        return self;
+    }
+    
+    static Deserialize = function(_buffer)
+    {
+        var _header = buffer_read(_buffer, buffer_string);
+        if (_header != "dotobj @jujuadams")
+        {
+            __DotobjError("File is not a dotobj raw file");
+            return undefined;
+        }
+        
+        var _version = buffer_read(_buffer, buffer_string);
+        if (_version != __DOTOBJ_VERSION)
+        {
+            __DotobjError("Version mismatch (file=", _version, ", dotobj=", __DOTOBJ_VERSION, ")");
+            return undefined;
+        }
+        
+        sha1 = buffer_read(_buffer, buffer_string);
+        
+        var _material_library = buffer_read(_buffer, buffer_string);
+        if (_material_library != "") DotobjMaterialLoadFile(_material_library);
+        
+        repeat(buffer_read(_buffer, buffer_u16))
+        {
+            with(new DotobjClassGroup())
+            {
+                Deserialize(_buffer);
+                AddTo(other);
+            }
+        }
+        
+        return self;
     }
     
     static Destroy = function()
