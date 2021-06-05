@@ -22,7 +22,6 @@
     {"id":{"name":"sprPlanetTexArid","path":"sprites/sprPlanetTexArid/sprPlanetTexArid.yy",},"order":13,},
     {"id":{"name":"DotobjSetFlipTexcoordV","path":"scripts/DotobjSetFlipTexcoordV/DotobjSetFlipTexcoordV.yy",},"order":0,},
     {"id":{"name":"objPlanetCacheTest","path":"objects/objPlanetCacheTest/objPlanetCacheTest.yy",},"order":9,},
-    {"id":{"name":"DotobjCacheSave","path":"scripts/DotobjCacheSave/DotobjCacheSave.yy",},"order":10,},
     {"id":{"name":"objPlanetTest","path":"objects/objPlanetTest/objPlanetTest.yy",},"order":6,},
     {"id":{"name":"DotobjModelRawLoad","path":"scripts/DotobjModelRawLoad/DotobjModelRawLoad.yy",},"order":5,},
     {"id":{"name":"DotobjModelRawSave","path":"scripts/DotobjModelRawSave/DotobjModelRawSave.yy",},"order":4,},
