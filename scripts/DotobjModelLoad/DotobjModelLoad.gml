@@ -60,11 +60,16 @@ function DotobjModelLoad(_buffer)
     var _colour_list   = ds_list_create(); ds_list_add(_colour_list,   1,1,1,1);
     var _normal_list   = ds_list_create(); ds_list_add(_normal_list,   0,0,0  );
     var _texture_list  = ds_list_create(); ds_list_add(_texture_list,  0,0    );
+    
+    //Handle materials
+    var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
+    var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
 
     //Create a model for us to fill
     //We add a default group and default mesh to the model for use later during parsing
     var _model_struct = new DotobjClassModel();
-    _model_struct.sha1 = buffer_sha1(_buffer, 0, buffer_get_size(_buffer));
+    _model_struct.sha1             = buffer_sha1(_buffer, 0, buffer_get_size(_buffer));
+    _model_struct.material_library = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
     
     var _group_struct   = __DotobjEnsureGroup(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
     var _mesh_struct    = (new DotobjClassMesh()).AddTo(_group_struct);
@@ -77,11 +82,6 @@ function DotobjModelLoad(_buffer)
         primitive    = _mesh_primitive;
         var _mesh_vertexes_array = vertexes_array;
     }
-    
-    //Handle materials
-    var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
-    var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
-    _model_struct.material_library = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
     
     //We keep a list of data per line
     var _line_data_list = ds_list_create();
@@ -240,7 +240,7 @@ function DotobjModelLoad(_buffer)
                         
                             //Create a new group and give it a blank mesh
                             var _group_struct = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                            var _mesh_struct  = (new DotobjClassMesh(__DOTOBJ_DEFAULT_MATERIAL_NAME, _write_tangents, _mesh_primitive)).AddTo(_group_struct);
+                            var _mesh_struct  = (new DotobjClassMesh()).AddTo(_group_struct);
                             
                             with(_mesh_struct)
                             {
@@ -348,7 +348,7 @@ function DotobjModelLoad(_buffer)
                                 var _mesh_struct = (new DotobjClassMesh()).AddTo(_group_struct);
                                 with(_mesh_struct)
                                 {
-                                    material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                    material     = _material_name;
                                     has_tangents = _write_tangents;
                                     primitive    = _mesh_primitive;
                                     var _mesh_vertexes_array = vertexes_array;
