@@ -1,7 +1,7 @@
 {
   "option_windows_display_name": "dotobj    @jujuadams",
   "option_windows_executable_name": "${project_name}",
-  "option_windows_version": "5.2.1.0",
+  "option_windows_version": "5.3.0.0",
   "option_windows_company_info": "@jujuadams",
   "option_windows_product_info": "dotobj",
   "option_windows_copyright_info": "@jujuadams",
