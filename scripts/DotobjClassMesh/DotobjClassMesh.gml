@@ -95,15 +95,22 @@ function DotobjClassMesh() constructor
         buffer_write(_buffer, buffer_bool,   has_tangents);
         buffer_write(_buffer, buffer_u8,     primitive);
         
-        var _vbuff = buffer_create_from_vertex_buffer(vertex_buffer, buffer_fixed, 1);
-        var _vbuff_size = buffer_get_size(_vbuff);
-        buffer_write(_buffer, buffer_u32, _vbuff_size);
-        
-        buffer_resize(_buffer, buffer_get_size(_buffer) + _vbuff_size);
-        buffer_copy(_vbuff, 0, _vbuff_size, _buffer, buffer_tell(_buffer));
-        buffer_seek(_buffer, buffer_seek_relative, _vbuff_size);
-        
-        buffer_delete(_vbuff);
+        if (vertex_buffer == undefined)
+        {
+            buffer_write(_buffer, buffer_u32, 0);
+        }
+        else
+        {
+            var _vbuff = buffer_create_from_vertex_buffer(vertex_buffer, buffer_fixed, 1);
+            var _vbuff_size = buffer_get_size(_vbuff);
+            buffer_write(_buffer, buffer_u32, _vbuff_size);
+            
+            buffer_resize(_buffer, buffer_get_size(_buffer) + _vbuff_size);
+            buffer_copy(_vbuff, 0, _vbuff_size, _buffer, buffer_tell(_buffer));
+            buffer_seek(_buffer, buffer_seek_relative, _vbuff_size);
+            
+            buffer_delete(_vbuff);
+        }
         
         return self;
     }
@@ -115,14 +122,20 @@ function DotobjClassMesh() constructor
         primitive    = buffer_read(_buffer, buffer_u8);
         
         var _vbuff_size = buffer_read(_buffer, buffer_u32);
-        
-        var _vbuff = buffer_create(_vbuff_size, buffer_fixed, 1);
-        buffer_copy(_buffer, buffer_tell(_buffer), _vbuff_size, _vbuff, 0);
-        buffer_seek(_buffer, buffer_seek_relative, _vbuff_size);
-        
-        vertex_buffer = vertex_create_buffer_from_buffer(_vbuff, has_tangents? global.__dotobjPNCTTanVertexFormat : global.__dotobjPNCTVertexFormat);
-        
-        buffer_delete(_vbuff);
+        if (_vbuff_size == 0)
+        {
+            vertex_buffer = undefined;
+        }
+        else
+        {
+            var _vbuff = buffer_create(_vbuff_size, buffer_fixed, 1);
+            buffer_copy(_buffer, buffer_tell(_buffer), _vbuff_size, _vbuff, 0);
+            buffer_seek(_buffer, buffer_seek_relative, _vbuff_size);
+            
+            vertex_buffer = vertex_create_buffer_from_buffer(_vbuff, has_tangents? global.__dotobjPNCTTanVertexFormat : global.__dotobjPNCTVertexFormat);
+            
+            buffer_delete(_vbuff);
+        }
         
         return self;
     }
