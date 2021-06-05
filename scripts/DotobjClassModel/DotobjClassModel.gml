@@ -45,16 +45,6 @@ function DotobjClassModel() constructor
         return _new_model;
     }
     
-    static SaveRaw = function(_filename)
-    {
-        var _buffer = buffer_create(1024, buffer_grow, 1);
-        Serialize(_buffer);
-        buffer_save_ext(_buffer, _filename, 0, buffer_tell(_buffer));
-        buffer_delete(_buffer);
-        
-        return self;
-    }
-    
     static Serialize = function(_buffer)
     {
         buffer_write(_buffer, buffer_string, "dotobj @jujuadams");
