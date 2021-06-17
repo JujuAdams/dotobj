@@ -2,8 +2,8 @@
 gpu_set_ztestenable(true);
 gpu_set_zwriteenable(true);
 
-//Clockwise faces are backfaces. We want to cull these so we're drawing less
-gpu_set_cullmode(cull_clockwise);
+//Counterclockwise faces are backfaces. We want to cull these so we're drawing less
+gpu_set_cullmode(cull_counterclockwise);
 
 //Interpolation is set <on> in Windows graphics options so this code isn't needed
 //gpu_set_tex_filter(true);

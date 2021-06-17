@@ -8,7 +8,6 @@ DotobjSpriteAddInternal("textures\\planet_tex_arid.png", sprPlanetTexArid);
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
-DotobjSetReverseTriangles(true);
 
 if (!file_exists("planet.dat"))
 {
