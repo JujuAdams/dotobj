@@ -1,12 +1,13 @@
 /// @param sprite
 /// @param index
-/// @param filename
+/// @param external
 
-function DotobjClassTexture(_sprite, _index) constructor
+function DotobjClassTexture(_sprite, _index, _external) constructor
 {
     filename          = undefined;
     sprite            = _sprite;
     index             = _index;
+    external          = _external;
     pointer           = sprite_get_texture(_sprite, _index);
     blend_u           = undefined;
     blend_v           = undefined;
@@ -21,4 +22,11 @@ function DotobjClassTexture(_sprite, _index) constructor
     turbulence        = undefined;
     resolution        = undefined;
     invert_v          = undefined;
+    
+    static Free = function()
+    {
+        if (_external && (sprite != undefined))  sprite_delete(sprite);
+        sprite  = undefined;
+        pointer = undefined;
+    }
 }

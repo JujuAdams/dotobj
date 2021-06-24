@@ -4,33 +4,33 @@
 function DotobjClassMaterial(_library_name, _material_name) constructor
 {
     //Materials are collected together in .mtl files (a.k.a. "material libraries")
-    library            = _library_name;  // 0) string
-    name               = _material_name; // 1) string
-    ambient            = undefined;      // 2) u24 RGB
-    diffuse            = undefined;      // 3) u24 RGB
-    emissive           = undefined;      // 4) u24 RGB
-    specular           = undefined;      // 5) u24 RGB
-    specular_exp       = undefined;      // 6) f64
-    transparency       = undefined;      // 7) f64
-    transmission       = undefined;      // 8) u24 RGB
-    illumination_model = undefined;      // 9) u8 index
-    dissolve           = undefined;      //10) f64
-    sharpness          = undefined;      //11) f64
-    optical_density    = undefined;      //12) f64
-    ambient_map        = undefined;      //13) Texture struct (see DotobjClassTexture)
-    diffuse_map        = undefined;      //14) Texture struct (see DotobjClassTexture)
-    emissive_map       = undefined;      //15) Texture struct (see DotobjClassTexture)
-    specular_map       = undefined;      //16) Texture struct (see DotobjClassTexture)
-    specular_exp_map   = undefined;      //17) Texture struct (see DotobjClassTexture)
-    dissolve_map       = undefined;      //18) Texture struct (see DotobjClassTexture)
-    decal_map          = undefined;      //19) Texture struct (see DotobjClassTexture)
-    displacement_map   = undefined;      //20) Texture struct (see DotobjClassTexture)
-    normal_map         = undefined;      //21) Texture struct (see DotobjClassTexture)
+    library            = _library_name;  //string
+    name               = _material_name; //string
+    ambient            = undefined;      //u24 RGB
+    diffuse            = undefined;      //u24 RGB
+    emissive           = undefined;      //u24 RGB
+    specular           = undefined;      //u24 RGB
+    specular_exp       = undefined;      //f64
+    transparency       = undefined;      //f64
+    transmission       = undefined;      //u24 RGB
+    illumination_model = undefined;      //u8 index
+    dissolve           = undefined;      //f64
+    sharpness          = undefined;      //f64
+    optical_density    = undefined;      //f64
+    ambient_map        = undefined;      //Texture struct (see DotobjClassTexture)
+    diffuse_map        = undefined;      //Texture struct (see DotobjClassTexture)
+    emissive_map       = undefined;      //Texture struct (see DotobjClassTexture)
+    specular_map       = undefined;      //Texture struct (see DotobjClassTexture)
+    specular_exp_map   = undefined;      //Texture struct (see DotobjClassTexture)
+    dissolve_map       = undefined;      //Texture struct (see DotobjClassTexture)
+    decal_map          = undefined;      //Texture struct (see DotobjClassTexture)
+    displacement_map   = undefined;      //Texture struct (see DotobjClassTexture)
+    normal_map         = undefined;      //Texture struct (see DotobjClassTexture)
     
-    var _name = _library_name + "." + _material_name;
-    global.__dotobjMaterialLibrary[? _name] = self;
+    cache_name = _library_name + "." + _material_name;
+    global.__dotobjMaterialLibrary[? cache_name] = self;
 
-    if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjClassMaterial(): Created material \"" + string(_name) + "\"");
+    if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjClassMaterial(): Created material \"" + string(cache_name) + "\"");
     
     static SetDiffuseMap = function(_texture)
     {
@@ -42,6 +42,31 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
     {
         normal_map = _texture;
         return self;
+    }
+    
+    static Destroy = function()
+    {
+        if (is_struct(ambient_map     )) ambient_map.Free();
+        if (is_struct(diffuse_map     )) diffuse_map.Free();
+        if (is_struct(emissive_map    )) emissive_map.Free();
+        if (is_struct(specular_map    )) specular_map.Free();
+        if (is_struct(specular_exp_map)) specular_exp_map.Free();
+        if (is_struct(dissolve_map    )) dissolve_map.Free();
+        if (is_struct(decal_map       )) decal_map.Free();
+        if (is_struct(displacement_map)) displacement_map.Free();
+        if (is_struct(normal_map      )) normal_map.Free();
+        
+        ambient_map      = undefined;
+        diffuse_map      = undefined;
+        emissive_map     = undefined;
+        specular_map     = undefined;
+        specular_exp_map = undefined;
+        dissolve_map     = undefined;
+        decal_map        = undefined;
+        displacement_map = undefined;
+        normal_map       = undefined;
+        
+        ds_map_delete(global.__dotobjMtlFileLoaded, cache_name);
     }
 }
 
