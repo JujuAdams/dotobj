@@ -64,12 +64,14 @@ function DotobjModelLoad(_buffer)
     //Handle materials
     var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
     var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
+    var _unique_materials  = {};
 
     //Create a model for us to fill
     //We add a default group and default mesh to the model for use later during parsing
     var _model_struct = new DotobjClassModel();
     _model_struct.sha1             = buffer_sha1(_buffer, 0, buffer_get_size(_buffer));
     _model_struct.material_library = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
+    var _model_materials_array = _model_struct.materials_array;
     
     var _group_struct   = __DotobjEnsureGroup(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
     var _mesh_struct    = (new DotobjClassMesh()).AddTo(_group_struct);
@@ -336,7 +338,14 @@ function DotobjModelLoad(_buffer)
                         
                             //Then build a full material name from that
                             var _material_name = _material_library + "." + _material_specific;
-                        
+                            
+                            //If this material is new to us, add it to our materials array
+                            if (!variable_struct_exists(_unique_materials, _material_name))
+                            {
+                                _unique_materials[$ _material_name] = variable_struct_names_count(_unique_materials);
+                                array_push(_model_materials_array, _material_name);
+                            }
+                            
                             if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertexes_array) <= 0))
                             {
                                 //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material

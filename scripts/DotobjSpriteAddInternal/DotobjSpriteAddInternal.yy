@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Loaders",
-    "path": "folders/dotobj/Loaders.yy",
+    "name": "Materials and Textures",
+    "path": "folders/dotobj/Materials and Textures.yy",
   },
   "resourceVersion": "1.0",
   "name": "DotobjSpriteAddInternal",

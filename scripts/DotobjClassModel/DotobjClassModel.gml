@@ -4,6 +4,7 @@ function DotobjClassModel() constructor
     groups_struct    = {};
     groups_array     = [];
     material_library = "";
+    materials_array  = [];
     
     static Submit = function()
     {
@@ -52,6 +53,15 @@ function DotobjClassModel() constructor
         buffer_write(_buffer, buffer_string, sha1);
         buffer_write(_buffer, buffer_string, material_library);
         
+        var _size = array_length(materials_array);
+        buffer_write(_buffer, buffer_u16, _size);
+        var _i = 0;
+        repeat(_size)
+        {
+            buffer_write(_buffer, buffer_string, materials_array[_i]);
+            ++_i;
+        }
+        
         var _size = array_length(groups_array);
         buffer_write(_buffer, buffer_u16, _size);
         var _i = 0;
@@ -84,6 +94,11 @@ function DotobjClassModel() constructor
         
         var _material_library = buffer_read(_buffer, buffer_string);
         if (_material_library != "") DotobjMaterialLoadFile(_material_library);
+        
+        repeat(buffer_read(_buffer, buffer_u16))
+        {
+            array_push(materials_array, buffer_read(_buffer, buffer_string));
+        }
         
         repeat(buffer_read(_buffer, buffer_u16))
         {

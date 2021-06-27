@@ -9,6 +9,9 @@ DotobjSetFlipTexcoordV(true);
 model_sponza = DotobjModelLoadFile("sponza.obj");
 model_sponza.Freeze(); //Wise to freeze your models as well
 
+//Output the materials that this model uses
+show_debug_message(model_sponza.materials_array);
+
 //If you want to manually load material (.mtl) files then you can do so using this function:
 //    DotobjMaterialLoadFile("sponza.mtl");
 //As mentioned above, DotobjModelLoadFile() will try to load material files automatically

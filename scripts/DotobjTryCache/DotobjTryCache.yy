@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "dotobj",
-    "path": "folders/dotobj.yy",
+    "name": "Model Caching",
+    "path": "folders/dotobj/Model Caching.yy",
   },
   "resourceVersion": "1.0",
   "name": "DotobjTryCache",
