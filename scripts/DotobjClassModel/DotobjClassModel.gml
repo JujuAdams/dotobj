@@ -148,4 +148,18 @@ function DotobjClassModel() constructor
         
         return _group.meshes_array[0];
     }
+    
+    static GetMaterials = function()
+    {
+        var _array = array_create(materials_array);
+        
+        var _i = 0;
+        repeat(array_length(materials_array))
+        {
+            _array[@ _i] = global.__dotobjMaterialLibrary[? materials_array[_i]];
+            ++_i;
+        }
+        
+        return _array;
+    }
 }

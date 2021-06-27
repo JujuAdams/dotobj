@@ -1,12 +1,15 @@
 //Always date your work!
-#macro __DOTOBJ_VERSION  "5.3.2"
-#macro __DOTOBJ_DATE     "2021/06/24"
+#macro  __DOTOBJ_VERSION  "5.3.2"
+#macro  __DOTOBJ_DATE     "2021/06/24"
 
 //Some strings to use for defaults. Change these if you so desire.
-#macro __DOTOBJ_DEFAULT_GROUP              "__dotobj_group__"
-#macro __DOTOBJ_DEFAULT_MATERIAL_LIBRARY   "__dotobj_library__"
-#macro __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC  "__dotobj_material__"
-#macro __DOTOBJ_DEFAULT_MATERIAL_NAME      (__DOTOBJ_DEFAULT_MATERIAL_LIBRARY + "." + __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC)
+#macro  __DOTOBJ_DEFAULT_GROUP              "__dotobj_group__"
+#macro  __DOTOBJ_DEFAULT_MATERIAL_LIBRARY   "__dotobj_library__"
+#macro  __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC  "__dotobj_material__"
+#macro  __DOTOBJ_DEFAULT_MATERIAL_NAME      (__DOTOBJ_DEFAULT_MATERIAL_LIBRARY + "." + __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC)
+
+//Macro to access the inner material library ds_map
+#macro  DOTOBJ_MATERIAL_LIBRARY_MAP  global.__dotobjMaterialLibrary
 
 
 
