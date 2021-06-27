@@ -151,7 +151,7 @@ function DotobjClassModel() constructor
     
     static GetMaterials = function()
     {
-        var _array = array_create(materials_array);
+        var _array = array_create(array_length(materials_array));
         
         var _i = 0;
         repeat(array_length(materials_array))
