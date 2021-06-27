@@ -10,7 +10,7 @@ model_sponza = DotobjModelLoadFile("sponza.obj");
 model_sponza.Freeze(); //Wise to freeze your models as well
 
 //Output the materials that this model uses
-show_debug_message(model_sponza.materials_array);
+show_debug_message(model_sponza.GetMaterials());
 
 //If you want to manually load material (.mtl) files then you can do so using this function:
 //    DotobjMaterialLoadFile("sponza.mtl");

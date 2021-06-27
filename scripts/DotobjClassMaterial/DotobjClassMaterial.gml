@@ -68,6 +68,11 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
         
         ds_map_delete(global.__dotobjMaterialLibrary, cache_name);
     }
+    
+    static toString = function()
+    {
+        return cache_name;
+    }
 }
 
 
