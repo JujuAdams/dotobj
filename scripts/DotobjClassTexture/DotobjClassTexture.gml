@@ -25,7 +25,7 @@ function DotobjClassTexture(_sprite, _index, _external) constructor
     
     static Free = function()
     {
-        if (_external && (sprite != undefined))  sprite_delete(sprite);
+        if (external && (sprite != undefined)) sprite_delete(sprite);
         sprite  = undefined;
         pointer = undefined;
     }

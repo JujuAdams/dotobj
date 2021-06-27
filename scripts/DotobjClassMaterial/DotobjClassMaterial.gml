@@ -66,7 +66,7 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
         displacement_map = undefined;
         normal_map       = undefined;
         
-        ds_map_delete(global.__dotobjMtlFileLoaded, cache_name);
+        ds_map_delete(global.__dotobjMaterialLibrary, cache_name);
     }
 }
 
