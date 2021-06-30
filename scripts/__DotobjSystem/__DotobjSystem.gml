@@ -43,6 +43,7 @@ global.__dotobjReverseTriangles = false;
 global.__dotobjWriteTangents    = false;
 global.__dotobjForceTangentCalc = false;
 global.__dotobjWireframe        = false;
+global.__dotobjTransformOnLoad  = false;
     
 //Create a default material
 __DotobjEnsureMaterial(__DOTOBJ_DEFAULT_MATERIAL_LIBRARY, __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC);

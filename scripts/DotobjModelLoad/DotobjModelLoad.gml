@@ -52,6 +52,7 @@ function DotobjModelLoad(_buffer)
     var _reverse_triangles        = global.__dotobjReverseTriangles;
     var _write_tangents           = global.__dotobjWriteTangents;
     var _force_calculate_tangents = global.__dotobjForceTangentCalc;
+    var _rotate_on_load           = global.__dotobjTransformOnLoad;
 
 
     //Create some lists to store the .obj file's data
@@ -816,9 +817,17 @@ function DotobjModelLoad(_buffer)
                     ++_missing_positions;
                     continue;
                 }
-            
+                
+                if (_rotate_on_load)
+                {
+                    var _old_vx = _vx;
+                    var _old_vy = _vy;
+                    var _old_vz = _vz;
+                    DOTOBJ_POSITION_TRANSFORM;
+                }
+                
                 vertex_position_3d(_vbuff, _vx, _vy, _vz);
-            
+                
                 //Write the normal
                 if (_n_index >= 0)
                 {
@@ -833,6 +842,14 @@ function DotobjModelLoad(_buffer)
                         _nx = 0;
                         _ny = 0;
                         _nz = 0;
+                    }
+                
+                    if (_rotate_on_load)
+                    {
+                        var _old_nx = _nx;
+                        var _old_ny = _ny;
+                        var _old_nz = _nz;
+                        DOTOBJ_NORMAL_TRANSFORM;
                     }
                 }
                 
