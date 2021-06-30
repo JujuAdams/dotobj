@@ -1,10 +1,24 @@
 function DotobjClassModel() constructor
 {
+    aabb = {
+        x1 : 0,
+        y1 : 0,
+        z1 : 0,
+        x2 : 0,
+        y2 : 0,
+        z2 : 0,
+    };
+    
     sha1             = undefined;
     groups_struct    = {};
     groups_array     = [];
     material_library = "";
     materials_array  = [];
+    
+    static GetAABB = function()
+    {
+        return aabb;
+    }
     
     static Submit = function()
     {

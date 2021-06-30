@@ -52,9 +52,16 @@ function DotobjModelLoad(_buffer)
     var _reverse_triangles        = global.__dotobjReverseTriangles;
     var _write_tangents           = global.__dotobjWriteTangents;
     var _force_calculate_tangents = global.__dotobjForceTangentCalc;
-    var _rotate_on_load           = global.__dotobjTransformOnLoad;
+    var _transform_on_load        = global.__dotobjTransformOnLoad;
 
-
+    //Axis-aligned bounding box variables
+    var _aabb_x1 =  infinity;
+    var _aabb_y1 =  infinity;
+    var _aabb_z1 =  infinity;
+    var _aabb_x2 = -infinity;
+    var _aabb_y2 = -infinity;
+    var _aabb_z2 = -infinity;
+    
     //Create some lists to store the .obj file's data
     //We fill in the 0th element because .obj vertices are 1-indexed (!)
     var _position_list = ds_list_create(); ds_list_add(_position_list, 0,0,0  );
@@ -151,9 +158,29 @@ function DotobjModelLoad(_buffer)
                                 }
                                 break;
                             }
-                        
+                            
+                            var _vx = real(_line_data_list[| 1]);
+                            var _vy = real(_line_data_list[| 2]);
+                            var _vz = real(_line_data_list[| 3]);
+                            
+                            //Perform a transformation if needed
+                            if (_transform_on_load)
+                            {
+                                var _old_vx = _vx;
+                                var _old_vy = _vy;
+                                var _old_vz = _vz;
+                                DOTOBJ_POSITION_TRANSFORM;
+                            }
+                            
+                            _aabb_x1 = min(_aabb_x1, _vx);
+                            _aabb_y1 = min(_aabb_y1, _vy);
+                            _aabb_z1 = min(_aabb_z1, _vz);
+                            _aabb_x2 = max(_aabb_x2, _vx);
+                            _aabb_y2 = max(_aabb_y2, _vy);
+                            _aabb_z2 = max(_aabb_z2, _vz);
+                            
                             //Add the position to our global list of positions
-                            ds_list_add(_position_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]), real(_line_data_list[| 3]));
+                            ds_list_add(_position_list, _vx, _vy, _vz);
                         
                             if (ds_list_size(_line_data_list) == 1+3+3)
                             {
@@ -202,7 +229,21 @@ function DotobjModelLoad(_buffer)
                     
                         case "vn": //Normal
                             //Add our normal to the global list of normals
-                            ds_list_add(_normal_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]), real(_line_data_list[| 3]));
+                            
+                            var _nx = real(_line_data_list[| 1]);
+                            var _ny = real(_line_data_list[| 2]);
+                            var _nz = real(_line_data_list[| 3]);
+                            
+                            //Perform a transformation if needed
+                            if (_transform_on_load)
+                            {
+                                var _old_nx = _nx;
+                                var _old_ny = _ny;
+                                var _old_nz = _nz;
+                                DOTOBJ_NORMAL_TRANSFORM;
+                            }
+                            
+                            ds_list_add(_normal_list, _nx, _ny, _nz);
                         break;
                     
                         case "f": //Face definition
@@ -818,14 +859,6 @@ function DotobjModelLoad(_buffer)
                     continue;
                 }
                 
-                if (_rotate_on_load)
-                {
-                    var _old_vx = _vx;
-                    var _old_vy = _vy;
-                    var _old_vz = _vz;
-                    DOTOBJ_POSITION_TRANSFORM;
-                }
-                
                 vertex_position_3d(_vbuff, _vx, _vy, _vz);
                 
                 //Write the normal
@@ -842,14 +875,6 @@ function DotobjModelLoad(_buffer)
                         _nx = 0;
                         _ny = 0;
                         _nz = 0;
-                    }
-                
-                    if (_rotate_on_load)
-                    {
-                        var _old_nx = _nx;
-                        var _old_ny = _ny;
-                        var _old_nz = _nz;
-                        DOTOBJ_NORMAL_TRANSFORM;
                     }
                 }
                 
@@ -953,6 +978,19 @@ function DotobjModelLoad(_buffer)
         //Move to the next group
         ++_g;
     }
+
+    //Update axis-aligned bounding box variables
+    with(_model_struct.aabb)
+    {
+        x1 = _aabb_x1;
+        y1 = _aabb_y1;
+        z1 = _aabb_z1;
+        x2 = _aabb_x2;
+        y2 = _aabb_y2;
+        z2 = _aabb_z2;
+    }
+    
+    //show_debug_message("DotobjModelLoad(): AABB = " + string(_aabb_x1) + ", " + string(_aabb_y1) + ", "+ string(_aabb_z1) + " --> " + string(_aabb_x2) + ", " + string(_aabb_y2) + ", "+ string(_aabb_z2));
 
     //Clean up our data structures
     ds_list_destroy(_position_list );
