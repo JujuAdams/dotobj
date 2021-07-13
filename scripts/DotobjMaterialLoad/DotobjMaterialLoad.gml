@@ -257,6 +257,13 @@ function DotobjMaterialLoad()
                         case "map_bump":
                         case "bump": //"Bump" map (normal map)
                             var _texture_filename = _directory + _line_data_list[| 1];
+                            var _i = 1;
+                            var _size = ds_list_size(_line_data_list);
+                            repeat(_size-1)
+                            {
+                                _texture_filename += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                                ++_i;
+                            }
                             
                             var _sprite = __DotobjAddExternalSprite(_texture_filename);
                             _texture_struct = (_sprite >= 0)? new DotobjClassTexture(_sprite, 0, true) : undefined;
