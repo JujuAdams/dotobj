@@ -55,10 +55,10 @@
     {"name":"Windows","path":"options/windows/options_windows.yy",},
     {"name":"Xbox One","path":"options/xboxone/options_xboxone.yy",},
     {"name":"Main","path":"options/main/options_main.yy",},
+    {"name":"operagx","path":"options/operagx/options_operagx.yy",},
   ],
   "isDnDProject": false,
   "isEcma": false,
-  "tutorialPath": "",
   "configs": {
     "name": "Default",
     "children": [],
@@ -144,7 +144,7 @@
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"maya_2.obj","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2.3.2.560",
+    "IDEVersion": "2022.1.1.610",
   },
   "resourceVersion": "1.4",
   "name": "dotobj",
