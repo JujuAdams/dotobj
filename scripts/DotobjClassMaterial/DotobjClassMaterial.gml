@@ -75,6 +75,12 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
         normal_map       = undefined;
         
         ds_map_delete(global.__dotobjMaterialLibrary, cache_name);
+        
+        if (ds_map_exists(global.__dotobjMtlFileLoaded, library))
+        {
+            show_debug_message("DotobjClassMaterial.Destroy(): Invalidating cache for library \"" + library + "\"");
+            ds_map_delete(global.__dotobjMtlFileLoaded, library);
+        }
     }
     
     static toString = function()
