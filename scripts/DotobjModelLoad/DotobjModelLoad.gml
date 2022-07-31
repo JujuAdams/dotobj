@@ -1,7 +1,8 @@
 /// Turns an ASCII .obj file, stored in a buffer, into a series of vertex buffers stored in a tree-like heirachy.
 /// @jujuadams    contact@jujuadams.com
 /// 
-/// @param buffer   Buffer to read from
+/// @param buffer             Buffer to read from
+/// @param [modelDirectory]   Directory that the model is in. This is used to find .mtl material libraries. Defaults to the root of Included Files
 /// 
 /// Returns: A dotobj model (a struct)
 ///          This model can be drawn using the submit() method e.g. sponza_model.submit();
@@ -34,9 +35,15 @@
 /// - Line primitives
 /// - Separate in-file LOD
 
-function DotobjModelLoad(_buffer)
+function DotobjModelLoad()
 {
+    var _buffer          = argument[0];
+    var _model_directory = ((argument_count > 1) && (argument[1] != undefined))? argument[1] : "";
+    
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
+    
+    //Tidy up the model directory
+    if (string_char_at(_model_directory, string_length(_model_directory)) != "\\") _model_directory += "\\";
     
     //Create some variables to track errors
     var _vec4_error            = false;
@@ -352,7 +359,7 @@ function DotobjModelLoad(_buffer)
                     
                         case "mtllib":
                             //Build the library name from all the line data
-                            var _material_library = "";
+                            var _material_library = _model_directory;
                             var _i = 1;
                             var _size = ds_list_size(_line_data_list);
                             repeat(_size-1)

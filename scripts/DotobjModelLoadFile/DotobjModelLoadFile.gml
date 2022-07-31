@@ -28,7 +28,7 @@
 function DotobjModelLoadFile(_filename)
 {
     var _buffer = buffer_load(_filename);
-    var _result = DotobjModelLoad(_buffer);
+    var _result = DotobjModelLoad(_buffer, filename_dir(_filename));
     buffer_delete(_buffer);
 
     return _result;

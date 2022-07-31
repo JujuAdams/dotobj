@@ -21,7 +21,7 @@ function DotobjMaterialLoadFile(_filename)
         else
         {
             var _buffer = buffer_load(_filename);
-            var _result = DotobjMaterialLoad(_filename, _buffer);
+            var _result = DotobjMaterialLoad(_filename, _buffer, filename_dir(_filename));
             buffer_delete(_buffer);
             
             global.__dotobjMtlFileLoaded[? _filename] = _result;

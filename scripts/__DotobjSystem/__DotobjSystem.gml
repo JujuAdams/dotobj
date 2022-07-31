@@ -1,6 +1,6 @@
 //Always date your work!
-#macro  __DOTOBJ_VERSION  "5.3.2"
-#macro  __DOTOBJ_DATE     "2021/06/30"
+#macro  __DOTOBJ_VERSION  "5.4.0"
+#macro  __DOTOBJ_DATE     "2022/07/31"
 
 //Some strings to use for defaults. Change these if you so desire.
 #macro  __DOTOBJ_DEFAULT_GROUP              "__dotobj_group__"
@@ -75,8 +75,17 @@ function __DotobjAddExternalSprite(_filename)
     
     if (ds_map_exists(global.__dotobjSpriteMap, _filename))
     {
-        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjAddExternalSprite(): Reusing \"" + string(_filename) + "\"");
         _sprite = global.__dotobjSpriteMap[? _filename];
+        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjAddExternalSprite(): Reusing \"" + string(_filename) + "\" (spr=" + string(_sprite) + ")");
+        
+        if (sprite_exists(_sprite))
+        {
+            return _sprite;
+        }
+        else
+        {
+            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjAddExternalSprite(): Sprite " + string(_sprite) + " does not exist, trying to reload");
+        }
     }
     
     if (!file_exists(_filename))

@@ -5,7 +5,7 @@ if (!code_is_compiled() && !debug_mode) show_error("It is strongly recommended y
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
-model_sponza = DotobjTryCache("sponza.obj");
+model_sponza = DotobjTryCache("sponza\\sponza.obj");
 model_sponza.Freeze(); //Wise to freeze your models as well
 
 //Output the materials that this model uses
