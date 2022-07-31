@@ -259,7 +259,7 @@ function DotobjMaterialLoad()
                             var _texture_filename = _directory + _line_data_list[| 1];
                             var _i = 1;
                             var _size = ds_list_size(_line_data_list);
-                            repeat(_size-1)
+                            repeat(_size-2)
                             {
                                 _texture_filename += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
                                 ++_i;
