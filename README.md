@@ -1,4 +1,4 @@
-<h1 align="center">dotobj 5.3.2</h1>
+<h1 align="center">dotobj 5.4.0</h1>
 
 <p align="center">.obj/.mtl loader, written in native GML, for GameMaker Studio 2.3 by <b>@jujuadams</b></p>
 
