@@ -67,6 +67,13 @@ function DotobjClassModel() constructor
         buffer_write(_buffer, buffer_string, sha1);
         buffer_write(_buffer, buffer_string, material_library);
         
+        buffer_write(_buffer, buffer_f64, aabb.x1);
+        buffer_write(_buffer, buffer_f64, aabb.y1);
+        buffer_write(_buffer, buffer_f64, aabb.z1);
+        buffer_write(_buffer, buffer_f64, aabb.x2);
+        buffer_write(_buffer, buffer_f64, aabb.y2);
+        buffer_write(_buffer, buffer_f64, aabb.z2);
+        
         var _size = array_length(materials_array);
         buffer_write(_buffer, buffer_u16, _size);
         var _i = 0;
@@ -108,6 +115,13 @@ function DotobjClassModel() constructor
         
         var _material_library = buffer_read(_buffer, buffer_string);
         if (_material_library != "") DotobjMaterialLoadFile(_material_library);
+        
+        aabb.x1 = buffer_read(_buffer, buffer_f64);
+        aabb.y1 = buffer_read(_buffer, buffer_f64);
+        aabb.z1 = buffer_read(_buffer, buffer_f64);
+        aabb.x2 = buffer_read(_buffer, buffer_f64);
+        aabb.y2 = buffer_read(_buffer, buffer_f64);
+        aabb.z2 = buffer_read(_buffer, buffer_f64);
         
         repeat(buffer_read(_buffer, buffer_u16))
         {
