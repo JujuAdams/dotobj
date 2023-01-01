@@ -736,6 +736,7 @@ function DotobjModelLoad()
             {
                 //Reset our lookup indexes
                 var _v_index = undefined;
+                var _c_index = undefined;
                 var _t_index = undefined;
                 var _n_index = undefined;
                 
@@ -850,6 +851,7 @@ function DotobjModelLoad()
                 }
                 
                 _v_index = 3*floor(real(_v_index));
+                _c_index = (4/3)*_v_index;
                 _n_index = 3*floor(real(_n_index));
                 _t_index = 2*floor(real(_t_index));
                 
@@ -888,10 +890,10 @@ function DotobjModelLoad()
                 vertex_normal(_vbuff, _nx, _ny, _nz);
             
                 //Write the colour
-                _cr = _colour_list[| _v_index  ]*255; //Red
-                _cg = _colour_list[| _v_index+1]*255; //Green
-                _cb = _colour_list[| _v_index+2]*255; //Blue
-                _ca = _colour_list[| _v_index+3];     //Alpha
+                _cr = _colour_list[| _c_index  ]*255; //Red
+                _cg = _colour_list[| _c_index+1]*255; //Green
+                _cb = _colour_list[| _c_index+2]*255; //Blue
+                _ca = _colour_list[| _c_index+3];     //Alpha
                 vertex_colour(_vbuff, make_colour_rgb(_cr, _cg, _cb), _ca);
             
                 //Write the UVs
