@@ -23,7 +23,7 @@
 /// @param filename   File to read from
 /// 
 /// Returns: A dotobj model (a struct)
-///          This model can be drawn using the submit() method e.g. sponza_model.submit();
+///          This model can be drawn using the submit() method e.g. sponza_model.Submit();
 
 function DotobjModelLoadFile(_filename)
 {

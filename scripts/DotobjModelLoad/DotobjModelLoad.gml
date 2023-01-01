@@ -5,7 +5,7 @@
 /// @param [modelDirectory]   Directory that the model is in. This is used to find .mtl material libraries. Defaults to the root of Included Files
 /// 
 /// Returns: A dotobj model (a struct)
-///          This model can be drawn using the submit() method e.g. sponza_model.submit();
+///          This model can be drawn using the submit() method e.g. sponza_model.Submit();
 /// 
 /// 
 /// 
