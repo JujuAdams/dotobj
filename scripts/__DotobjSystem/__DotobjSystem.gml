@@ -1,5 +1,5 @@
 //Always date your work!
-#macro  __DOTOBJ_VERSION  "5.4.1"
+#macro  __DOTOBJ_VERSION  "5.4.2"
 #macro  __DOTOBJ_DATE     "2023/01/01"
 
 //Some strings to use for defaults. Change these if you so desire.
