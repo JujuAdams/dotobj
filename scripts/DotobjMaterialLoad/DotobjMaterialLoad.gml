@@ -88,17 +88,29 @@ function DotobjMaterialLoad()
                         
                         var _material_struct = __DotobjEnsureMaterial(_library_name, _material_name);
                     }
-                    else if (_line_data_list[| 0] == "#")
+                    else if (string_char_at(_line_data_list[| 0], 1) == "#")
                     {
                         //Handle comments
                         if (DOTOBJ_OUTPUT_COMMENTS)
                         {
                             var _string = "";
-                            var _i = 1;
+                            var _i = 0;
                             var _size = ds_list_size(_line_data_list);
-                            repeat(_size-1)
+                            repeat(_size)
                             {
-                                _string += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                                var _line = _line_data_list[| _i];
+                                if (_i == 0)
+                                {
+                                    var _len = string_length(_line);
+                                    if (_len >= 2)
+                                    {
+                                        _string += string_copy(_line, 2, _len-1) + ((_i < _size-1)? " " : "");
+                                    } 
+                                }
+                                else
+                                {
+                                    _string += _line + ((_i < _size-1)? " " : "");
+                                }
                                 ++_i;
                             }
                         

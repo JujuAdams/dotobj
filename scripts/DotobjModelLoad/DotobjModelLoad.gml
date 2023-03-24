@@ -152,321 +152,337 @@ function DotobjModelLoad()
                 if (_value != 32)
                 {
                     //If we've reached the end of a line or the end of the buffer, process the line
-                
-                    switch(_line_data_list[| 0]) //Use the first piece of data we read to determine what kind of line this is
+
+                    if (string_pos("#", _line_data_list[| 0]) == 1) //If first piece is a comment
                     {
-                        case "v": //Position
-                            if (ds_list_size(_line_data_list) == 1+4)
+                        if (DOTOBJ_OUTPUT_COMMENTS)
+                        {
+                            var _string = "";
+                            var _i = 0;
+                            var _size = ds_list_size(_line_data_list);
+                            var _can_add = false;
+                            repeat(_size)
                             {
-                                if (DOTOBJ_OUTPUT_WARNINGS && !_vec4_error)
+                                var _line = _line_data_list[| _i];
+                                if (_i == 0)
                                 {
-                                    show_debug_message("DotobjModelLoad(): Warning! 4-element vertex position data is for mathematical curves/surfaces. This is not supported. (ln=" + string(_meta_line) + ")");
-                                    _vec4_error = true;
-                                }
-                                break;
-                            }
-                            
-                            var _vx = real(_line_data_list[| 1]);
-                            var _vy = real(_line_data_list[| 2]);
-                            var _vz = real(_line_data_list[| 3]);
-                            
-                            //Perform a transformation if needed
-                            if (_transform_on_load)
-                            {
-                                var _old_vx = _vx;
-                                var _old_vy = _vy;
-                                var _old_vz = _vz;
-                                DOTOBJ_POSITION_TRANSFORM;
-                            }
-                            
-                            _aabb_x1 = min(_aabb_x1, _vx);
-                            _aabb_y1 = min(_aabb_y1, _vy);
-                            _aabb_z1 = min(_aabb_z1, _vz);
-                            _aabb_x2 = max(_aabb_x2, _vx);
-                            _aabb_y2 = max(_aabb_y2, _vy);
-                            _aabb_z2 = max(_aabb_z2, _vz);
-                            
-                            //Add the position to our global list of positions
-                            ds_list_add(_position_list, _vx, _vy, _vz);
-                        
-                            if (ds_list_size(_line_data_list) == 1+3+3)
-                            {
-                                //Three extra pieces of data: this is an RGB value
-                                ds_list_add(_colour_list, real(_line_data_list[| 4]), real(_line_data_list[| 5]), real(_line_data_list[| 6]), 1);
-                            }
-                            else if (ds_list_size(_line_data_list) == 1+3+4)
-                            {
-                                //Four extra pieces of data: this is an RGBA value
-                                ds_list_add(_colour_list, real(_line_data_list[| 4]), real(_line_data_list[| 5]), real(_line_data_list[| 6]), real(_line_data_list[| 7]));
-                            }
-                            else
-                            {
-                                //If we have insufficient data for this line, presume this vertex is white with 100%
-                                ds_list_add(_colour_list, 1, 1, 1, 1);
-                            }
-                        break;
-                    
-                        case "vt": //Texture coordinate
-                            if (ds_list_size(_line_data_list) == 1+3)
-                            {
-                                if (DOTOBJ_OUTPUT_WARNINGS && !_texture_depth_error)
-                                {
-                                    switch(_line_data_list[| 3])
+                                    var _len = string_length(_line);
+                                    if (_len >= 2)
                                     {
-                                        case "0":
-                                        case "0.0":
-                                        case "0.00":
-                                        case "0.000":
-                                        case "0.0000":
-                                        case "0.00000":
-                                            //Ignore texture depths of exactly 0
-                                        break;
-                                    
-                                        default:
-                                            show_debug_message("DotobjModelLoad(): Warning! Texture depth is not supported; W-component of the texture coordinate will be ignored. (ln=" + string(_meta_line) + ")");
-                                            _texture_depth_error = true;
-                                        break;
-                                    }
-                                }
-                            }
-                        
-                            //Add our UVs to the global list of UVs
-                            ds_list_add(_texture_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]));
-                        break;
-                    
-                        case "vn": //Normal
-                            //Add our normal to the global list of normals
-                            
-                            var _nx = real(_line_data_list[| 1]);
-                            var _ny = real(_line_data_list[| 2]);
-                            var _nz = real(_line_data_list[| 3]);
-                            
-                            //Perform a transformation if needed
-                            if (_transform_on_load)
-                            {
-                                var _old_nx = _nx;
-                                var _old_ny = _ny;
-                                var _old_nz = _nz;
-                                DOTOBJ_NORMAL_TRANSFORM;
-                            }
-                            
-                            ds_list_add(_normal_list, _nx, _ny, _nz);
-                        break;
-                    
-                        case "f": //Face definition
-                            var _line_data_size = ds_list_size(_line_data_list);
-                        
-                            //Add all triangles, vertex-by-vertex, defined by this face to the mesh's vertex list
-                            _meta_triangles += _line_data_size-3;
-                            var _f = 0;
-                            repeat(_line_data_size-3)
-                            {
-                                if (!_reverse_triangles)
-                                {
-                                    array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
+                                        _string += string_copy(_line, 2, _len-1) + ((_i < _size-1)? " " : "");
+                                    } 
                                 }
                                 else
                                 {
-                                    array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
+                                    _string += _line + ((_i < _size-1)? " " : "");
                                 }
-                            
-                                ++_f;
-                            }
-                        break;
-                    
-                        case "l": //Line definition
-                            if (DOTOBJ_OUTPUT_WARNINGS && !DOTOBJ_IGNORE_LINES) show_debug_message("DotobjModelLoad(): Warning! Line primitives are not currently supported. (ln=" + string(_meta_line) + ")");
-                        break;
-                    
-                        case "g": //Group definition
-                            //Build the group name from all the line data
-                            var _group_name = "";
-                            var _i = 1;
-                            var _size = ds_list_size(_line_data_list);
-                            repeat(_size-1)
-                            {
-                                _group_name += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
                                 ++_i;
                             }
-                        
-                            //Create a new group and give it a blank mesh
-                            var _group_struct = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                            var _mesh_struct  = (new DotobjClassMesh()).AddTo(_group_struct);
-                            
-                            with(_mesh_struct)
+
+                            show_debug_message("DotobjModelLoad(): \"" + _string + "\"");
+                        }
+                    }
+                    else
+                    {
+                        switch(_line_data_list[| 0]) //Use the first piece of data we read to determine what kind of line this is
                             {
-                                material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
-                                has_tangents = _write_tangents;
-                                primitive    = _mesh_primitive;
-                                var _mesh_vertexes_array = vertexes_array;
-                            }
-                        break;
-                    
-                        case "o": //Object definition
-                            //Build the object name from all the line data
-                            var _group_name = "";
-                            var _i = 1;
-                            var _size = ds_list_size(_line_data_list);
-                            repeat(_size-1)
-                            {
-                                _group_name += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
-                                ++_i;
-                            }
-                        
-                            if (DOTOBJ_OBJECTS_ARE_GROUPS)
-                            {
-                                //If we want to parse objects as groups, create a new group and give it a blank mesh
-                                var _group_struct = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
-                                var _mesh_struct  = (new DotobjClassMesh()).AddTo(_group_struct);
+                                case "v": //Position
+                                    if (ds_list_size(_line_data_list) == 1+4)
+                                    {
+                                        if (DOTOBJ_OUTPUT_WARNINGS && !_vec4_error)
+                                        {
+                                            show_debug_message("DotobjModelLoad(): Warning! 4-element vertex position data is for mathematical curves/surfaces. This is not supported. (ln=" + string(_meta_line) + ")");
+                                            _vec4_error = true;
+                                        }
+                                        break;
+                                    }
+                                    
+                                    var _vx = real(_line_data_list[| 1]);
+                                    var _vy = real(_line_data_list[| 2]);
+                                    var _vz = real(_line_data_list[| 3]);
+                                    
+                                    //Perform a transformation if needed
+                                    if (_transform_on_load)
+                                    {
+                                        var _old_vx = _vx;
+                                        var _old_vy = _vy;
+                                        var _old_vz = _vz;
+                                        DOTOBJ_POSITION_TRANSFORM;
+                                    }
+                                    
+                                    _aabb_x1 = min(_aabb_x1, _vx);
+                                    _aabb_y1 = min(_aabb_y1, _vy);
+                                    _aabb_z1 = min(_aabb_z1, _vz);
+                                    _aabb_x2 = max(_aabb_x2, _vx);
+                                    _aabb_y2 = max(_aabb_y2, _vy);
+                                    _aabb_z2 = max(_aabb_z2, _vz);
+                                    
+                                    //Add the position to our global list of positions
+                                    ds_list_add(_position_list, _vx, _vy, _vz);
                                 
-                                with(_mesh_struct)
-                                {
-                                    material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
-                                    has_tangents = _write_tangents;
-                                    primitive    = _mesh_primitive;
-                                    var _mesh_vertexes_array = vertexes_array;
-                                }
-                            }
-                            else if (DOTOBJ_OUTPUT_WARNINGS)
-                            {
-                                show_debug_message("DotobjModelLoad(): Warning! Object \"" + string(_string) + "\" found. Objects are not supported; use groups instead, or set DOTOBJ_OBJECTS_ARE_GROUPS to <true>. (ln=" + string(_meta_line) + ")");
-                            }
-                        break;
-                    
-                        case "s": //Section definition
-                            if (DOTOBJ_OUTPUT_WARNINGS && !_smoothing_group_error)
-                            {
-                                show_debug_message("DotobjModelLoad(): Warning! Smoothing groups are not currently supported. (ln=" + string(_meta_line) + ")");
-                                _smoothing_group_error = true;
-                            }
-                        break;
-                    
-                        case "#": //Comments
-                            if (DOTOBJ_OUTPUT_COMMENTS)
-                            {
-                                var _string = "";
-                                var _i = 1;
-                                var _size = ds_list_size(_line_data_list);
-                                repeat(_size-1)
-                                {
-                                    _string += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
-                                    ++_i;
-                                }
+                                    if (ds_list_size(_line_data_list) == 1+3+3)
+                                    {
+                                        //Three extra pieces of data: this is an RGB value
+                                        ds_list_add(_colour_list, real(_line_data_list[| 4]), real(_line_data_list[| 5]), real(_line_data_list[| 6]), 1);
+                                    }
+                                    else if (ds_list_size(_line_data_list) == 1+3+4)
+                                    {
+                                        //Four extra pieces of data: this is an RGBA value
+                                        ds_list_add(_colour_list, real(_line_data_list[| 4]), real(_line_data_list[| 5]), real(_line_data_list[| 6]), real(_line_data_list[| 7]));
+                                    }
+                                    else
+                                    {
+                                        //If we have insufficient data for this line, presume this vertex is white with 100%
+                                        ds_list_add(_colour_list, 1, 1, 1, 1);
+                                    }
+                                break;
                             
-                                show_debug_message("DotobjModelLoad(): \"" + _string + "\"");
-                            }
-                        break;
-                    
-                        case "mtllib":
-                            //Build the library name from all the line data
-                            var _material_library = _model_directory;
-                            var _i = 1;
-                            var _size = ds_list_size(_line_data_list);
-                            repeat(_size-1)
-                            {
-                                _material_library += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
-                                ++_i;
-                            }
+                                case "vt": //Texture coordinate
+                                    if (ds_list_size(_line_data_list) == 1+3)
+                                    {
+                                        if (DOTOBJ_OUTPUT_WARNINGS && !_texture_depth_error)
+                                        {
+                                            switch(_line_data_list[| 3])
+                                            {
+                                                case "0":
+                                                case "0.0":
+                                                case "0.00":
+                                                case "0.000":
+                                                case "0.0000":
+                                                case "0.00000":
+                                                    //Ignore texture depths of exactly 0
+                                                break;
+                                            
+                                                default:
+                                                    show_debug_message("DotobjModelLoad(): Warning! Texture depth is not supported; W-component of the texture coordinate will be ignored. (ln=" + string(_meta_line) + ")");
+                                                    _texture_depth_error = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                
+                                    //Add our UVs to the global list of UVs
+                                    ds_list_add(_texture_list, real(_line_data_list[| 1]), real(_line_data_list[| 2]));
+                                break;
                             
-                            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Requires \"" + _material_library + "\"");
-                            _model_struct.material_library = _material_library;
-                            DotobjMaterialLoadFile(_material_library);
-                            if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Set material library to \"" + _material_library + "\"");
-                        break;
-                    
-                        case "usemtl":
-                            //Build the material name from all the line data
-                            var _material_specific = "";
-                            var _i = 1;
-                            var _size = ds_list_size(_line_data_list);
-                            repeat(_size-1)
-                            {
-                                _material_specific += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
-                                ++_i;
-                            }
-                        
-                            //Then build a full material name from that
-                            var _material_name = _material_library + "." + _material_specific;
+                                case "vn": //Normal
+                                    //Add our normal to the global list of normals
+                                    
+                                    var _nx = real(_line_data_list[| 1]);
+                                    var _ny = real(_line_data_list[| 2]);
+                                    var _nz = real(_line_data_list[| 3]);
+                                    
+                                    //Perform a transformation if needed
+                                    if (_transform_on_load)
+                                    {
+                                        var _old_nx = _nx;
+                                        var _old_ny = _ny;
+                                        var _old_nz = _nz;
+                                        DOTOBJ_NORMAL_TRANSFORM;
+                                    }
+                                    
+                                    ds_list_add(_normal_list, _nx, _ny, _nz);
+                                break;
                             
-                            //If this material is new to us, add it to our materials array
-                            if (!variable_struct_exists(_unique_materials, _material_name))
-                            {
-                                _unique_materials[$ _material_name] = variable_struct_names_count(_unique_materials);
-                                array_push(_model_materials_array, _material_name);
-                            }
+                                case "f": //Face definition
+                                    var _line_data_size = ds_list_size(_line_data_list);
+                                
+                                    //Add all triangles, vertex-by-vertex, defined by this face to the mesh's vertex list
+                                    _meta_triangles += _line_data_size-3;
+                                    var _f = 0;
+                                    repeat(_line_data_size-3)
+                                    {
+                                        if (!_reverse_triangles)
+                                        {
+                                            array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 2+_f], _line_data_list[| 3+_f]);
+                                        }
+                                        else
+                                        {
+                                            array_push(_mesh_vertexes_array, _line_data_list[| 1], _line_data_list[| 3+_f], _line_data_list[| 2+_f]);
+                                        }
+                                    
+                                        ++_f;
+                                    }
+                                break;
                             
-                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertexes_array) <= 0))
-                            {
-                                //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material
-                                _mesh_struct.material = _material_name;
+                                case "l": //Line definition
+                                    if (DOTOBJ_OUTPUT_WARNINGS && !DOTOBJ_IGNORE_LINES) show_debug_message("DotobjModelLoad(): Warning! Line primitives are not currently supported. (ln=" + string(_meta_line) + ")");
+                                break;
+                            
+                                case "g": //Group definition
+                                    //Build the group name from all the line data
+                                    var _group_name = "";
+                                    var _i = 1;
+                                    var _size = ds_list_size(_line_data_list);
+                                    repeat(_size-1)
+                                    {
+                                        _group_name += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                                        ++_i;
+                                    }
+                                
+                                    //Create a new group and give it a blank mesh
+                                    var _group_struct = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
+                                    var _mesh_struct  = (new DotobjClassMesh()).AddTo(_group_struct);
+                                    
+                                    with(_mesh_struct)
+                                    {
+                                        material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                        has_tangents = _write_tangents;
+                                        primitive    = _mesh_primitive;
+                                        var _mesh_vertexes_array = vertexes_array;
+                                    }
+                                break;
+                            
+                                case "o": //Object definition
+                                    //Build the object name from all the line data
+                                    var _group_name = "";
+                                    var _i = 1;
+                                    var _size = ds_list_size(_line_data_list);
+                                    repeat(_size-1)
+                                    {
+                                        _group_name += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                                        ++_i;
+                                    }
+                                
+                                    if (DOTOBJ_OBJECTS_ARE_GROUPS)
+                                    {
+                                        //If we want to parse objects as groups, create a new group and give it a blank mesh
+                                        var _group_struct = __DotobjEnsureGroup(_model_struct, _group_name, _meta_line);
+                                        var _mesh_struct  = (new DotobjClassMesh()).AddTo(_group_struct);
+                                        
+                                        with(_mesh_struct)
+                                        {
+                                            material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                            has_tangents = _write_tangents;
+                                            primitive    = _mesh_primitive;
+                                            var _mesh_vertexes_array = vertexes_array;
+                                        }
+                                    }
+                                    else if (DOTOBJ_OUTPUT_WARNINGS)
+                                    {
+                                        show_debug_message("DotobjModelLoad(): Warning! Object \"" + string(_string) + "\" found. Objects are not supported; use groups instead, or set DOTOBJ_OBJECTS_ARE_GROUPS to <true>. (ln=" + string(_meta_line) + ")");
+                                    }
+                                break;
+                            
+                                case "s": //Section definition
+                                    if (DOTOBJ_OUTPUT_WARNINGS && !_smoothing_group_error)
+                                    {
+                                        show_debug_message("DotobjModelLoad(): Warning! Smoothing groups are not currently supported. (ln=" + string(_meta_line) + ")");
+                                        _smoothing_group_error = true;
+                                    }
+                                break;
+                            
+                                case "mtllib":
+                                    //Build the library name from all the line data
+                                    var _material_library = _model_directory;
+                                    var _i = 1;
+                                    var _size = ds_list_size(_line_data_list);
+                                    repeat(_size-1)
+                                    {
+                                        _material_library += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                                        ++_i;
+                                    }
+                                    
+                                    if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Requires \"" + _material_library + "\"");
+                                    _model_struct.material_library = _material_library;
+                                    DotobjMaterialLoadFile(_material_library);
+                                    if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Set material library to \"" + _material_library + "\"");
+                                break;
+                            
+                                case "usemtl":
+                                    //Build the material name from all the line data
+                                    var _material_specific = "";
+                                    var _i = 1;
+                                    var _size = ds_list_size(_line_data_list);
+                                    repeat(_size-1)
+                                    {
+                                        _material_specific += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
+                                        ++_i;
+                                    }
+                                
+                                    //Then build a full material name from that
+                                    var _material_name = _material_library + "." + _material_specific;
+                                    
+                                    //If this material is new to us, add it to our materials array
+                                    if (!variable_struct_exists(_unique_materials, _material_name))
+                                    {
+                                        _unique_materials[$ _material_name] = array_length(variable_struct_get_names(_unique_materials));
+                                        array_push(_model_materials_array, _material_name);
+                                    }
+                                    
+                                    if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertexes_array) <= 0))
+                                    {
+                                        //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material
+                                        _mesh_struct.material = _material_name;
+                                    }
+                                    else
+                                    {
+                                        //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
+                                        var _mesh_struct = (new DotobjClassMesh()).AddTo(_group_struct);
+                                        with(_mesh_struct)
+                                        {
+                                            material     = _material_name;
+                                            has_tangents = _write_tangents;
+                                            primitive    = _mesh_primitive;
+                                            var _mesh_vertexes_array = vertexes_array;
+                                        }
+                                    }
+                                break;
+                            
+                                case "maplib":
+                                case "usemap":
+                                    if (DOTOBJ_OUTPUT_WARNINGS && !_map_error)
+                                    {
+                                        show_debug_message("DotobjModelLoad(): Warning! External texture map files are not currently supported. (ln=" + string(_meta_line) + ")");
+                                        _map_error = true;
+                                    }
+                                break;
+                            
+                                case "shadow_obj":
+                                case "trace_obj":
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is an external .obj reference. This is not supported. (ln=" + string(_meta_line) + ")");
+                                break;
+                            
+                                case "vp":
+                                case "cstype":
+                                case "deg":
+                                case "bmat":
+                                case "step":
+                                case "curv":
+                                case "curv2":
+                                case "surf":
+                                case "end":
+                                case "parm":
+                                case "trim":
+                                case "hole":
+                                case "scrv":
+                                case "sp":
+                                case "con":
+                                case "mg":
+                                case "ctech":
+                                case "stech":
+                                case "bsp":   //Depreciated
+                                case "bzp":   //Depreciated
+                                case "cdc":   //Depreciated
+                                case "cdp":   //Depreciated
+                                case "res":   //Depreciated
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is for mathematical curves/surfaces. This is not supported. (ln=" + string(_meta_line) + ")");
+                                break;
+                            
+                                case "lod":
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! In-file LODs are not currently supported. (ln=" + string(_meta_line) + ")");
+                                break;
+                            
+                                case "bevel":
+                                case "c_interp":
+                                case "d_interp":
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is a rendering attribute. This is not supported. (ln=" + string(_meta_line) + ")");
+                                break;
+                            
+                                default: //Something else that we don't recognise!
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised. (ln=" + string(_meta_line) + ")");
+                                break;
                             }
-                            else
-                            {
-                                //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
-                                var _mesh_struct = (new DotobjClassMesh()).AddTo(_group_struct);
-                                with(_mesh_struct)
-                                {
-                                    material     = _material_name;
-                                    has_tangents = _write_tangents;
-                                    primitive    = _mesh_primitive;
-                                    var _mesh_vertexes_array = vertexes_array;
-                                }
-                            }
-                        break;
-                    
-                        case "maplib":
-                        case "usemap":
-                            if (DOTOBJ_OUTPUT_WARNINGS && !_map_error)
-                            {
-                                show_debug_message("DotobjModelLoad(): Warning! External texture map files are not currently supported. (ln=" + string(_meta_line) + ")");
-                                _map_error = true;
-                            }
-                        break;
-                    
-                        case "shadow_obj":
-                        case "trace_obj":
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is an external .obj reference. This is not supported. (ln=" + string(_meta_line) + ")");
-                        break;
-                    
-                        case "vp":
-                        case "cstype":
-                        case "deg":
-                        case "bmat":
-                        case "step":
-                        case "curv":
-                        case "curv2":
-                        case "surf":
-                        case "end":
-                        case "parm":
-                        case "trim":
-                        case "hole":
-                        case "scrv":
-                        case "sp":
-                        case "con":
-                        case "mg":
-                        case "ctech":
-                        case "stech":
-                        case "bsp":   //Depreciated
-                        case "bzp":   //Depreciated
-                        case "cdc":   //Depreciated
-                        case "cdp":   //Depreciated
-                        case "res":   //Depreciated
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is for mathematical curves/surfaces. This is not supported. (ln=" + string(_meta_line) + ")");
-                        break;
-                    
-                        case "lod":
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! In-file LODs are not currently supported. (ln=" + string(_meta_line) + ")");
-                        break;
-                    
-                        case "bevel":
-                        case "c_interp":
-                        case "d_interp":
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is a rendering attribute. This is not supported. (ln=" + string(_meta_line) + ")");
-                        break;
-                    
-                        default: //Something else that we don't recognise!
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised. (ln=" + string(_meta_line) + ")");
-                        break;
                     }
                 
                     //Once we're done with the line, clear the data out and start again
