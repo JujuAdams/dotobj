@@ -53,9 +53,9 @@ function DotobjClassMesh() constructor
                 if (_diffuse_colour == undefined) _diffuse_colour = c_white;
                 
                 //Hijack the fog system to force the blend colour, and submit the vertex buffer
-                //gpu_set_fog(true, _diffuse_colour, 0, 0);
+                gpu_set_fog(true, _diffuse_colour, 0, 0);
                 vertex_submit(vertex_buffer, primitive, -1);
-                //gpu_set_fog(false, c_fuchsia, 0, 0);
+                gpu_set_fog(false, c_fuchsia, 0, 0);
             }
         }
     }
