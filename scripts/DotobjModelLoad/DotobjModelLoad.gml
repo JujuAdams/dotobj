@@ -92,6 +92,9 @@ function DotobjModelLoad()
     var _mesh_struct    = (new DotobjClassMesh()).AddTo(_group_struct);
     var _mesh_primitive = global.__dotobjWireframe? pr_linelist : pr_trianglelist;
     
+    //Used for the #MRGB tag
+    var _mrgb_buffer = undefined;
+    
     with(_mesh_struct)
     {
         material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
@@ -413,6 +416,12 @@ function DotobjModelLoad()
                                 }
                             }
                         break;
+                        
+                        case "#MRGB":
+                        case "#mrgb":
+                            if (_mrgb_buffer == undefined) _mrgb_buffer = buffer_create(1024, buffer_grow, 1);
+                            buffer_write(_mrgb_buffer, buffer_text, _line_data_list[| 1]);
+                        break;
                     
                         case "maplib":
                         case "usemap":
@@ -478,6 +487,39 @@ function DotobjModelLoad()
     
         //If we've hit a \n or \r character then increment our line counter
         if ((_value == 10) || (_value == 13)) _meta_line++;
+    }
+    
+    if (_mrgb_buffer != undefined)
+    {
+        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" does not support mask bytes (ln=" + string(_meta_line) + ")");
+        var _mrgb_length = buffer_tell(_mrgb_buffer)/8;
+        
+        if (_mrgb_length != floor(_mrgb_length))
+        {
+            show_debug_message("DotobjModelLoad(): Warning! #MRGB length is not a multiple of 8, vertex colours may be malformed (ln=" + string(_meta_line) + ")");
+        }
+        
+        buffer_write(_mrgb_buffer, buffer_u8, 0x00);
+        buffer_seek(_mrgb_buffer, buffer_seek_start, 8);
+        
+        var _tell = 0;
+        var _i = 4; //Colour list is 1-indexed
+        repeat(_mrgb_length)
+        {
+            var _old_value = buffer_peek(_mrgb_buffer, _tell + 8, buffer_u8);
+            buffer_poke(_mrgb_buffer, _tell + 8, buffer_u8, 0x00);
+            var _hex_string = buffer_peek(_mrgb_buffer, _tell, buffer_string);
+            buffer_poke(_mrgb_buffer, _tell + 8, buffer_u8, _old_value);
+            
+            _value = real("0x" + _hex_string);
+            _colour_list[| _i  ] = ((_value >> 16) & 0xFF) / 255;
+            _colour_list[| _i+1] = ((_value >>  8) & 0xFF) / 255;
+            _colour_list[| _i+2] = ( _value        & 0xFF) / 255;
+            _colour_list[| _i+3] = 1;
+            
+            _tell += 8;
+            _i += 4;
+        }
     }
     
     //If we're writing tangents, initialise those lists
@@ -1013,10 +1055,15 @@ function DotobjModelLoad()
         ds_list_destroy(_tangent_list);
         ds_list_destroy(_bitangent_list);
     }
-
+    
+    if (_mrgb_buffer != undefined)
+    {
+        buffer_delete(_mrgb_buffer);
+    }
+    
     //Return to the old tell position for the buffer
     buffer_seek(_buffer, buffer_seek_start, _old_tell);
-
+    
     //Report errors if we found any
     if (DOTOBJ_OUTPUT_WARNINGS)
     {
