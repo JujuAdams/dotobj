@@ -26,8 +26,9 @@ matrix_set(matrix_view, matrix_build_lookat(cam_x, cam_y, cam_z,
 matrix_set(matrix_projection, matrix_build_projection_perspective_fov(90, room_width/room_height, 1, 3000));
 
 //Finally, draw the model
-//matrix_set(matrix_world, matrix_build(0,0,0, 0,0,0, 100, 100, 100));
+shader_set(shdSimpleLighting);
 model.Submit();
+shader_reset();
 
 //Reset draw state
 matrix_set(matrix_world     , _old_world     );

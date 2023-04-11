@@ -24,6 +24,7 @@
     {"id":{"name":"objMayaTest1","path":"objects/objMayaTest1/objMayaTest1.yy",},"order":10,},
     {"id":{"name":"DotobjModelLoad","path":"scripts/DotobjModelLoad/DotobjModelLoad.yy",},"order":5,},
     {"id":{"name":"DotobjClassTexture","path":"scripts/DotobjClassTexture/DotobjClassTexture.yy",},"order":5,},
+    {"id":{"name":"shdTestNormals","path":"shaders/shdTestNormals/shdTestNormals.yy",},"order":21,},
     {"id":{"name":"DotobjMaterialCreate","path":"scripts/DotobjMaterialCreate/DotobjMaterialCreate.yy",},"order":0,},
     {"id":{"name":"sprPlanetTexArid","path":"sprites/sprPlanetTexArid/sprPlanetTexArid.yy",},"order":17,},
     {"id":{"name":"DotobjSetFlipTexcoordV","path":"scripts/DotobjSetFlipTexcoordV/DotobjSetFlipTexcoordV.yy",},"order":0,},
