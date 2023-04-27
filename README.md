@@ -1,6 +1,6 @@
 <h1 align="center">dotobj 5.5.0</h1>
 
-<p align="center">.obj/.mtl loader, written in native GML, for GameMaker LTS 2022 by <b>@jujuadams</b></p>
+<p align="center">.obj/.mtl loader, written in native GML, for GameMaker LTS 2022 by <a href="https://www.jujuadams.com/" target="_blank">Juju Adams</a></p>
 
 <p align="center"><a href="https://github.com/JujuAdams/dotobj/releases/">Download the .yymps</a></p>
 
