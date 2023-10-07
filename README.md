@@ -6,6 +6,8 @@
 
 <p align="center">Chat about dotobj on the <a href="https://discord.gg/8krYCqr">Discord server</a></p>
 
+<p align="center">See also <a href="https://github.com/blueburncz/BBMOD">BBMod</a></p>
+
 &nbsp;
 
 Lightweight .obj/.mtl 3D model loader written in native GML. Can load from external files or from buffers. This example does not show off complex renderering or PBR, it only demonstrates the loading capabilities of the library.
