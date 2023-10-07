@@ -6,7 +6,7 @@
 
 <p align="center">Chat about dotobj on the <a href="https://discord.gg/8krYCqr">Discord server</a></p>
 
-<p align="center">See also <a href="https://github.com/blueburncz/BBMOD">BBMod</a></p>
+<p align="center">See also <a href="https://github.com/blueburncz/BBMOD">BBMOD</a> by <a href="https://github.com/kraifpatrik">Patrik Kraif</a></p>
 
 &nbsp;
 
