@@ -60,6 +60,21 @@ function DotobjClassModel() constructor
         return _new_model;
     }
     
+    // Used for combining vertex buffers from other Dotobj structs
+    // Can be useful for reducing the number of vertex batches in large scenes with modular assets
+    static Merge = function(_model)
+    {
+        var _g = 0;
+        repeat(array_length(groups_array))
+        {
+        if (array_length(groups_array[_g].meshes_array) <=0) continue;
+            ++_g;
+            if (groups_array[_g].Merge(_model) == true) break;
+        }
+        
+        return self;
+    }
+    
     static Serialize = function(_buffer)
     {
         buffer_write(_buffer, buffer_string, "dotobj @jujuadams");

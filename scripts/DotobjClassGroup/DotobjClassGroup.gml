@@ -55,6 +55,20 @@ function DotobjClassGroup() constructor
         return _new_group;
     }
     
+    static Merge = function(_model)
+    {
+        //Merge an entire model's meshes into the first mesh of this group
+        var _m = 0;
+        repeat(array_length(meshes_array))
+        {
+            if (meshes_array[_m].vertex_buffer == undefined) continue;
+            if (meshes_array[_m].Merge(_model) == true) return true;
+            ++_m;
+        }
+        return false;
+    }
+    
+    
     static Serialize = function(_buffer)
     {
         buffer_write(_buffer, buffer_string, name);
