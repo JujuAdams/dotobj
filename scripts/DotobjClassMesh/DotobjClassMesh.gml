@@ -117,7 +117,6 @@ function DotobjClassMesh() constructor
                     continue;
                 }
                 // FUNCTION DOES NOT EXIST IN LTS
-                show_message(GM_version);
                 //vertex_update_buffer_from_vertex(vertex_buffer, vertex_count, _mesh.vertex_buffer);
                 vertex_count += _mesh.vertex_count;
                 ++_m;
