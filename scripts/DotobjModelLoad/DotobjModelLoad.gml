@@ -768,6 +768,7 @@ function DotobjModelLoad()
             //Iterate over all the vertices
             var _i = 0;
             var _line_counter = 0;
+            var _vertex_count = 0;
             
             var _repeat_count = array_length(_mesh_vertexes_array);
             
@@ -911,6 +912,7 @@ function DotobjModelLoad()
                 }
                 
                 vertex_position_3d(_vbuff, _vx, _vy, _vz);
+                ++_vertex_count;
                 
                 //Write the normal
                 if (_n_index >= 0)
@@ -1021,6 +1023,7 @@ function DotobjModelLoad()
         
             //Clean up memory for meshes
             _mesh_struct.vertexes_array = undefined;
+            _mesh_struct.vertex_count = _vertex_count;
             
             //Move to the next mesh
             ++_mesh;

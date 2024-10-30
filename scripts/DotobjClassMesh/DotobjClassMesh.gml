@@ -12,6 +12,7 @@ function DotobjClassMesh() constructor
     
     group_name     = undefined;
     vertexes_array = [];
+    vertex_count   = 0;
     vertex_buffer  = undefined;
     frozen         = false;
     material       = __DOTOBJ_DEFAULT_MATERIAL_NAME;
@@ -83,10 +84,47 @@ function DotobjClassMesh() constructor
             has_tangents  = other.has_tangents;
             primitive     = other.primitive;
             vertex_buffer = other.vertex_buffer;
+            vertex_count  = other.vertex_count;
             frozen        = other.frozen;
         }
         
         return _new_mesh;
+    }
+    
+    static Merge = function(_model)
+    {
+        // Skip meshes with no vertex buffer
+        if (vertex_buffer == undefined) return self;
+        // Warn frozen mesh
+        if (frozen)
+        {
+            show_debug_message("Merge(): Warning! Can not merge frozen meshes!");
+            return true;
+        }
+        // Loop through all meshes from a given model and merge them onto this one
+        var _g = 0;
+        var _m = 0;
+        var _group, _mesh;
+        repeat(array_length(_model.groups_array))
+        {
+            _group = _model.groups_array[_g];
+            repeat(array_length(_group.meshes_array))
+            {
+                _mesh = _group.meshes_array[_m];
+                if (_mesh.vertex_buffer == undefined) continue;
+                if (_mesh.frozen)
+                {
+                    show_debug_message("Merge(): Warning! Can not merge frozen meshes!");
+                    continue;
+                }
+                // FUNCTION DOES NOT EXIST IN LTS
+                //vertex_update_buffer_from_vertex(vertex_buffer, vertex_count, _mesh.vertex_buffer);
+                vertex_count += _mesh.vertex_count;
+                ++_m;
+            }
+            ++_g;
+        }
+        return true;
     }
     
     static Serialize = function(_buffer)
