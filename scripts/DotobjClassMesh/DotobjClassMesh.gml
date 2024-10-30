@@ -84,6 +84,7 @@ function DotobjClassMesh() constructor
             has_tangents  = other.has_tangents;
             primitive     = other.primitive;
             vertex_buffer = other.vertex_buffer;
+            vertex_count  = other.vertex_count;
             frozen        = other.frozen;
         }
         
