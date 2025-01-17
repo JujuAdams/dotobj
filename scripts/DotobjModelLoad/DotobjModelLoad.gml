@@ -373,7 +373,7 @@ function DotobjModelLoad()
                             
                             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Requires \"" + _material_library + "\"");
                             _model_struct.material_library = _material_library;
-                            DotobjMaterialLoadFile(_material_library);
+                            DotobjMtlFromFile(_material_library);
                             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Set material library to \"" + _material_library + "\"");
                         break;
                     

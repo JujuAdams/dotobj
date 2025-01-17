@@ -5,7 +5,7 @@
 /// @param buffer        Buffer to read from
 /// @param [directory]   Directory that the material library is in. This is used to find textures. Defaults to the root of Included Files
 
-function DotobjMaterialLoad()
+function DotobjMtlLoadFromBuffer()
 {
     var _library_name = argument[0];
     var _buffer       = argument[1];
@@ -102,14 +102,14 @@ function DotobjMaterialLoad()
                                 ++_i;
                             }
                         
-                            show_debug_message("DotobjMaterialLoad(): \"" + _string + "\"");
+                            show_debug_message("DotobjMtlLoadFromBuffer(): \"" + _string + "\"");
                         }
                     }
                     else if (!is_struct(_material_struct))
                     {
                         if (DOTOBJ_OUTPUT_WARNINGS)
                         {
-                            show_debug_message("DotobjMaterialLoad(): Warning! No material has been created (ln=" + string(_meta_line) + ")");
+                            show_debug_message("DotobjMtlLoadFromBuffer(): Warning! No material has been created (ln=" + string(_meta_line) + ")");
                         }
                     }
                     else switch(_line_data_list[| 0]) //Use the first piece of data we read to determine what kind of line this is
@@ -120,10 +120,10 @@ function DotobjMaterialLoad()
                             switch(_line_data_list[| 1])
                             {
                                 case "spectral": //Spectral curve file (.rfl)
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Spectral curves are not supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Spectral curves are not supported");
                                 break;
                                 case "xyz": //Using CIE-XYZ
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): CIE-XYZ colourspace is not currently supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): CIE-XYZ colourspace is not currently supported");
                                 break;
                                 default: //Using RGB
                                     _material_struct.ambient = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -135,10 +135,10 @@ function DotobjMaterialLoad()
                             switch(_line_data_list[| 1])
                             {
                                 case "spectral": //Spectral curve file (.rfl)
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Spectral curves are not supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Spectral curves are not supported");
                                 break;
                                 case "xyz": //Using CIE-XYZ
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): CIE-XYZ colourspace is not currently supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): CIE-XYZ colourspace is not currently supported");
                                 break;
                                 default: //Using RGB
                                     _material_struct.diffuse = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -150,10 +150,10 @@ function DotobjMaterialLoad()
                             switch(_line_data_list[| 1])
                             {
                                 case "spectral": //Spectral curve file (.rfl)
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Spectral curves are not supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Spectral curves are not supported");
                                 break;
                                 case "xyz": //Using CIE-XYZ
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): CIE-XYZ colourspace is not currently supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): CIE-XYZ colourspace is not currently supported");
                                 break;
                                 default: //Using RGB
                                     _material_struct.specular = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -165,10 +165,10 @@ function DotobjMaterialLoad()
                             switch(_line_data_list[| 1])
                             {
                                 case "spectral": //Spectral curve file (.rfl)
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Spectral curves are not supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Spectral curves are not supported");
                                 break;
                                 case "xyz": //Using CIE-XYZ
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): CIE-XYZ colourspace is not currently supported");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): CIE-XYZ colourspace is not currently supported");
                                 break;
                                 default: //Using RGB
                                     _material_struct.emissive = make_colour_rgb(255*real(_line_data_list[| 1]), 255*real(_line_data_list[| 2]), 255*real(_line_data_list[| 3]));
@@ -212,11 +212,11 @@ function DotobjMaterialLoad()
                                 case "5": //Reflection: Fresnel on and Ray trace on
                                 case "6": //Transparency: Refraction on,  Reflection: Fresnel off and Ray trace on
                                 case "7": //Transparency: Refraction on,  Reflection: Fresnel on and Ray trace on
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Illumination model \"" + string(_line_data_list[| 1]) + "\" is not supported as it requires raytracing");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Illumination model \"" + string(_line_data_list[| 1]) + "\" is not supported as it requires raytracing");
                                 break;
                             
                                 default:
-                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Illumination model \"" + string(_line_data_list[| 1]) + "\" not recognised");
+                                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Illumination model \"" + string(_line_data_list[| 1]) + "\" not recognised");
                                 break;
                             }
                         break;
@@ -292,7 +292,7 @@ function DotobjMaterialLoad()
                     
                         case "-blenu":   //Horizontal texture blending
                         case "-blenv":   //Vertical texture blending
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Warning! Horizontal/vertical texture blending is not supported. (ln=" + string(_meta_line) + ")");
+                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Warning! Horizontal/vertical texture blending is not supported. (ln=" + string(_meta_line) + ")");
                         break;
                     
                         case "-bm":      //Bump multiplier
@@ -305,7 +305,7 @@ function DotobjMaterialLoad()
                         case "-s":       //Texture coordinate scaling
                         case "-t":       //Turbulence
                         case "-texres":  //Texture resolution
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not currently supported. (ln=" + string(_meta_line) + ")");
+                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not currently supported. (ln=" + string(_meta_line) + ")");
                         break;
                     
                         #endregion
@@ -313,13 +313,13 @@ function DotobjMaterialLoad()
                         #region Reflection map
                     
                         case "refl": //Reflection map
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Warning! Reflection maps are not supported. (ln=" + string(_meta_line) + ")");
+                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Warning! Reflection maps are not supported. (ln=" + string(_meta_line) + ")");
                         break;
                     
                         #endregion
                     
                         default: //Something else that we don't recognise!
-                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMaterialLoad(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised. (ln=" + string(_meta_line) + ")");
+                            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjMtlLoadFromBuffer(): Warning! \"" + string(_line_data_list[| 0]) + "\" is not recognised. (ln=" + string(_meta_line) + ")");
                         break;
                     }
                 
@@ -341,7 +341,7 @@ function DotobjMaterialLoad()
     buffer_seek(_buffer, buffer_seek_start, _old_tell);
 
     //If we want to report the load time, do it!
-    if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("DotobjMaterialLoad(): Time to load was " + string((get_timer() - _timer)/1000) + "ms");
+    if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("DotobjMtlLoadFromBuffer(): Time to load was " + string((get_timer() - _timer)/1000) + "ms");
 
     //Return our data
     return true;

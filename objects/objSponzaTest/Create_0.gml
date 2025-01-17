@@ -13,7 +13,7 @@ model_sponza.Freeze(); //Wise to freeze your models as well
 show_debug_message(model_sponza.GetMaterials());
 
 //If you want to manually load material (.mtl) files then you can do so using this function:
-//    DotobjMaterialLoadFile("sponza.mtl");
+//    DotobjMtlFromFile("sponza.mtl");
 //As mentioned above, DotobjModelLoadFile() will try to load material files automatically
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
