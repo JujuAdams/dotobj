@@ -2,7 +2,7 @@
 /// @param [libraryName="runtime"]
 /// @param [materialName=path]
 
-function DotobjMtlLoadFromBuffer(_path, _libraryName = "runtime", _materialName = _path)
+function DotobjMaterialLoadFromFile(_path, _libraryName = "runtime", _materialName = _path)
 {
     if (not file_exists(_path))
     {
