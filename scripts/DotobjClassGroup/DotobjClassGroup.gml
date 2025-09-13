@@ -122,6 +122,16 @@ function DotobjClassGroup() constructor
         
         return self;
     }
+    
+    static __FillVertexBufferArray = function(_array)
+    {
+        var _i = 0;
+        repeat(array_length(meshes_array))
+        {
+            meshes_array[_i].__FillVertexBufferArray(_array);
+            ++_i;
+        }
+    }
 }
 
 

@@ -165,4 +165,12 @@ function DotobjClassMesh() constructor
         
         return self;
     }
+    
+    static __FillVertexBufferArray = function(_array)
+    {
+        if (vertex_buffer != undefined)
+        {
+            array_push(_array, vertex_buffer);
+        }
+    }
 }

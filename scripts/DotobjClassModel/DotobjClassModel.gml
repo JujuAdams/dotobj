@@ -191,4 +191,18 @@ function DotobjClassModel() constructor
         
         return _array;
     }
+    
+    static GetVertexBufferArray = function()
+    {
+        var _array = [];
+        
+        var _i = 0;
+        repeat(array_length(groups_array))
+        {
+            groups_array[_i].__FillVertexBufferArray(_array);
+            ++_i;
+        }
+        
+        return _array;
+    }
 }
