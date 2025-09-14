@@ -41,6 +41,7 @@ function DotobjModelLoad(_buffer, _model_directory = "")
     static _system = __DotobjSystem();
     static _vertexFormatPNCT    = _system.__vertexFormatPNCT;
     static _vertexFormatPNCTTan = _system.__vertexFormatPNCTTan;
+    static _materialLibraryMap  = _system.__materialLibraryMap;
     
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
     
@@ -568,18 +569,18 @@ function DotobjModelLoad(_buffer, _model_directory = "")
             }
         
             //Check if this mesh's material exists
-            var _material_struct = global.__dotobjMaterialLibrary[? _mesh_material];
+            var _material_struct = _materialLibraryMap[? _mesh_material];
             if (_material_struct == undefined)
             {
                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Material \"" + _mesh_material + "\" doesn't exist for group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + ", using default material instead");
-                _material_struct = global.__dotobjMaterialLibrary[? DOTOBJ_DEFAULT_MATERIAL_NAME];
+                _material_struct = _materialLibraryMap[? DOTOBJ_DEFAULT_MATERIAL_NAME];
             }
             
             //Calculate tangents/bitangents for every point that this group uses
             var _write_null_tangent = false;
             if (_write_tangents)
             {
-                var _material_struct = global.__dotobjMaterialLibrary[? _mesh_material];
+                var _material_struct = _materialLibraryMap[? _mesh_material];
                 if ((_material_struct.normal_map == undefined) && !_force_calculate_tangents)
                 {
                     _write_null_tangent = true;

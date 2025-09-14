@@ -30,10 +30,10 @@ function __DotobjSystem()
     
     
     
-        //Create a global map to store all our material definitions
-        global.__dotobjMtlFileLoaded   = ds_map_create();
-        global.__dotobjMaterialLibrary = ds_map_create();
-        global.__dotobjSpriteMap       = ds_map_create();
+        //Create maps to store all our material definitions
+        __mtlFileLoadedMap   = ds_map_create();
+        __materialLibraryMap = ds_map_create();
+        __spriteMap          = ds_map_create();
         
         //State variables
         __flipTexcoordV    = false;

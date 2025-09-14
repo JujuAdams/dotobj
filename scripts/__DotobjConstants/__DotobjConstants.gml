@@ -22,6 +22,6 @@
 #macro DOTOBJ_DEFAULT_MATERIAL_NAME     (DOTOBJ_DEFAULT_MATERIAL_LIBRARY + "." + DOTOBJ_DEFAULT_MATERIAL)
 
 //Macro to access the inner material library ds_map
-#macro DOTOBJ_MATERIAL_LIBRARY_MAP  global.__dotobjMaterialLibrary
+#macro DOTOBJ_MATERIAL_LIBRARY_MAP  (__DotobjSystem().__materialLibraryMap)
 
 #macro DOTOBJ_SERIALIZE_VERSION  "1.0"

@@ -6,10 +6,12 @@
 
 function DotobjMtlFromFile(_filename)
 {
-    if (ds_map_exists(global.__dotobjMtlFileLoaded, _filename))
+    static _mtlFileLoadedMap = __DotobjSystem().__mtlFileLoadedMap;
+    
+    if (ds_map_exists(_mtlFileLoadedMap, _filename))
     {
         show_debug_message("DotobjMtlFromFile(): \"" + _filename + "\" already loaded");
-        return global.__dotobjMtlFileLoaded[? _filename];
+        return _mtlFileLoadedMap[? _filename];
     }
     else
     {
@@ -25,7 +27,7 @@ function DotobjMtlFromFile(_filename)
             var _result = DotobjMtlLoadFromBuffer(_filename, _buffer, filename_dir(_filename));
             buffer_delete(_buffer);
             
-            global.__dotobjMtlFileLoaded[? _filename] = _result;
+            _mtlFileLoadedMap[? _filename] = _result;
             
             return _result;
         }

@@ -181,12 +181,14 @@ function DotobjClassModel() constructor
     
     static GetMaterials = function()
     {
+        static _materialLibraryMap = __DotobjSystem().__materialLibraryMap;
+        
         var _array = [];
         
         var _i = 0;
         repeat(array_length(materials_array))
         {
-            var _material = global.__dotobjMaterialLibrary[? materials_array[_i]];
+            var _material = _materialLibraryMap[? materials_array[_i]];
             if (is_struct(_material)) array_push(_array, _material);
             ++_i;
         }

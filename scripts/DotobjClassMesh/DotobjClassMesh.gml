@@ -22,16 +22,18 @@ function DotobjClassMesh() constructor
     
     static Submit = function()
     {
+        static _materialLibraryMap = __DotobjSystem().__materialLibraryMap;
+        
         //If a mesh failed to create a vertex buffer then it'll hold the value <undefined>
         //We need to check for this to avoid crashes
         if (vertex_buffer != undefined)
         {
             //Find the material for this mesh from the global material library
-            var _material_struct = global.__dotobjMaterialLibrary[? material];
+            var _material_struct = _materialLibraryMap[? material];
             
             //If a material cannot be found, it'll return <undefined>
             //We use a fallback default material if we can't one for this mesh
-            if (!is_struct(_material_struct)) _material_struct = global.__dotobjMaterialLibrary[? DOTOBJ_DEFAULT_MATERIAL_NAME];
+            if (not is_struct(_material_struct)) _material_struct = _materialLibraryMap[? DOTOBJ_DEFAULT_MATERIAL_NAME];
             
             //Find the texture for the material
             var _diffuse_texture_struct = _material_struct.diffuse_map;

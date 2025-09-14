@@ -5,6 +5,8 @@
 
 function DotobjClassMaterial(_library_name, _material_name) constructor
 {
+    static _materialLibraryMap = __DotobjSystem().__materialLibraryMap;
+    
     //Materials are collected together in .mtl files (a.k.a. "material libraries")
     library            = _library_name;  //string
     name               = _material_name; //string
@@ -30,7 +32,7 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
     normal_map         = undefined;      //Texture struct (see DotobjClassTexture)
     
     cache_name = _library_name + "." + _material_name;
-    global.__dotobjMaterialLibrary[? cache_name] = self;
+    _materialLibraryMap[? cache_name] = self;
 
     if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjClassMaterial(): Created material \"" + string(cache_name) + "\"");
     
@@ -48,6 +50,8 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
     
     static Destroy = function()
     {
+        static _mtlFileLoadedMap = __DotobjSystem().__mtlFileLoadedMap;
+        
         if (cache_name == DOTOBJ_DEFAULT_MATERIAL_NAME)
         {
             show_debug_message("DotobjClassMaterial.Destroy(): Warning! Cannot destroy default material \"" + DOTOBJ_DEFAULT_MATERIAL_NAME + "\"");
@@ -76,12 +80,12 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
         displacement_map = undefined;
         normal_map       = undefined;
         
-        ds_map_delete(global.__dotobjMaterialLibrary, cache_name);
+        ds_map_delete(_materialLibraryMap, cache_name);
         
-        if (ds_map_exists(global.__dotobjMtlFileLoaded, library))
+        if (ds_map_exists(_mtlFileLoadedMap, library))
         {
             show_debug_message("DotobjClassMaterial.Destroy(): Invalidating cache for library \"" + library + "\"");
-            ds_map_delete(global.__dotobjMtlFileLoaded, library);
+            ds_map_delete(_mtlFileLoadedMap, library);
         }
     }
     
@@ -100,11 +104,13 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
 
 function __DotobjEnsureMaterial(_library_name, _material_name)
 {
+    static _materialLibraryMap = __DotobjSystem().__materialLibraryMap;
+    
     var _name = _library_name + "." + _material_name;
-    if (ds_map_exists(global.__dotobjMaterialLibrary, _name))
+    if (ds_map_exists(_materialLibraryMap, _name))
     {
         show_debug_message("__DotobjEnsureMaterial(): Warning! Material \"" + string(_name) + "\" already exists");
-        return global.__dotobjMaterialLibrary[? _name];
+        return _materialLibraryMap[? _name];
     }
     else
     {

@@ -5,5 +5,7 @@
 
 function DotobjMaterialFind(_libraryName, _materialName)
 {
-    return global.__dotobjMaterialLibrary[? _libraryName + "." + _materialName];
+    static _materialLibraryMap = __DotobjSystem().__materialLibraryMap;
+    
+    return _materialLibraryMap[? _libraryName + "." + _materialName];
 }
