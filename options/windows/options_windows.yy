@@ -4,7 +4,7 @@
   "name": "Windows",
   "option_windows_display_name": "dotobj",
   "option_windows_executable_name": "${project_name}",
-  "option_windows_version": "5.5.0.0",
+  "option_windows_version": "6.0.1.0",
   "option_windows_company_info": "Juju Adams",
   "option_windows_product_info": "dotobj",
   "option_windows_copyright_info": "Juju Adams",
