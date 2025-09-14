@@ -25,3 +25,5 @@
 #macro DOTOBJ_MATERIAL_LIBRARY_MAP  (__DotobjSystem().__materialLibraryMap)
 
 #macro DOTOBJ_SERIALIZE_VERSION  "1.0"
+
+#macro DOTOBJ_USE_CACHE  ((os_type == os_windows) || (os_type == os_macosx) || (os_type == os_linux))
