@@ -33,7 +33,7 @@ global.__dotobjWireframe        = false;
 global.__dotobjTransformOnLoad  = false;
     
 //Create a default material
-__DotobjEnsureMaterial(__DOTOBJ_DEFAULT_MATERIAL_LIBRARY, __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC);
+__DotobjEnsureMaterial(DOTOBJ_DEFAULT_MATERIAL_LIBRARY, DOTOBJ_DEFAULT_MATERIAL);
 
 
 

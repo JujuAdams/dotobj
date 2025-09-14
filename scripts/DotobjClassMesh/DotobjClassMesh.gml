@@ -16,7 +16,7 @@ function DotobjClassMesh() constructor
     vertexes_array = [];
     vertex_buffer  = undefined;
     frozen         = false;
-    material       = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+    material       = DOTOBJ_DEFAULT_MATERIAL_NAME;
     has_tangents   = false;
     primitive      = pr_trianglelist;
     
@@ -31,7 +31,7 @@ function DotobjClassMesh() constructor
             
             //If a material cannot be found, it'll return <undefined>
             //We use a fallback default material if we can't one for this mesh
-            if (!is_struct(_material_struct)) _material_struct = global.__dotobjMaterialLibrary[? __DOTOBJ_DEFAULT_MATERIAL_NAME];
+            if (!is_struct(_material_struct)) _material_struct = global.__dotobjMaterialLibrary[? DOTOBJ_DEFAULT_MATERIAL_NAME];
             
             //Find the texture for the material
             var _diffuse_texture_struct = _material_struct.diffuse_map;

@@ -1,8 +1,8 @@
 if (show_info)
 {
     //Display credits
-    var _string  = "dotobj " + __DOTOBJ_VERSION + "\n";
-        _string += "@jujuadams " + __DOTOBJ_DATE + "\n";
+    var _string  = "dotobj " + DOTOBJ_VERSION + "\n";
+        _string += "Juju Adams " + DOTOBJ_DATE + "\n";
         _string += "\n";
         _string += "Model by @artofsully\n"
         _string += "\n";

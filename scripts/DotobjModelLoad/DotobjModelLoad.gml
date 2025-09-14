@@ -78,18 +78,18 @@ function DotobjModelLoad()
     var _texture_list  = ds_list_create(); ds_list_add(_texture_list,  0,0    );
     
     //Handle materials
-    var _material_library  = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
-    var _material_specific = __DOTOBJ_DEFAULT_MATERIAL_SPECIFIC;
+    var _material_library  = DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
+    var _material_specific = DOTOBJ_DEFAULT_MATERIAL;
     var _unique_materials  = {};
 
     //Create a model for us to fill
     //We add a default group and default mesh to the model for use later during parsing
     var _model_struct = new DotobjClassModel();
     _model_struct.sha1             = buffer_sha1(_buffer, 0, buffer_get_size(_buffer));
-    _model_struct.material_library = __DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
+    _model_struct.material_library = DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
     var _model_materials_array = _model_struct.materials_array;
     
-    var _group_struct   = __DotobjEnsureGroup(_model_struct, __DOTOBJ_DEFAULT_GROUP, 0);
+    var _group_struct   = __DotobjEnsureGroup(_model_struct, DOTOBJ_DEFAULT_GROUP, 0);
     var _mesh_struct    = (new DotobjClassMesh()).AddTo(_group_struct);
     var _mesh_primitive = global.__dotobjWireframe? pr_linelist : pr_trianglelist;
     
@@ -98,7 +98,7 @@ function DotobjModelLoad()
     
     with(_mesh_struct)
     {
-        material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+        material     = DOTOBJ_DEFAULT_MATERIAL_NAME;
         has_tangents = _write_tangents;
         primitive    = _mesh_primitive;
         var _mesh_vertexes_array = vertexes_array;
@@ -299,7 +299,7 @@ function DotobjModelLoad()
                             
                             with(_mesh_struct)
                             {
-                                material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                material     = DOTOBJ_DEFAULT_MATERIAL_NAME;
                                 has_tangents = _write_tangents;
                                 primitive    = _mesh_primitive;
                                 var _mesh_vertexes_array = vertexes_array;
@@ -325,7 +325,7 @@ function DotobjModelLoad()
                                 
                                 with(_mesh_struct)
                                 {
-                                    material     = __DOTOBJ_DEFAULT_MATERIAL_NAME;
+                                    material     = DOTOBJ_DEFAULT_MATERIAL_NAME;
                                     has_tangents = _write_tangents;
                                     primitive    = _mesh_primitive;
                                     var _mesh_vertexes_array = vertexes_array;
@@ -399,7 +399,7 @@ function DotobjModelLoad()
                                 array_push(_model_materials_array, _material_name);
                             }
                             
-                            if ((_mesh_struct.material == __DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertexes_array) <= 0))
+                            if ((_mesh_struct.material == DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_mesh_vertexes_array) <= 0))
                             {
                                 //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material
                                 _mesh_struct.material = _material_name;
@@ -571,7 +571,7 @@ function DotobjModelLoad()
             if (_material_struct == undefined)
             {
                 if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Material \"" + _mesh_material + "\" doesn't exist for group \"" + _group_name + "\" (ln=" + string(_group_line) + ") mesh " + string(_mesh) + ", using default material instead");
-                _material_struct = global.__dotobjMaterialLibrary[? __DOTOBJ_DEFAULT_MATERIAL_NAME];
+                _material_struct = global.__dotobjMaterialLibrary[? DOTOBJ_DEFAULT_MATERIAL_NAME];
             }
             
             //Calculate tangents/bitangents for every point that this group uses

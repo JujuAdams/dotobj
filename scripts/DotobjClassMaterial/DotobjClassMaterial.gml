@@ -48,9 +48,9 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
     
     static Destroy = function()
     {
-        if (cache_name == __DOTOBJ_DEFAULT_MATERIAL_NAME)
+        if (cache_name == DOTOBJ_DEFAULT_MATERIAL_NAME)
         {
-            show_debug_message("DotobjClassMaterial.Destroy(): Warning! Cannot destroy default material \"" + __DOTOBJ_DEFAULT_MATERIAL_NAME + "\"");
+            show_debug_message("DotobjClassMaterial.Destroy(): Warning! Cannot destroy default material \"" + DOTOBJ_DEFAULT_MATERIAL_NAME + "\"");
             return;
         }
         

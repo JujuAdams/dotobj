@@ -64,8 +64,8 @@ function DotobjClassModel() constructor
     
     static Serialize = function(_buffer)
     {
-        buffer_write(_buffer, buffer_string, "dotobj @jujuadams");
-        buffer_write(_buffer, buffer_string, __DOTOBJ_VERSION);
+        buffer_write(_buffer, buffer_string, "dotobj juju adams");
+        buffer_write(_buffer, buffer_string, DOTOBJ_SERIALIZE_VERSION);
         buffer_write(_buffer, buffer_string, sha1);
         buffer_write(_buffer, buffer_string, material_library);
         
@@ -100,16 +100,16 @@ function DotobjClassModel() constructor
     static Deserialize = function(_buffer)
     {
         var _header = buffer_read(_buffer, buffer_string);
-        if (_header != "dotobj @jujuadams")
+        if (_header != "dotobj juju adams")
         {
             __DotobjError("File is not a dotobj raw file");
             return undefined;
         }
         
         var _version = buffer_read(_buffer, buffer_string);
-        if (_version != __DOTOBJ_VERSION)
+        if (_version != DOTOBJ_SERIALIZE_VERSION)
         {
-            __DotobjError("Version mismatch (file=", _version, ", dotobj=", __DOTOBJ_VERSION, ")");
+            __DotobjError("Version mismatch (file=", _version, ", dotobj=", DOTOBJ_VERSION, ")");
             return undefined;
         }
         
