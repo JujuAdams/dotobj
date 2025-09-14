@@ -1,5 +1,8 @@
 // Feather disable all
 
+/// Returns the material struct associated with the material name. If no such material exists, this
+/// function returns `undefined`.
+/// 
 /// @param libraryName
 /// @param materialName
 

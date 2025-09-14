@@ -1,5 +1,7 @@
 // Feather disable all
 
+/// Creates a material and returns a material struct.
+/// 
 /// @param libraryName
 /// @param materialName
 

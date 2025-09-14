@@ -1,5 +1,8 @@
 // Feather disable all
 
+/// Saves a model in a quick-to-load propriatery format. Models saved with this function should be
+/// loaded by `DotobjModelRawLoad()`.
+/// 
 /// @param model
 /// @param path
 

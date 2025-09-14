@@ -1,5 +1,7 @@
 // Feather disable all
 
+/// Loads a model saved by `DotobjModelRawSave()`.
+/// 
 /// @param path
 
 function DotobjModelRawLoad(_path)

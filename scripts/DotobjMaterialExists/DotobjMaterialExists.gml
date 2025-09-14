@@ -1,5 +1,7 @@
 // Feather disable all
 
+/// Returns if a material exists.
+/// 
 /// @param libraryName
 /// @param materialName
 
