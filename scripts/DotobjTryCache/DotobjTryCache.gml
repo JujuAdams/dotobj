@@ -1,3 +1,5 @@
+// Feather disable all
+
 /// param objFilename
 
 function DotobjTryCache(_filename)

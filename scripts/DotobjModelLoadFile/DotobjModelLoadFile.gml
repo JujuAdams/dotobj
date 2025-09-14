@@ -1,5 +1,6 @@
+// Feather disable all
+
 /// Loads an ASCII .obj file from disk and turns it into a vertex buffer
-/// @jujuadams
 /// 
 /// .obj format documentation can be found here:
 /// http://paulbourke.net/dataformats/obj/

@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "DotobjModelRawSave",
+  "name": "__DotobjConstants",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "Model Caching",
-    "path": "folders/dotobj/Model Caching.yy",
+    "name": "dotobj",
+    "path": "folders/dotobj.yy",
   },
 }

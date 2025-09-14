@@ -1,5 +1,6 @@
+// Feather disable all
+
 /// Adds materials from an ASCII .mtl file, stored in a buffer, to the global material library.
-/// @jujuadams    contact@jujuadams.com
 /// 
 /// @param libraryName   Name of the library (usually a filename)
 /// @param buffer        Buffer to read from

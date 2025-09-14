@@ -1,3 +1,5 @@
+// Feather disable all
+
 function DotobjClassModel() constructor
 {
     aabb = {

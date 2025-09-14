@@ -1,6 +1,10 @@
-function DotobjModelRawLoad(_filename)
+// Feather disable all
+
+/// @param path
+
+function DotobjModelRawLoad(_path)
 {
-    var _compressedBuffer = buffer_load(_filename);
+    var _compressedBuffer = buffer_load(_path);
     var _buffer = buffer_decompress(_compressedBuffer);
     
     var _model = (new DotobjClassModel()).Deserialize(_buffer);

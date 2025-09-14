@@ -1,10 +1,15 @@
-function DotobjModelRawSave(_model, _filename)
+// Feather disable all
+
+/// @param model
+/// @param path
+
+function DotobjModelRawSave(_model, _path)
 {
     var _buffer = buffer_create(1024, buffer_grow, 1);
     _model.Serialize(_buffer);
     
     var _compressedBuffer = buffer_compress(_buffer, 0, buffer_tell(_buffer));
-    buffer_save(_compressedBuffer, _filename);
+    buffer_save(_compressedBuffer, _path);
     
     buffer_delete(_buffer);
     buffer_delete(_compressedBuffer);

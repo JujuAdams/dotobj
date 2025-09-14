@@ -1,5 +1,6 @@
+// Feather disable all
+
 /// Turns an ASCII .obj file, stored in a buffer, into a series of vertex buffers stored in a tree-like heirachy.
-/// @jujuadams    contact@jujuadams.com
 /// 
 /// @param buffer             Buffer to read from
 /// @param [modelDirectory]   Directory that the model is in. This is used to find .mtl material libraries. Defaults to the root of Included Files

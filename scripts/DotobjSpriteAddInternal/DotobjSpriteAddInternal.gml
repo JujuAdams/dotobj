@@ -1,3 +1,8 @@
+// Feather disable all
+
+/// @param filename
+/// @param sprite
+
 function DotobjSpriteAddInternal(_filename, _sprite)
 {
     if (ds_map_exists(global.__dotobjSpriteMap, _filename))

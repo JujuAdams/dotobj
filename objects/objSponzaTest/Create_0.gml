@@ -1,5 +1,8 @@
 //Remind the user to run using YYC, but only if they're not debugging
-if (!code_is_compiled() && !debug_mode) show_error("It is strongly recommended you run this example using YYC.\n ", false);
+if ((not code_is_compiled()) && (not debug_mode))
+{
+    show_message("It is strongly recommended you run this example using YYC.");
+}
 
 //Load our .obj from disk. This might take a while!
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event

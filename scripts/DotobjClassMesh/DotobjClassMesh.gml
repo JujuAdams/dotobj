@@ -1,3 +1,5 @@
+// Feather disable all
+
 /// @param materialName
 /// @param hasTangents
 /// @param primitive
