@@ -6,5 +6,7 @@
 
 function DotobjSetTransformOnLoad(_state)
 {
-    global.__dotobjTransformOnLoad = _state;
+    static _system = __DotobjSystem();
+    
+    _system.__transformOnLoad = _state;
 }

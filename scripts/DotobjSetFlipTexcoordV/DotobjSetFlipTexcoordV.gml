@@ -4,5 +4,7 @@
 
 function DotobjSetFlipTexcoordV(_state)
 {
-    global.__dotobjFlipTexcoordV = _state;
+    static _system = __DotobjSystem();
+    
+    _system.__flipTexcoordV = _state;
 }

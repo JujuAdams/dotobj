@@ -119,6 +119,10 @@ function DotobjClassMesh() constructor
     
     static Deserialize = function(_buffer)
     {
+        static _system = __DotobjSystem();
+        static _vertexFormatPNCT    = _system.__vertexFormatPNCT;
+        static _vertexFormatPNCTTan = _system.__vertexFormatPNCTTan;
+        
         material     = buffer_read(_buffer, buffer_string);
         has_tangents = buffer_read(_buffer, buffer_bool);
         primitive    = buffer_read(_buffer, buffer_u8);
@@ -134,7 +138,7 @@ function DotobjClassMesh() constructor
             buffer_copy(_buffer, buffer_tell(_buffer), _vbuff_size, _vbuff, 0);
             buffer_seek(_buffer, buffer_seek_relative, _vbuff_size);
             
-            vertex_buffer = vertex_create_buffer_from_buffer(_vbuff, has_tangents? global.__dotobjPNCTTanVertexFormat : global.__dotobjPNCTVertexFormat);
+            vertex_buffer = vertex_create_buffer_from_buffer(_vbuff, has_tangents? _vertexFormatPNCTTan : _vertexFormatPNCT);
             
             buffer_delete(_vbuff);
         }

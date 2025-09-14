@@ -4,5 +4,7 @@
 
 function DotobjSetReverseTriangles(_state)
 {
-    global.__dotobjReverseTriangles = _state;
+    static _system = __DotobjSystem();
+    
+    _system.__reverseTriangles = _state;
 }

@@ -36,10 +36,11 @@
 /// - Line primitives
 /// - Separate in-file LOD
 
-function DotobjModelLoad()
+function DotobjModelLoad(_buffer, _model_directory = "")
 {
-    var _buffer          = argument[0];
-    var _model_directory = ((argument_count > 1) && (argument[1] != undefined))? argument[1] : "";
+    static _system = __DotobjSystem();
+    static _vertexFormatPNCT    = _system.__vertexFormatPNCT;
+    static _vertexFormatPNCTTan = _system.__vertexFormatPNCTTan;
     
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
     
@@ -56,11 +57,11 @@ function DotobjModelLoad()
     var _missing_uvs           = 0;
     var _negative_references   = 0;
     
-    var _flip_texcoords           = global.__dotobjFlipTexcoordV;
-    var _reverse_triangles        = global.__dotobjReverseTriangles;
-    var _write_tangents           = global.__dotobjWriteTangents;
-    var _force_calculate_tangents = global.__dotobjForceTangentCalc;
-    var _transform_on_load        = global.__dotobjTransformOnLoad;
+    var _flip_texcoords           = _system.__flipTexcoordV;
+    var _reverse_triangles        = _system.__reverseTriangles;
+    var _write_tangents           = _system.__writeTangents;
+    var _force_calculate_tangents = _system.__forceTangentCalc;
+    var _transform_on_load        = _system.__transformOnLoad;
 
     //Axis-aligned bounding box variables
     var _aabb_x1 =  infinity;
@@ -91,7 +92,7 @@ function DotobjModelLoad()
     
     var _group_struct   = __DotobjEnsureGroup(_model_struct, DOTOBJ_DEFAULT_GROUP, 0);
     var _mesh_struct    = (new DotobjClassMesh()).AddTo(_group_struct);
-    var _mesh_primitive = global.__dotobjWireframe? pr_linelist : pr_trianglelist;
+    var _mesh_primitive = _system.__wireframe? pr_linelist : pr_trianglelist;
     
     //Used for the #MRGB tag
     var _mrgb_buffer = undefined;
@@ -764,7 +765,7 @@ function DotobjModelLoad()
             ++_meta_vertex_buffers;
             var _vbuff = vertex_create_buffer();
             _mesh_struct.vertex_buffer = _vbuff;
-            vertex_begin(_vbuff, _write_tangents? global.__dotobjPNCTTanVertexFormat : global.__dotobjPNCTVertexFormat);
+            vertex_begin(_vbuff, _write_tangents? _vertexFormatPNCTTan : _vertexFormatPNCT);
             
             //Iterate over all the vertices
             var _i = 0;

@@ -5,6 +5,8 @@
 
 function DotobjSetWriteTangents(_state, _force_calc)
 {
-    global.__dotobjWriteTangents    = _state;
-    global.__dotobjForceTangentCalc = _force_calc;
+    static _system = __DotobjSystem();
+    
+    _system.__writeTangents    = _state;
+    _system.__forceTangentCalc = _force_calc;
 }

@@ -4,5 +4,7 @@
 
 function DotobjSetWireframe(_state)
 {
-    global.__dotobjWireframe = _state;
+    static _system = __DotobjSystem();
+    
+    _system.__wireframe = _state;
 }
