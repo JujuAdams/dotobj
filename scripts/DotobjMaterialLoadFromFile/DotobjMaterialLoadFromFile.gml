@@ -1,5 +1,8 @@
 // Feather disable all
 
+/// Creates a material with a diffuse texture made from image loaded from storage. This function
+/// returns a material struct.
+/// 
 /// @param path
 /// @param [libraryName="runtime"]
 /// @param [materialName=path]

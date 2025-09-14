@@ -6,12 +6,8 @@
 /// @param buffer        Buffer to read from
 /// @param [directory]   Directory that the material library is in. This is used to find textures. Defaults to the root of Included Files
 
-function DotobjMtlLoadFromBuffer()
+function DotobjMtlLoadFromBuffer(_library_name, _buffer, _directory = "")
 {
-    var _library_name = argument[0];
-    var _buffer       = argument[1];
-    var _directory    = ((argument_count > 2) && (argument[2] != undefined))? argument[2] : "";
-    
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
     
     //Tidy up the directory

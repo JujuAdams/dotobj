@@ -21,7 +21,7 @@
     {"id":{"name":"DotobjTextureCreate","path":"scripts/DotobjTextureCreate/DotobjTextureCreate.yy",},"order":0,},
     {"id":{"name":"DotobjSpriteAddInternal","path":"scripts/DotobjSpriteAddInternal/DotobjSpriteAddInternal.yy",},"order":1,},
     {"id":{"name":"objMayaTest2","path":"objects/objMayaTest2/objMayaTest2.yy",},"order":11,},
-    {"id":{"name":"DotobjMtlFromFile","path":"scripts/DotobjMtlFromFile/DotobjMtlFromFile.yy",},"order":4,},
+    {"id":{"name":"DotobjMtlLoadFromFile","path":"scripts/DotobjMtlLoadFromFile/DotobjMtlLoadFromFile.yy",},"order":4,},
     {"id":{"name":"objCubeTest","path":"objects/objCubeTest/objCubeTest.yy",},"order":14,},
     {"id":{"name":"DotobjGetVertexFormat","path":"scripts/DotobjGetVertexFormat/DotobjGetVertexFormat.yy",},"order":5,},
     {"id":{"name":"DotobjClassGroup","path":"scripts/DotobjClassGroup/DotobjClassGroup.yy",},"order":4,},

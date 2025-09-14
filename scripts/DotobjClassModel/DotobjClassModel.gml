@@ -116,7 +116,7 @@ function DotobjClassModel() constructor
         sha1 = buffer_read(_buffer, buffer_string);
         
         var _material_library = buffer_read(_buffer, buffer_string);
-        if (_material_library != "") DotobjMtlFromFile(_material_library);
+        if (_material_library != "") DotobjMtlLoadFromFile(_material_library);
         
         aabb.x1 = buffer_read(_buffer, buffer_f64);
         aabb.y1 = buffer_read(_buffer, buffer_f64);
