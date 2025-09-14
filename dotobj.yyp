@@ -156,6 +156,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"cube.obj","CopyToMask":-1,"filePath":"datafiles/cube",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"voronoi.obj","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"mrgb_format.obj","CopyToMask":-1,"filePath":"datafiles",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"dotobj_license.txt","CopyToMask":-1,"filePath":"datafiles",},
   ],
   "MetaData": {
     "IDEVersion": "2022.0.3.85",
