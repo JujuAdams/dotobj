@@ -1,7 +1,7 @@
 // Feather disable all
 
 /// Creates a material with a diffuse texture made from image loaded from storage. This function
-/// returns a material struct.
+/// returns a material struct as created by `DotobjMaterialCreate()`.
 /// 
 /// @param path
 /// @param [libraryName="runtime"]

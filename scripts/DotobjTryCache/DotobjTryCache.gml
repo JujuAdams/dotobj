@@ -1,6 +1,6 @@
 // Feather disable all
 
-/// Tries to load a model, using a cache if possible.
+/// Tries to load a model from disk, using a preparsed cached model if possible.
 /// 
 /// N.B. This function will only cache models on desktop platforms. On all other platforms, this
 ///      function will always fall back on loading the target .obj file.

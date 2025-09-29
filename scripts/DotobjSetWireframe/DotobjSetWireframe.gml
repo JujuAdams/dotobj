@@ -1,6 +1,8 @@
 // Feather disable all
 
-/// @param state  Whether to import meshes as a wireframe (i.e. use pr_linelist rather than pr_trianglelist)
+/// Whether to import meshes as a wireframe (i.e. use `pr_linelist` rather than `pr_trianglelist`).
+///
+/// @param state
 
 function DotobjSetWireframe(_state)
 {

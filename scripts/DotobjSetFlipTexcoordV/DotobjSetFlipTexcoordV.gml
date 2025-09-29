@@ -1,6 +1,9 @@
 // Feather disable all
 
-/// @param state   Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct for DirectX / OpenGL idiosyncrasies
+/// Whether to flip the y-axis (V-component) of the texture coordinates. This is useful to correct
+/// for DirectX / OpenGL idiosyncrasies.
+/// 
+/// @param state
 
 function DotobjSetFlipTexcoordV(_state)
 {

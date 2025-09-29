@@ -1,5 +1,7 @@
 // Feather disable all
 
+/// Returns the vertex format currently being used to construct models.
+
 function DotobjGetVertexFormat()
 {
     static _system = __DotobjSystem();

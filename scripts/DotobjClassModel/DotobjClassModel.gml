@@ -1,5 +1,46 @@
 // Feather disable all
 
+/// The main constructor ("class") that acts as the root for .obj models. The model struct has the
+/// following public methods:
+/// 
+/// `.Destroy()`
+///     Free memory associated with the model. You should call this when you no longer need the
+///     model in memory. Please note this does not free materials.
+/// 
+/// `.Submit()`
+///     Submit all vertex buffers in the model. No shaders are applied giving you the option to
+///     customize drawing as you see fit.
+/// 
+/// `.GetAABB()`
+///     Returns a struct containing the axis-aligned bounding box for the model.
+/// 
+/// `.Freeze()`
+///     Freezes all vertex buffers. This will speed up rendering.
+/// 
+/// `.Duplicate()`
+///     Returns a duplicate of the model. Model duplicates will be unfrozen.
+/// 
+/// `.Serialize(buffer)`
+///     Writes the model into a buffer using a fast to load propriatary format. This is the same
+///     format that `DotobjModelRawSave()` uses. Please note that frozen models cannot be
+///     serialized.
+/// 
+/// `.Deserialize(buffer)`
+///     Replaces model data with binary data loaded from a buffer. The binary data should have
+///     been written using the `.Serialize()` method above.
+/// 
+/// `.SetMaterialForMeshes(libraryName, materialName)`
+///     Overwrites all materials for all meshes to the indicated material.
+/// 
+/// `.GetFirstMesh()`
+///     Returns the first mesh in the model.
+/// 
+/// `.GetMaterials()`
+///     Returns an array of all materials used by this model.
+/// 
+/// `.GetVertexBufferArray()`
+///     Returns an array of all vertex buffers used by this model.
+
 function DotobjClassModel() constructor
 {
     aabb = {

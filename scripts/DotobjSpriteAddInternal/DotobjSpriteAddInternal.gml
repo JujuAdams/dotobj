@@ -1,6 +1,7 @@
 // Feather disable all
 
-/// Remaps an image path to a sprite reference in the game application.
+/// Remaps an image path found in .mtl material libraries to a GameMaker native sprite. This is
+/// helpful if you want to keep textures stored internally for easier memory handling.
 /// 
 /// @param remapPath
 /// @param sprite

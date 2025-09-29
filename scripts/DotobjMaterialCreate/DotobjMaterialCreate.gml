@@ -1,6 +1,7 @@
 // Feather disable all
 
-/// Creates a material and returns a material struct.
+/// Manually creates a material and returns a material struct. You can use manually created
+/// materials to replace materials already defined for a model.
 /// 
 /// @param libraryName
 /// @param materialName

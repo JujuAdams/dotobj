@@ -1,6 +1,8 @@
 // Feather disable all
 
-/// Adds materials from an ASCII .mtl file, stored in a buffer, to the global material library.
+/// Manually adds materials from an ASCII .mtl material library, stored in a buffer, to the
+/// global material library. If your .obj models reference .mtl files themselves then they will
+/// be loaded automatically and you will not need to call this function.
 /// 
 /// @param libraryName   Name of the library (usually a filename)
 /// @param buffer        Buffer to read from
