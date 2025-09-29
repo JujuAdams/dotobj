@@ -12,8 +12,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 //Always date your work!
-#macro DOTOBJ_VERSION  "6.0.1"
-#macro DOTOBJ_DATE     "2025-09-14"
+#macro DOTOBJ_VERSION  "6.0.1.1"
+#macro DOTOBJ_DATE     "2025-09-29"
 
 //Some strings to use for defaults. Change these if you so desire.
 #macro DOTOBJ_DEFAULT_GROUP             "__dotobj_group__"
