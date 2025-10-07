@@ -9,7 +9,7 @@ if ((not code_is_compiled()) && (not debug_mode))
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
 
-model_sponza = DotobjModelLoadFile("sponza\\sponza.obj");
+model_sponza = DotobjModelLoadFromFile("sponza\\sponza.obj");
 model_sponza.Freeze(); //Wise to freeze your models as well
 
 //Output the materials that this model uses
@@ -17,7 +17,7 @@ show_debug_message(model_sponza.GetMaterials());
 
 //If you want to manually load material (.mtl) files then you can do so using this function:
 //    DotobjMtlLoadFromFile("sponza.mtl");
-//As mentioned above, DotobjModelLoadFile() will try to load material files automatically
+//As mentioned above, DotobjModelLoadFromFile() will try to load material files automatically
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;

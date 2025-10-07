@@ -7,7 +7,7 @@
 /// This path replacement only applies to paths that are found within .obj and .mtl files that
 /// implicitly load resources from disk. Partial path replacement will **not** apply to paths that
 /// you manually input into functions. For example, neither `DotobjModelRawLoad()` nor
-/// `DotobjModelLoadFile()` input paths will be affected by substring replacement.
+/// `DotobjModelLoadFromFile()` input paths will be affected by substring replacement.
 /// 
 /// You may use `DotobjAliasPathSubstringsApply()` if you'd like to perform path substring
 /// remapping manually to strings that you provide yourself.

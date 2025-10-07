@@ -27,7 +27,7 @@ function DotobjTryCache(_path)
         }
     }
     
-    var _model = DotobjModelLoadFile(_path);
+    var _model = DotobjModelLoadFromFile(_path);
     
     if (DOTOBJ_USE_CACHE)
     {

@@ -44,7 +44,7 @@
     {"id":{"name":"__DotobjConstants","path":"scripts/__DotobjConstants/__DotobjConstants.yy",},"order":1,},
     {"id":{"name":"sprPlanetTexAridInv","path":"sprites/sprPlanetTexAridInv/sprPlanetTexAridInv.yy",},"order":18,},
     {"id":{"name":"DotobjClassMaterial","path":"scripts/DotobjClassMaterial/DotobjClassMaterial.yy",},"order":6,},
-    {"id":{"name":"DotobjModelLoadFile","path":"scripts/DotobjModelLoadFile/DotobjModelLoadFile.yy",},"order":6,},
+    {"id":{"name":"DotobjModelLoadFromFile","path":"scripts/DotobjModelLoadFromFile/DotobjModelLoadFromFile.yy",},"order":6,},
     {"id":{"name":"DotobjSetWireframe","path":"scripts/DotobjSetWireframe/DotobjSetWireframe.yy",},"order":2,},
     {"id":{"name":"shdSimpleLighting","path":"shaders/shdSimpleLighting/shdSimpleLighting.yy",},"order":19,},
     {"id":{"name":"objLoadingScreen","path":"objects/objLoadingScreen/objLoadingScreen.yy",},"order":1,},

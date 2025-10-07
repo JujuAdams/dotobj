@@ -1,4 +1,4 @@
-model = DotobjModelLoadFile("mrgb_format.obj");
+model = DotobjModelLoadFromFile("mrgb_format.obj");
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;

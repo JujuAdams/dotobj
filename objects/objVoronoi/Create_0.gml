@@ -1,4 +1,4 @@
-model = DotobjModelLoadFile("voronoi.obj");
+model = DotobjModelLoadFromFile("voronoi.obj");
 
 //Smoothed fps_real variable
 fps_smoothed = 60;

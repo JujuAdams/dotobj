@@ -5,7 +5,7 @@
 /// 
 /// @param filename
 
-function DotobjModelLoadFile(_filename)
+function DotobjModelLoadFromFile(_filename)
 {
     var _buffer = buffer_load(_filename);
     var _result = DotobjModelLoad(_buffer, filename_dir(_filename));

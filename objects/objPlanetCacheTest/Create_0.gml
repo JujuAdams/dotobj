@@ -11,7 +11,7 @@ DotobjSetFlipTexcoordV(true);
 
 if (!file_exists("planet.dat"))
 {
-    model_planet = DotobjModelLoadFile("planet.obj");
+    model_planet = DotobjModelLoadFromFile("planet.obj");
     DotobjModelRawSave(model_planet, "planet.dat");
 }
 else
