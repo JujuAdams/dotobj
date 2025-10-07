@@ -24,7 +24,7 @@ function DotobjMaterialLoadFromFile(_path, _libraryName = "runtime", _materialNa
     
     if (DotobjMaterialExists(_libraryName, _materialName))
     {
-        show_debug_message("DotobjMtlLoadFromBuffer(): \"" + string(_libraryName) + "\" \"" + string(_materialName) + "\" already exists");
+        show_debug_message("DotobjMaterialLoadFromFile(): \"" + string(_libraryName) + "\" \"" + string(_materialName) + "\" already exists");
         return DotobjMaterialFind(_libraryName, _materialName);
     }
     

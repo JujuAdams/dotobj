@@ -255,7 +255,7 @@ function DotobjMtlLoadFromBuffer(_library_name, _buffer, _directory = "")
                         case "disp": //Displacement map
                         case "map_bump":
                         case "bump": //"Bump" map (normal map)
-                            var _texture_filename = _directory + _line_data_list[| 1];
+                            var _texture_filename = _line_data_list[| 1];
                             var _i = 1;
                             var _size = ds_list_size(_line_data_list);
                             repeat(_size-2)
@@ -263,6 +263,14 @@ function DotobjMtlLoadFromBuffer(_library_name, _buffer, _directory = "")
                                 _texture_filename += _line_data_list[| _i] + ((_i < _size-1)? " " : "");
                                 ++_i;
                             }
+                            
+                            //Try to find absolute paths and raise an error if we find one
+                            if (string_pos(":", _texture_filename) > 0)
+                            {
+                                __DotobjError("Absolute path detected whilst loading .mtl file\nPlease review export settings and/or adjust the .mtl file as necessary\nPath was \"", _texture_filename, "\"");
+                            }
+                            
+                            _texture_filename = _directory + _texture_filename;
                             
                             var _sprite = __DotobjAddExternalSprite(_texture_filename);
                             _texture_struct = (_sprite >= 0)? new DotobjClassTexture(_sprite, 0, true) : undefined;
