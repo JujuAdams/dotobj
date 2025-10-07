@@ -27,3 +27,5 @@
 #macro DOTOBJ_SERIALIZE_VERSION  "1.0"
 
 #macro DOTOBJ_USE_CACHE  ((os_type == os_windows) || (os_type == os_macosx) || (os_type == os_linux))
+
+#macro DOTOBJ_RUNNING_FROM_IDE  (GM_build_type == "run")

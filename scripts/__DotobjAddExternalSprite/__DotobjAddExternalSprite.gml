@@ -4,13 +4,13 @@
 
 function __DotobjAddExternalSprite(_filename)
 {
-    static _spriteMap = __DotobjSystem().__spriteMap;
+    static _aliasImagePathToSpriteMap = __DotobjSystem().__aliasImagePathToSpriteMap;
     
     var _sprite = -1;
     
-    if (ds_map_exists(_spriteMap, _filename))
+    if (ds_map_exists(_aliasImagePathToSpriteMap, _filename))
     {
-        _sprite = _spriteMap[? _filename];
+        _sprite = _aliasImagePathToSpriteMap[? _filename];
         if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjAddExternalSprite(): Reusing \"" + string(_filename) + "\" (spr=" + string(_sprite) + ")");
         
         if (sprite_exists(_sprite))
@@ -32,7 +32,7 @@ function __DotobjAddExternalSprite(_filename)
         _sprite = sprite_add(_filename, 1, false, false, 0, 0);
         if (_sprite > 0)
         {
-            _spriteMap[? _filename] = _sprite;
+            _aliasImagePathToSpriteMap[? _filename] = _sprite;
             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjAddExternalSprite(): Loaded \"" + string(_filename) + "\" (spr=" + string(_sprite) + ")");
         }
         else

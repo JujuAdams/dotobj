@@ -25,13 +25,15 @@ function DotobjClassTexture(_sprite, _index, _external) constructor
     resolution        = undefined;
     invert_v          = undefined;
     
+    
+    
     static Free = function()
     {
-        static _spriteMap = __DotobjSystem().__spriteMap;
+        static _aliasImagePathToSpriteMap = __DotobjSystem().__aliasImagePathToSpriteMap;
         
         if (external && (sprite != undefined))
         {
-            ds_map_delete(_spriteMap, filename);
+            ds_map_delete(_aliasImagePathToSpriteMap, filename);
             sprite_delete(sprite);
         }
         

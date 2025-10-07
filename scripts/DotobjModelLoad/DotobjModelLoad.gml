@@ -387,8 +387,13 @@ function DotobjModelLoad(_buffer, _model_directory = "")
                             }
                             
                             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Requires \"" + _material_library + "\"");
+                            
+                            //Try to remap before storing the material library name
+                            _material_library = DotobjAliasPathSubstringsApply(_material_library, true);
+                            
                             _model_struct.material_library = _material_library;
                             DotobjMtlLoadFromFile(_material_library);
+                            
                             if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Set material library to \"" + _material_library + "\"");
                         break;
                     

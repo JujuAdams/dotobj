@@ -264,11 +264,18 @@ function DotobjMtlLoadFromBuffer(_library_name, _buffer, _directory = "")
                                 ++_i;
                             }
                             
+                            //Try to remap before checking for absolute paths
+                            _texture_filename = DotobjAliasPathSubstringsApply(_texture_filename, true);
+                            
                             //Try to find absolute paths and raise an error if we find one
                             if (string_pos(":", _texture_filename) > 0)
                             {
-                                show_debug_message("Warning! Absolute path detected whilst loading .mtl file (path was \"" + string(_texture_filename) + "\")");
-                                show_debug_message("         Please review .obj export settings and/or adjust .mtl files as necessary");
+                                show_debug_message("DotobjMtlLoadFromBuffer(): Warning! Absolute path detected whilst loading .mtl file (path was \"" + string(_texture_filename) + "\")");
+                                
+                                if (DOTOBJ_RUNNING_FROM_IDE)
+                                {
+                                    show_debug_message("DotobjMtlLoadFromBuffer():          Please review .obj export settings and/or adjust .mtl files as necessary. You may also find `DotobjAliasPathSubstring()` helpful");
+                                }
                             }
                             
                             _texture_filename = _directory + _texture_filename;

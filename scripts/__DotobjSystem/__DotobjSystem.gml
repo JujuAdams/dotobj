@@ -33,7 +33,10 @@ function __DotobjSystem()
         //Create maps to store all our material definitions
         __mtlFileLoadedMap   = ds_map_create();
         __materialLibraryMap = ds_map_create();
-        __spriteMap          = ds_map_create();
+        
+        __aliasImagePathToSpriteMap = ds_map_create();
+        __aliasPathSubstringMap     = ds_map_create();
+        __aliasPathSubstringArray   = [];
         
         //State variables
         __flipTexcoordV    = false;
