@@ -8,7 +8,8 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
     static _materialLibraryMap = __DotobjSystem().__materialLibraryMap;
     
     //Materials are collected together in .mtl files (a.k.a. "material libraries")
-    library            = _library_name;  //string
+    library            = _library_name;  //string  //TODO - Legacy, remove in a future version
+    library_name       = _library_name;  //string
     name               = _material_name; //string
     ambient            = undefined;      //u24 RGB
     diffuse            = undefined;      //u24 RGB
@@ -82,10 +83,10 @@ function DotobjClassMaterial(_library_name, _material_name) constructor
         
         ds_map_delete(_materialLibraryMap, cache_name);
         
-        if (ds_map_exists(_mtlFileLoadedMap, library))
+        if (ds_map_exists(_mtlFileLoadedMap, library_name))
         {
-            show_debug_message("DotobjClassMaterial.Destroy(): Invalidating cache for library \"" + library + "\"");
-            ds_map_delete(_mtlFileLoadedMap, library);
+            show_debug_message("DotobjClassMaterial.Destroy(): Invalidating cache for library \"" + library_name + "\"");
+            ds_map_delete(_mtlFileLoadedMap, library_name);
         }
     }
     

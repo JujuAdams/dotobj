@@ -267,7 +267,8 @@ function DotobjMtlLoadFromBuffer(_library_name, _buffer, _directory = "")
                             //Try to find absolute paths and raise an error if we find one
                             if (string_pos(":", _texture_filename) > 0)
                             {
-                                __DotobjError("Absolute path detected whilst loading .mtl file\nPlease review export settings and/or adjust the .mtl file as necessary\nPath was \"", _texture_filename, "\"");
+                                show_debug_message("Warning! Absolute path detected whilst loading .mtl file (path was \"" + string(_texture_filename) + "\")");
+                                show_debug_message("         Please review .obj export settings and/or adjust .mtl files as necessary");
                             }
                             
                             _texture_filename = _directory + _texture_filename;
