@@ -1,7 +1,8 @@
 /// @param buffer
 /// @param modelDirectory
+/// @param budget
 
-function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
+function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
 {
     static _system = __DotobjSystem();
     static _vertexFormatPNCT    = _system.__vertexFormatPNCT;
@@ -10,9 +11,9 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
     
     __createTime = get_timer();
     
-    __buffer = _buffer;
+    __buffer         = _buffer;
     __modelDirectory = _modelDirectory;
-    
+    __budget         = _budget;
     
     __finished = false;
     __Update = __WorkBufferInitialize;
@@ -27,10 +28,9 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
     },
     [], -1);
     
-    static GetModel = function()
-    {
-        return __modelStruct;
-    }
+    time_source_start(__timeSource);
+    
+    
     
     static GetFinished = function()
     {
@@ -63,10 +63,10 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
             __buffer = undefined;
         }
         
-        if (_mrgbBuffer != undefined)
+        if (__mrgbBuffer != undefined)
         {
-            buffer_delete(__buffer);
-            _mrgbBuffer = undefined;
+            buffer_delete(__mrgbBuffer);
+            __mrgbBuffer = undefined;
         }
         
         ds_list_destroy(__lineDataList);
@@ -153,6 +153,8 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
         buffer_seek(__buffer, buffer_seek_start, 0);
         
         __bytesRemaining = __bufferSize;
+        
+        __Update = __WorkParseBuffer;
     }
     
     static __WorkParseBuffer = function()
@@ -471,16 +473,16 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                                     array_push(_modelMaterialsArray, _materialName);
                                 }
                             
-                                if ((_meshStruct.material == DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_meshVertexesArray) <= 0))
+                                if ((__meshStruct.material == DOTOBJ_DEFAULT_MATERIAL_NAME) && (array_length(_meshVertexesArray) <= 0))
                                 {
                                     //If our mesh's material hasn't been set and the vertex list is empty, set this mesh to use this material
-                                    _meshStruct.material = _materialName;
+                                    __meshStruct.material = _materialName;
                                 }
                                 else
                                 {
                                     //If our mesh's material has been set or we've added some vertices, create a new mesh to add triangles to
-                                    var _meshStruct = (new DotobjClassMesh()).AddTo(__groupStruct);
-                                    with(_meshStruct)
+                                    __meshStruct = (new DotobjClassMesh()).AddTo(__groupStruct);
+                                    with(__meshStruct)
                                     {
                                         material     = _materialName;
                                         has_tangents = _writeTangents;
@@ -709,7 +711,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
         //Create a vertex buffer for this mesh
         ++__metaVertexBuffers;
         __vertexBuffer = vertex_create_buffer();
-        __meshStruct.vertex_buffer = __vertexBuffer;
         vertex_begin(__vertexBuffer, __writeTangents? _vertexFormatPNCTTan : _vertexFormatPNCT);
         
         __trianglesRemaining = array_length(__meshVertexesArray);
@@ -961,7 +962,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
         if (__trianglesRemaining <= 0)
         {
             vertex_end(__vertexBuffer);
-            __vertexBuffer = undefined;
+            __meshStruct.vertex_buffer = __vertexBuffer;
             
             __Update = __WorkFinishMesh;
         }

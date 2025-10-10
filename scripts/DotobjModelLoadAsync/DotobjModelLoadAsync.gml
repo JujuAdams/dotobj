@@ -1,5 +1,11 @@
-function DotobjModelLoadAsync(_inBuffer, _modelDirectory = "", _consumeBuffer = false)
+function DotobjModelLoadAsync(_inBuffer, _modelDirectory = "", _consumeBuffer = false, _budget = 12)
 {
+    //Tidy up the model directory
+    if (string_char_at(_modelDirectory, string_length(_modelDirectory)) != "\\")
+    {
+        _modelDirectory += "\\";
+    }
+    
     if (_consumeBuffer)
     {
         var _buffer = _inBuffer;
@@ -11,5 +17,6 @@ function DotobjModelLoadAsync(_inBuffer, _modelDirectory = "", _consumeBuffer = 
         buffer_copy(_inBuffer, 0, buffer_get_size(_inBuffer), _buffer, 0);
     }
     
-    return new __DotobjClassModelWorker(_buffer, _modelDirectory);
+    var _worker = new __DotobjClassModelWorker(_buffer, _modelDirectory, _budget);
+    return _worker.__modelStruct;
 }
