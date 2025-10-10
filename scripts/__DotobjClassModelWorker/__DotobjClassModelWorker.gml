@@ -8,6 +8,8 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
     static _vertexFormatPNCTTan = _system.__vertexFormatPNCTTan;
     static _materialLibraryMap  = _system.__materialLibraryMap;
     
+    __createTime = get_timer();
+    
     __buffer = _buffer;
     __modelDirectory = _modelDirectory;
     
@@ -126,10 +128,12 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
     
     //Create some lists to store the .obj file's data
     //We fill in the 0th element because .obj vertices are 1-indexed (!)
-    __positionList = ds_list_create(); ds_list_add(__positionList, 0,0,0  );
-    __colourList   = ds_list_create(); ds_list_add(__colourList,   1,1,1,1);
-    __normalList   = ds_list_create(); ds_list_add(__normalList,   0,0,0  );
-    __textureList  = ds_list_create(); ds_list_add(__textureList,  0,0    );
+    __positionList  = ds_list_create(); ds_list_add(__positionList, 0,0,0  );
+    __colourList    = ds_list_create(); ds_list_add(__colourList,   1,1,1,1);
+    __normalList    = ds_list_create(); ds_list_add(__normalList,   0,0,0  );
+    __textureList   = ds_list_create(); ds_list_add(__textureList,  0,0    );
+    __tangentList   = ds_list_create();
+    __bitangentList = ds_list_create();
     
     __aabbX1 =  infinity;
     __aabbY1 =  infinity;
@@ -225,7 +229,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                                 {
                                     if (DOTOBJ_OUTPUT_WARNINGS && (not __vec4Error))
                                     {
-                                        show_debug_message("DotobjModelLoad(): Warning! 4-element vertex position data is for mathematical curves/surfaces. This is not supported. (ln=" + string(_metaLine) + ")");
+                                        show_debug_message("__DotobjClassModelWorker(): Warning! 4-element vertex position data is for mathematical curves/surfaces. This is not supported. (ln=" + string(_metaLine) + ")");
                                         __vec4Error = true;
                                     }
                                     break;
@@ -289,7 +293,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                                             break;
                                     
                                             default:
-                                                show_debug_message("DotobjModelLoad(): Warning! Texture depth is not supported; W-component of the texture coordinate will be ignored. (ln=" + string(_metaLine) + ")");
+                                                show_debug_message("__DotobjClassModelWorker(): Warning! Texture depth is not supported; W-component of the texture coordinate will be ignored. (ln=" + string(_metaLine) + ")");
                                                 __textureDepthError = true;
                                             break;
                                         }
@@ -342,7 +346,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                             break;
                     
                             case "l": //Line definition
-                                if (DOTOBJ_OUTPUT_WARNINGS && (not DOTOBJ_IGNORE_LINES)) show_debug_message("DotobjModelLoad(): Warning! Line primitives are not currently supported. (ln=" + string(_metaLine) + ")");
+                                if (DOTOBJ_OUTPUT_WARNINGS && (not DOTOBJ_IGNORE_LINES)) show_debug_message("__DotobjClassModelWorker(): Warning! Line primitives are not currently supported. (ln=" + string(_metaLine) + ")");
                             break;
                     
                             case "g": //Group definition
@@ -396,14 +400,14 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                                 }
                                 else if (DOTOBJ_OUTPUT_WARNINGS)
                                 {
-                                    show_debug_message("DotobjModelLoad(): Warning! Object \"" + string(_string) + "\" found. Objects are not supported; use groups instead, or set DOTOBJ_OBJECTS_ARE_GROUPS to <true>. (ln=" + string(_metaLine) + ")");
+                                    show_debug_message("__DotobjClassModelWorker(): Warning! Object \"" + string(_string) + "\" found. Objects are not supported; use groups instead, or set DOTOBJ_OBJECTS_ARE_GROUPS to <true>. (ln=" + string(_metaLine) + ")");
                                 }
                             break;
                     
                             case "s": //Section definition
                                 if (DOTOBJ_OUTPUT_WARNINGS && (not __smoothingGroupError))
                                 {
-                                    show_debug_message("DotobjModelLoad(): Warning! Smoothing groups are not currently supported. (ln=" + string(_metaLine) + ")");
+                                    show_debug_message("__DotobjClassModelWorker(): Warning! Smoothing groups are not currently supported. (ln=" + string(_metaLine) + ")");
                                     __smoothingGroupError = true;
                                 }
                             break;
@@ -420,7 +424,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                                         ++_i;
                                     }
                             
-                                    show_debug_message("DotobjModelLoad(): \"" + _string + "\"");
+                                    show_debug_message("__DotobjClassModelWorker(): \"" + _string + "\"");
                                 }
                             break;
                     
@@ -435,7 +439,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                                     ++_i;
                                 }
                             
-                                if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Requires \"" + __materialLibrary + "\"");
+                                if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjClassModelWorker(): Requires \"" + __materialLibrary + "\"");
                             
                                 //Try to remap before storing the material library name
                                 __materialLibrary = DotobjAliasPathSubstringsApply(__materialLibrary, true);
@@ -443,7 +447,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                                 __modelStruct.material_library = __materialLibrary;
                                 DotobjMtlLoadFromFile(__materialLibrary); //TODO - Make this async
                                 
-                                if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Set material library to \"" + __materialLibrary + "\"");
+                                if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjClassModelWorker(): Set material library to \"" + __materialLibrary + "\"");
                             break;
                     
                             case "usemtl":
@@ -500,14 +504,14 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                             case "usemap":
                                 if (DOTOBJ_OUTPUT_WARNINGS && (not __mapError))
                                 {
-                                    show_debug_message("DotobjModelLoad(): Warning! External texture map files are not currently supported. (ln=" + string(_metaLine) + ")");
+                                    show_debug_message("__DotobjClassModelWorker(): Warning! External texture map files are not currently supported. (ln=" + string(_metaLine) + ")");
                                     __mapError = true;
                                 }
                             break;
                     
                             case "shadow_obj":
                             case "trace_obj":
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_lineDataList[| 0]) + "\" is an external .obj reference. This is not supported. (ln=" + string(_metaLine) + ")");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! \"" + string(_lineDataList[| 0]) + "\" is an external .obj reference. This is not supported. (ln=" + string(_metaLine) + ")");
                             break;
                     
                             case "vp":
@@ -533,21 +537,21 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                             case "cdc":   //Depreciated
                             case "cdp":   //Depreciated
                             case "res":   //Depreciated
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_lineDataList[| 0]) + "\" is for mathematical curves/surfaces. This is not supported. (ln=" + string(_metaLine) + ")");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! \"" + string(_lineDataList[| 0]) + "\" is for mathematical curves/surfaces. This is not supported. (ln=" + string(_metaLine) + ")");
                             break;
                     
                             case "lod":
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! In-file LODs are not currently supported. (ln=" + string(_metaLine) + ")");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! In-file LODs are not currently supported. (ln=" + string(_metaLine) + ")");
                             break;
                     
                             case "bevel":
                             case "c_interp":
                             case "d_interp":
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_lineDataList[| 0]) + "\" is a rendering attribute. This is not supported. (ln=" + string(_metaLine) + ")");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! \"" + string(_lineDataList[| 0]) + "\" is a rendering attribute. This is not supported. (ln=" + string(_metaLine) + ")");
                             break;
                     
                             default: //Something else that we don't recognise!
-                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! \"" + string(_lineDataList[| 0]) + "\" is not recognised. (ln=" + string(_metaLine) + ")");
+                                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! \"" + string(_lineDataList[| 0]) + "\" is not recognised. (ln=" + string(_metaLine) + ")");
                             break;
                         }
                 
@@ -592,42 +596,420 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory = "")
                 z2 = _aabbZ2;
             }
             
-            __Update = __WorkMRGB;
+            __Update = (__mrgbBuffer != undefined)? __WorkMRGB : __WorkStartGroups;
         }
     }
     
     static __WorkMRGB = function()
     {
+        var _mrgbBuffer = __mrgbBuffer;
+        var _colourList = __colourList;
         
+        if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! #MRGB implementation does not support mask bytes");
+        var _mrgbLength = buffer_tell(_mrgbBuffer)/8;
+        
+        if (_mrgbLength != floor(_mrgbLength))
+        {
+            show_debug_message("__DotobjClassModelWorker(): Warning! #MRGB length is not a multiple of 8, vertex colours may be malformed");
+        }
+        
+        buffer_write(_mrgbBuffer, buffer_u8, 0x00);
+        buffer_seek(_mrgbBuffer, buffer_seek_start, 8);
+        
+        var _tell = 0;
+        var _i = 4; //Colour list is 1-indexed
+        repeat(_mrgbLength)
+        {
+            var _oldValue = buffer_peek(_mrgbBuffer, _tell + 8, buffer_u8);
+            buffer_poke(_mrgbBuffer, _tell + 8, buffer_u8, 0x00);
+            var _hexString = buffer_peek(_mrgbBuffer, _tell, buffer_string);
+            buffer_poke(_mrgbBuffer, _tell + 8, buffer_u8, _oldValue);
+            
+            var _value = real("0x" + _hexString);
+            _colourList[| _i  ] = ((_value >> 16) & 0xFF) / 255;
+            _colourList[| _i+1] = ((_value >>  8) & 0xFF) / 255;
+            _colourList[| _i+2] = ( _value        & 0xFF) / 255;
+            _colourList[| _i+3] = 1;
+            
+            _tell += 8;
+            _i += 4;
+        }
+        
+        __Update = __WorkStartGroups;
+    }
+    
+    static __WorkStartGroups = function()
+    {
+        //If we're writing tangents, initialise those lists
+        if (__writeTangents)
+        {
+            //Each list should be the same size as the position list - we have one tangent vector and one bitangent vector for every position
+            //(Tangents/Bitangents are stored as vec3, like positions, so this all lines up nicely)
+            __tangentList[|   ds_list_size(__positionList)-1] = 0;
+            __bitangentList[| ds_list_size(__positionList)-1] = 0;
+        }
+        
+        __meshGroupArray = __modelStruct.groups_array;
+        __groupIndex = 0;
+        
+        __Update = __WorkInitializeGroup;
     }
     
     static __WorkInitializeGroup = function()
     {
+        //Iterate over all the groups we've found
+        //If we're not returning arrays, the group map should only contain one group
+        __groupStruct = __meshGroupArray[__groupIndex];
         
-    }
-    
-    static __WorkTangents = function()
-    {
+        //Find our list of faces for this group
+        __groupLine        = __groupStruct.line;
+        __groupName        = __groupStruct.name;
+        __groupMeshesArray = __groupStruct.meshes_array;
         
+        __meshIndex = 0;
+        
+        __Update = __WorkInitializeMesh;
     }
     
     static __WorkInitializeMesh = function()
     {
+        __meshStruct        = __groupMeshesArray[__meshIndex];
+        __meshVertexesArray = __meshStruct.vertexes_array;
+        __meshMaterial      = __meshStruct.material;
+        __meshPrimitive     = __meshStruct.primitive;
         
+        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Group \"" + __groupName + "\" (ln=" + string(__groupLine) + ") mesh " + string(__meshIndex) + " uses material \"" + __meshMaterial + "\" and has " + string(array_length(__meshVertexesArray)) + " vertexes (" + string(array_length(__meshVertexesArray)/3) + " triangles)");
+        
+        //Check if this mesh is empty
+        if (array_length(__meshVertexesArray) <= 0)
+        {
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Group \"" + string(__groupName) + "\" mesh " + string(__meshIndex) + " has no triangles");
+            __Update = __WorkFinishMesh;
+            return;
+        }
+        
+        //Check if this mesh's material exists
+        var _materialStruct = _materialLibraryMap[? __meshMaterial];
+        if (_materialStruct == undefined)
+        {
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Material \"" + __meshMaterial + "\" doesn't exist for group \"" + __groupName + "\" (ln=" + string(__groupLine) + ") mesh " + string(__meshIndex) + ", using default material instead");
+            _materialStruct = _materialLibraryMap[? DOTOBJ_DEFAULT_MATERIAL_NAME];
+        }
+        
+        __Update = __writeTangents? __WorkWriteTangents : __WorkCreateVertexBuffer;
+    }
+    
+    static __WorkWriteTangents = function()
+    {
+        __Update = __WorkCreateVertexBuffer;
+    }
+    
+    static __WorkCreateVertexBuffer = function()
+    {
+        //Create a vertex buffer for this mesh
+        ++__metaVertexBuffers;
+        __vertexBuffer = vertex_create_buffer();
+        __meshStruct.vertex_buffer = __vertexBuffer;
+        vertex_begin(__vertexBuffer, __writeTangents? _vertexFormatPNCTTan : _vertexFormatPNCT);
+        
+        __trianglesRemaining = array_length(__meshVertexesArray);
+        __triangleIndex = 0;
+        
+        __Update = __WorkAddTriangles;
     }
     
     static __WorkAddTriangles = function()
     {
+        var _flipTexcoords = __flipTexcoords;
+        var _writeTangents = __writeTangents;
         
+        var _writeNullTangent = true; //TODO
+        
+        var _positionList  = __positionList;
+        var _colourList    = __colourList;
+        var _normalList    = __normalList;
+        var _textureList   = __textureList;
+        var _tangentList   = __tangentList;
+        var _bitangentList = __bitangentList;
+        
+        var _vertexBuffer      = __vertexBuffer;
+        var _meshVertexesArray = __meshVertexesArray;
+        
+        var _triangleIndex = __triangleIndex;
+        
+        repeat(min(1000, __trianglesRemaining))
+        {
+            //Reset our lookup indexes
+            var _vIndex = undefined;
+            var _cIndex = undefined;
+            var _tIndex = undefined;
+            var _nIndex = undefined;
+            
+            //Reset our vertex data
+            var _vx = undefined; //X
+            var _vy = undefined; //Y
+            var _vz = undefined; //Z
+            var _cr = 1;         //Red
+            var _cg = 1;         //Green
+            var _cb = 1;         //Blue
+            var _ca = 1;         //Alpha
+            var _tx = 0;         //U
+            var _ty = 0;         //V
+            var _nx = 0;         //Normal X
+            var _ny = 0;         //Normal Y
+            var _nz = 0;         //Normal Z
+            
+            //N.B. This whole vertex decoding thing that uses strings can probably be done earlier by parsing data as it comes out of the buffer
+            //     This can definitely be improved in terms of speed!
+            
+            //Get the vertex string, and count how many slashes it contains
+            var _vertexString = _meshVertexesArray[_triangleIndex];
+            _triangleIndex++;
+                
+            var _slashCount = string_count("/", _vertexString);
+            if (_slashCount == 0)
+            {
+                //If there are no slashes in the string, then it's a simple vertex position definition
+                _vIndex = _vertexString;
+                _tIndex = undefined;
+                _nIndex = undefined;
+            }
+            else if (_slashCount == 1)
+            {
+                //If there's one slash in the string, then it's a position + texture coordinate definition
+                _vIndex = string_copy(  _vertexString, 1, string_pos("/", _vertexString)-1);
+                _tIndex = string_delete(_vertexString, 1, string_pos("/", _vertexString)  );
+                _nIndex = undefined;
+            }
+            else if (_slashCount == 2)
+            {
+                //If there're two slashes in the string, then it could be one of two things...
+                
+                var _double_slash_count = string_count("//", _vertexString);
+                if (_double_slash_count == 0)
+                {
+                    //If we find no double slashes then this is a position + UV + normal defintion
+                    _vIndex       = string_copy(  _vertexString, 1, string_pos( "/", _vertexString)-1);
+                    _vertexString = string_delete(_vertexString, 1, string_pos( "/", _vertexString)  );
+                    _tIndex       = string_copy(  _vertexString, 1, string_pos( "/", _vertexString)-1);
+                    _nIndex       = string_delete(_vertexString, 1, string_pos( "/", _vertexString)  );
+                }
+                else if (_double_slash_count == 1)
+                {
+                    //If we find a single double slash then this is a position + normal defintion
+                    _vertexString = string_replace(_vertexString, "//", "/" );
+                    _vIndex       = string_copy(   _vertexString, 1, string_pos("/", _vertexString)-1);
+                    _tIndex       = undefined;
+                    _nIndex       = string_delete( _vertexString, 1, string_pos("/", _vertexString)  );
+                }
+                else
+                {
+                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Triangle " + string(_triangleIndex) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
+                    continue;
+                }
+            }
+            else
+            {
+                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Triangle " + string(_triangleIndex) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
+                continue;
+            }
+                
+            if ((_vIndex == "") || (_vIndex == undefined))
+            {
+                ++__missingPositions;
+                continue;
+            }
+                
+            //If we've got any blank strings set the indices to 0
+            if ((_nIndex == "") || (_nIndex == undefined)) _nIndex = 0;
+            if ((_tIndex == "") || (_tIndex == undefined)) _tIndex = 0;
+                
+            //Some .obj file use negative references to look at data recently defined. This isn't supported!
+            if ((_vIndex < 0) || (_nIndex < 0) || (_tIndex < 0))
+            {
+                ++__negativeReferences;
+                continue;
+            }
+                
+            _vIndex = 3*floor(real(_vIndex));
+            _cIndex = (4/3)*_vIndex;
+            _nIndex = 3*floor(real(_nIndex));
+            _tIndex = 2*floor(real(_tIndex));
+                
+            //Write the position
+            _vx = _positionList[| _vIndex  ]; //X
+            _vy = _positionList[| _vIndex+1]; //Y
+            _vz = _positionList[| _vIndex+2]; //Z
+                
+            //If we have some invalid data, log the warning, and move on to the next vertex
+            //(Incidentally, if the position data is broken then the colour data will be broken too)
+            if ((_vx == undefined) || (_vy == undefined) || (_vz == undefined))
+            {
+                ++__missingPositions;
+                continue;
+            }
+                
+            vertex_position_3d(_vertexBuffer, _vx, _vy, _vz);
+                
+            //Write the normal
+            if (_nIndex >= 0)
+            {
+                _nx = _normalList[| _nIndex  ]; //Normal X
+                _ny = _normalList[| _nIndex+1]; //Normal Y
+                _nz = _normalList[| _nIndex+2]; //Normal Z
+                    
+                //If we have some invalid data, log the warning, then default to (0,0,0)
+                if ((_nx == undefined) || (_ny == undefined) || (_nz == undefined))
+                {
+                    ++__missingNormals;
+                    _nx = 0;
+                    _ny = 0;
+                    _nz = 0;
+                }
+            }
+                
+            vertex_normal(_vertexBuffer, _nx, _ny, _nz);
+            
+            //Write the colour
+            _cr = _colourList[| _cIndex  ]*255; //Red
+            _cg = _colourList[| _cIndex+1]*255; //Green
+            _cb = _colourList[| _cIndex+2]*255; //Blue
+            _ca = _colourList[| _cIndex+3];     //Alpha
+            vertex_colour(_vertexBuffer, make_colour_rgb(_cr, _cg, _cb), _ca);
+            
+            //Write the UVs
+            if (_tIndex >= 0) 
+            {
+                _tx = _textureList[| _tIndex  ]; //U
+                _ty = _textureList[| _tIndex+1]; //V
+                    
+                //If we have some invalid data, log the warning, then default to (0,0)
+                if ((_tx == undefined) || (_ty == undefined))
+                {
+                    ++__missingUVs;
+                    _tx = 0;
+                    _ty = 0;
+                }
+                else
+                {
+                    if (_flipTexcoords) _ty = 1 - _ty;
+                }
+            }
+                
+            vertex_texcoord(_vertexBuffer, _tx, _ty);
+                
+            //Write the tangent, including handedness
+            if (_writeTangents)
+            {
+                if (_writeNullTangent)
+                {
+                    vertex_float4(_vertexBuffer, 0, 0, 0, 0);
+                }
+                else
+                {
+                    //Fetch our tangent/bitangent values for this position
+                    var _tx = _tangentList[| _vIndex  ];
+                    var _ty = _tangentList[| _vIndex+1];
+                    var _tz = _tangentList[| _vIndex+2];
+                        
+                    var _bx = _bitangentList[| _vIndex  ];
+                    var _by = _bitangentList[| _vIndex+1];
+                    var _bz = _bitangentList[| _vIndex+2];
+                        
+                    //show_debug_message("in normal     = " + string(_nx) + "," + string(_ny) + "," + string(_nz));
+                    //show_debug_message("in tangent    = " + string(_tx) + "," + string(_ty) + "," + string(_tz));
+                    //show_debug_message("in bitangent  = " + string(_bx) + "," + string(_by) + "," + string(_bz));
+                        
+                    //"Gram-Schmidt orthogonalize"... apparently
+                    //        dot = normal.tangent
+                    //    tangent = tangent - normal*dot
+                    //    tangent = normalize(tangent)
+                    var _dot = dot_product_3d(_nx, _ny, _nz,   _tx, _ty, _tz);
+                    _tx -= _nx * _dot;
+                    _ty -= _ny * _dot;
+                    _tz -= _nz * _dot;
+                        
+                    var _length = sqrt(_tx*_tx + _ty*_ty + _tz*_tz);
+                    if (_length > 0)
+                    {
+                        _tx /= _length;
+                        _ty /= _length;
+                        _tz /= _length;
+                    }
+                
+                    //Figure out the handedness of the bitangent
+                    //    cross = n x tan1
+                    //      dot = cross . tan2
+                    //     hand = (dot < 0)? -1 : 1
+                    var _crossX = _ny*_tz - _nz*_ty;
+                    var _crossY = _nz*_tx - _nx*_tz;
+                    var _crossZ = _nx*_ty - _ny*_tx;
+                    var _dot = dot_product_3d(_crossX, _crossY, _crossZ, _bx, _by, _bz)
+                    var _handedness = (_dot < 0)? -1 : 1;
+                        
+                    //Actually write the data!
+                    vertex_float4(_vertexBuffer, _tx, _ty, _tz, _handedness);
+                        
+                    //show_debug_message("out tangent = " + string(_tx) + "," + string(_ty) + "," + string(_tz) + ", handedness = " + string(_handedness));
+                }
+            }
+        }
+        
+        __triangleIndex = _triangleIndex;
+        
+        __trianglesRemaining -= 1000;
+        if (__trianglesRemaining <= 0)
+        {
+            vertex_end(__vertexBuffer);
+            __vertexBuffer = undefined;
+            
+            __Update = __WorkFinishMesh;
+        }
     }
     
     static __WorkAddLines = function()
     {
+        //TODO
         
+        __Update = __WorkCleanUp;
+    }
+    
+    static __WorkFinishMesh = function()
+    {
+        ++__meshIndex;
+        if (__meshIndex < array_length(__groupMeshesArray))
+        {
+            __Update = __WorkInitializeMesh;
+        }
+        else
+        {
+            ++__groupIndex;
+            if (__groupIndex < array_length(__meshGroupArray))
+            {
+                __Update = __WorkInitializeGroup;
+            }
+            else
+            {
+                __Update = __WorkCleanUp;
+            }
+        }
     }
     
     static __WorkCleanUp = function()
     {
+        __End();
+        
+        //Report errors if we found any
+        if (DOTOBJ_OUTPUT_WARNINGS)
+        {
+            if (__negativeReferences > 0) show_debug_message("DotobjModelLoad(): Warning! .obj had negative position references (x" + string(__negativeReferences) + ")");
+            if (__missingPositions   > 0) show_debug_message("DotobjModelLoad(): Warning! .obj referenced missing positions (x"     + string(__missingPositions  ) + ")");
+            if (__missingNormals     > 0) show_debug_message("DotobjModelLoad(): Warning! .obj referenced missing normals (x"       + string(__missingNormals    ) + ")");
+            if (__missingUVs         > 0) show_debug_message("DotobjModelLoad(): Warning! .obj referenced missing UVs (x"           + string(__missingUVs        ) + ")");
+        }
+        
+        //If we want to report the load time, do it!
+        if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("DotobjModelLoad(): lines=" + string(__metaLine) + ", groups=" + string(array_length(__meshGroupArray)) + ", vertex buffers=" + string(__metaVertexBuffers) + ", triangles=" + string(__metaTriangles) + ". Time to load was " + string((get_timer() - __createTime)/1000) + "ms");
         
     }
 }
