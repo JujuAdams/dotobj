@@ -108,6 +108,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     __lineDataList      = ds_list_create();
     __valueReadStart    = 0;
     __uniqueMaterials   = {};
+    __writeNullTangents = true;
     
     __materialLibrary = DOTOBJ_DEFAULT_MATERIAL_LIBRARY;
     
@@ -134,6 +135,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     __textureList   = ds_list_create(); ds_list_add(__textureList,  0,0    );
     __tangentList   = ds_list_create();
     __bitangentList = ds_list_create();
+    __unpackedMeshVertexList = ds_list_create();
     
     __aabbX1 =  infinity;
     __aabbY1 =  infinity;
@@ -680,12 +682,12 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         __meshMaterial      = __meshStruct.material;
         __meshPrimitive     = __meshStruct.primitive;
         
-        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("DotobjModelLoad(): Group \"" + __groupName + "\" (ln=" + string(__groupLine) + ") mesh " + string(__meshIndex) + " uses material \"" + __meshMaterial + "\" and has " + string(array_length(__meshVertexesArray)) + " vertexes (" + string(array_length(__meshVertexesArray)/3) + " triangles)");
+        if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjClassModelWorker(): Group \"" + __groupName + "\" (ln=" + string(__groupLine) + ") mesh " + string(__meshIndex) + " uses material \"" + __meshMaterial + "\" and has " + string(array_length(__meshVertexesArray)) + " vertexes (" + string(array_length(__meshVertexesArray)/3) + " triangles)");
         
         //Check if this mesh is empty
         if (array_length(__meshVertexesArray) <= 0)
         {
-            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Group \"" + string(__groupName) + "\" mesh " + string(__meshIndex) + " has no triangles");
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Group \"" + string(__groupName) + "\" mesh " + string(__meshIndex) + " has no triangles");
             __Update = __WorkFinishMesh;
             return;
         }
@@ -694,16 +696,229 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         var _materialStruct = _materialLibraryMap[? __meshMaterial];
         if (_materialStruct == undefined)
         {
-            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Material \"" + __meshMaterial + "\" doesn't exist for group \"" + __groupName + "\" (ln=" + string(__groupLine) + ") mesh " + string(__meshIndex) + ", using default material instead");
+            if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Material \"" + __meshMaterial + "\" doesn't exist for group \"" + __groupName + "\" (ln=" + string(__groupLine) + ") mesh " + string(__meshIndex) + ", using default material instead");
             _materialStruct = _materialLibraryMap[? DOTOBJ_DEFAULT_MATERIAL_NAME];
         }
         
-        __Update = __writeTangents? __WorkWriteTangents : __WorkCreateVertexBuffer;
+        __Update = __writeTangents? __WorkInitializeWriteTangents : __WorkCreateVertexBuffer;
+    }
+    
+    static __WorkInitializeWriteTangents = function()
+    {
+        var _materialStruct = _materialLibraryMap[? __meshMaterial];
+        if ((_materialStruct.normal_map == undefined) && (not __forceCalculateTangents))
+        {
+            __writeNullTangents = true;
+            __Update = __WorkCreateVertexBuffer;
+        }
+        else
+        {
+            __writeNullTangents = false;
+            __Update = __WorkUnpackMeshVertices;
+            
+            __vertexIndex = 0;
+        }
+    }
+    
+    static __WorkUnpackMeshVertices = function()
+    {
+        var _unpackedMeshVertexList = __unpackedMeshVertexList;
+        
+        //Iterate over all the vertices
+        var _vertexIndex = __vertexIndex;
+        repeat(min(1000, array_length(__meshVertexesArray) - __vertexIndex))
+        {
+            //Get the vertex string, and find the first slash
+            var _vertexString = __meshVertexesArray[_vertexIndex];
+            _vertexIndex++;
+            
+            var _slashCount = string_count("/", _vertexString);
+                        
+            if (_slashCount == 0)
+            {
+                //If there are no slashes in the string, then it's a simple vertex position definition
+                //We can't calculate a tangent without texture coordinates, bail
+                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Triangle " + string(_vertexIndex-1) + " for group \"" + string(__groupName) + "\" has no texture information, tangent cannot be computed");
+                ds_list_add(_unpackedMeshVertexList, undefined, undefined);
+                continue;
+            }
+            else if (_slashCount == 1)
+            {
+                //If there's one slash in the string, then it's a position + texture coordinate definition
+                var _vIndex = string_copy(  _vertexString, 1, string_pos("/", _vertexString)-1);
+                var _tIndex = string_delete(_vertexString, 1, string_pos("/", _vertexString)  );
+            }
+            else if (_slashCount == 2)
+            {
+                //If there're two slashes in the string, then it could be one of two things...
+                            
+                var _doubleSlashCount = string_count("//", _vertexString);
+                if (_doubleSlashCount == 0)
+                {
+                    //If we find no double slashes then this is a position + UV + normal defintion
+                    var _vIndex       = string_copy(  _vertexString, 1, string_pos( "/", _vertexString)-1);
+                    var _vertexString = string_delete(_vertexString, 1, string_pos( "/", _vertexString)  );
+                    var _tIndex       = string_copy(  _vertexString, 1, string_pos( "/", _vertexString)-1);
+                }
+                else if (_doubleSlashCount == 1)
+                {
+                    //If we find a single double slash then this is a position + normal defintion
+                    //We can't calculate a tangent without texture coordinates, bail
+                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Triangle " + string(_vertexIndex-1) + " for group \"" + string(__groupName) + "\" has no texture information, tangent cannot be computed");
+                    ds_list_add(_unpackedMeshVertexList, undefined, undefined);
+                    continue;
+                }
+                else
+                {
+                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Triangle " + string(_vertexIndex-1) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
+                    ds_list_add(_unpackedMeshVertexList, undefined, undefined);
+                    continue;
+                }
+            }
+            else
+            {
+                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Triangle " + string(_vertexIndex-1) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
+                ds_list_add(_unpackedMeshVertexList, undefined, undefined);
+                continue;
+            }
+                        
+            //Store the position and texture index in our unpacked list
+            ds_list_add(_unpackedMeshVertexList, 3*real(_vIndex), 2*real(_tIndex));
+        }
+        
+        __vertexIndex = _vertexIndex;
+        
+        if (_vertexIndex >= array_length(__meshVertexesArray))
+        {
+            __vertexIndex = 0;
+            __Update = __WorkWriteTangents;
+        }
     }
     
     static __WorkWriteTangents = function()
     {
-        __Update = __WorkCreateVertexBuffer;
+        var _positionList  = __positionList;
+        var _textureList   = __textureList;
+        var _tangentList   = __tangentList;
+        var _bitangentList = __bitangentList;
+        
+        var _unpackedMeshVertexList = __unpackedMeshVertexList;
+        
+        //Iterate over all the vertices again, this time FOR REAL
+        var _vertexIndex = __vertexIndex;
+        
+        repeat(min(1000, ds_list_size(_unpackedMeshVertexList) - _vertexIndex) div 6) //Triangles are defined as 3 points, and each point has a position and texture index
+        {
+            //Extract our position indexes
+            var _pos_index_1 = _unpackedMeshVertexList[| _vertexIndex  ];
+            var _pos_index_2 = _unpackedMeshVertexList[| _vertexIndex+2];
+            var _pos_index_3 = _unpackedMeshVertexList[| _vertexIndex+4];
+            
+            //Extract our texture indexes
+            var _tex_index_1 = _unpackedMeshVertexList[| _vertexIndex+1];
+            var _tex_index_2 = _unpackedMeshVertexList[| _vertexIndex+3];
+            var _tex_index_3 = _unpackedMeshVertexList[| _vertexIndex+5];
+            
+            //Fetch position/texture data for point 1
+            var _in_x1 = _positionList[| _pos_index_1  ]; //X
+            var _in_y1 = _positionList[| _pos_index_1+1]; //Y
+            var _in_z1 = _positionList[| _pos_index_1+2]; //Z
+            var _in_u1 = _textureList[|  _tex_index_1  ]; //U
+            var _in_v1 = _textureList[|  _tex_index_1+1]; //V
+            
+            //Fetch position/texture data for point 2
+            var _in_x2 = _positionList[| _pos_index_2  ]; //X
+            var _in_y2 = _positionList[| _pos_index_2+1]; //Y
+            var _in_z2 = _positionList[| _pos_index_2+2]; //Z
+            var _in_u2 = _textureList[|  _tex_index_2  ]; //U
+            var _in_v2 = _textureList[|  _tex_index_2+1]; //V
+            
+            //Fetch position/texture data for point 3
+            var _in_x3 = _positionList[| _pos_index_3  ]; //X
+            var _in_y3 = _positionList[| _pos_index_3+1]; //Y
+            var _in_z3 = _positionList[| _pos_index_3+2]; //Z
+            var _in_u3 = _textureList[|  _tex_index_3  ]; //U
+            var _in_v3 = _textureList[|  _tex_index_3+1]; //V
+            
+            //Not sure if this is needed, but it's in here just in case
+            //if (_flip_texcoords)
+            //{
+            //    _in_v1 = 1 - _in_v1;
+            //    _in_v2 = 1 - _in_v2;
+            //    _in_v3 = 1 - _in_v3;
+            //}
+            
+            //Find the position/texture vectors from point 1 to point 2
+            var _x1 = _in_x2 - _in_x1;
+            var _y1 = _in_y2 - _in_y1;
+            var _z1 = _in_z2 - _in_z1;
+            var _u1 = _in_u2 - _in_u1;
+            var _v1 = _in_v2 - _in_v1;
+            
+            //Find the position/texture vectors from point 1 to point 3
+            var _x2 = _in_x3 - _in_x1;
+            var _y2 = _in_y3 - _in_y1;
+            var _z2 = _in_z3 - _in_z1;
+            var _u2 = _in_u3 - _in_u1;
+            var _v2 = _in_v3 - _in_v1;
+            
+            //Uuh... Not sure what this bit does...
+            var _r = _u1*_v2 - _u2*_v1;
+            if (_r != 0)
+            {
+                //Speeeeeeed
+                _r = 1/_r;
+                
+                var _tx = (_v2*_x1 - _v1*_x2) * _r
+                var _ty = (_v2*_y1 - _v1*_y2) * _r
+                var _tz = (_v2*_z1 - _v1*_z2) * _r
+                
+                var _bx = (_u1*_x2 - _u2*_x1) * _r
+                var _by = (_u1*_y2 - _u2*_y1) * _r
+                var _bz = (_u1*_z2 - _u2*_z1) * _r
+                
+                //show_debug_message("t = " + string(_tx) + "," + string(_ty) + "," + string(_tz));
+                //show_debug_message("b = " + string(_bx) + "," + string(_by) + "," + string(_bz));
+                
+                //Update the tangents I guess?
+                _tangentList[|   _pos_index_1] += _tx;
+                _tangentList[|   _pos_index_2] += _ty;
+                _tangentList[|   _pos_index_3] += _tz;
+                
+                //And the bitangents too, why not  
+                _bitangentList[| _pos_index_1] += _bx;
+                _bitangentList[| _pos_index_2] += _by;
+                _bitangentList[| _pos_index_3] += _bz;
+            }
+            //else
+            //{
+            //    //I don't think this warning is meaningful
+            //    //We get (r==0) values when texture coordinates for a triangle are degenerate, and
+            //    // in those situations we probably want to not adjust the position's tangent/bitangent
+            //    if (DOTOBJ_OUTPUT_WARNINGS)
+            //    {
+            //        show_debug_message("__DotobjClassModelWorker(): WARNING! (r == 0), input values follow:");
+            //        show_debug_message("                     " + string(_in_u1) + ", " + string(_in_v1));
+            //        show_debug_message("                     " + string(_in_u2) + ", " + string(_in_v2));
+            //        show_debug_message("                     " + string(_in_u3) + ", " + string(_in_v3));
+            //        show_debug_message("                     -->");
+            //        show_debug_message("                     " + string(_u1) + ", " + string(_v1));
+            //        show_debug_message("                     " + string(_u2) + ", " + string(_v2));
+            //        show_debug_message("                     -->");
+            //        show_debug_message("                     " + string(_u1*_v2) + " - " + string(_u2*_v1));
+            //    }
+            //}
+            
+            //Next triangle!
+            _vertexIndex += 6;
+        }
+        
+        __vertexIndex = _vertexIndex;
+        
+        if (_vertexIndex >= ds_list_size(_unpackedMeshVertexList))
+        {
+            __Update = __WorkCreateVertexBuffer;
+        }
     }
     
     static __WorkCreateVertexBuffer = function()
@@ -724,7 +939,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         var _flipTexcoords = __flipTexcoords;
         var _writeTangents = __writeTangents;
         
-        var _writeNullTangent = true; //TODO
+        var _writeNullTangents = __writeNullTangents;
         
         var _positionList  = __positionList;
         var _colourList    = __colourList;
@@ -786,8 +1001,8 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
             {
                 //If there're two slashes in the string, then it could be one of two things...
                 
-                var _double_slash_count = string_count("//", _vertexString);
-                if (_double_slash_count == 0)
+                var _doubleSlashCount = string_count("//", _vertexString);
+                if (_doubleSlashCount == 0)
                 {
                     //If we find no double slashes then this is a position + UV + normal defintion
                     _vIndex       = string_copy(  _vertexString, 1, string_pos( "/", _vertexString)-1);
@@ -795,7 +1010,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
                     _tIndex       = string_copy(  _vertexString, 1, string_pos( "/", _vertexString)-1);
                     _nIndex       = string_delete(_vertexString, 1, string_pos( "/", _vertexString)  );
                 }
-                else if (_double_slash_count == 1)
+                else if (_doubleSlashCount == 1)
                 {
                     //If we find a single double slash then this is a position + normal defintion
                     _vertexString = string_replace(_vertexString, "//", "/" );
@@ -805,13 +1020,13 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
                 }
                 else
                 {
-                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Triangle " + string(_triangleIndex) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
+                    if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Triangle " + string(_triangleIndex) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
                     continue;
                 }
             }
             else
             {
-                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("DotobjModelLoad(): Warning! Triangle " + string(_triangleIndex) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
+                if (DOTOBJ_OUTPUT_WARNINGS) show_debug_message("__DotobjClassModelWorker(): Warning! Triangle " + string(_triangleIndex) + " for group \"" + string(__groupName) + "\" has an unsupported number of slashes (" + string(_slashCount) + ")");
                 continue;
             }
                 
@@ -902,7 +1117,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
             //Write the tangent, including handedness
             if (_writeTangents)
             {
-                if (_writeNullTangent)
+                if (_writeNullTangents)
                 {
                     vertex_float4(_vertexBuffer, 0, 0, 0, 0);
                 }
@@ -1003,14 +1218,14 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         //Report errors if we found any
         if (DOTOBJ_OUTPUT_WARNINGS)
         {
-            if (__negativeReferences > 0) show_debug_message("DotobjModelLoad(): Warning! .obj had negative position references (x" + string(__negativeReferences) + ")");
-            if (__missingPositions   > 0) show_debug_message("DotobjModelLoad(): Warning! .obj referenced missing positions (x"     + string(__missingPositions  ) + ")");
-            if (__missingNormals     > 0) show_debug_message("DotobjModelLoad(): Warning! .obj referenced missing normals (x"       + string(__missingNormals    ) + ")");
-            if (__missingUVs         > 0) show_debug_message("DotobjModelLoad(): Warning! .obj referenced missing UVs (x"           + string(__missingUVs        ) + ")");
+            if (__negativeReferences > 0) show_debug_message("__DotobjClassModelWorker(): Warning! .obj had negative position references (x" + string(__negativeReferences) + ")");
+            if (__missingPositions   > 0) show_debug_message("__DotobjClassModelWorker(): Warning! .obj referenced missing positions (x"     + string(__missingPositions  ) + ")");
+            if (__missingNormals     > 0) show_debug_message("__DotobjClassModelWorker(): Warning! .obj referenced missing normals (x"       + string(__missingNormals    ) + ")");
+            if (__missingUVs         > 0) show_debug_message("__DotobjClassModelWorker(): Warning! .obj referenced missing UVs (x"           + string(__missingUVs        ) + ")");
         }
         
         //If we want to report the load time, do it!
-        if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("DotobjModelLoad(): lines=" + string(__metaLine) + ", groups=" + string(array_length(__meshGroupArray)) + ", vertex buffers=" + string(__metaVertexBuffers) + ", triangles=" + string(__metaTriangles) + ". Time to load was " + string((get_timer() - __createTime)/1000) + "ms");
+        if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("__DotobjClassModelWorker(): lines=" + string(__metaLine) + ", groups=" + string(array_length(__meshGroupArray)) + ", vertex buffers=" + string(__metaVertexBuffers) + ", triangles=" + string(__metaTriangles) + ". Time to load was " + string((get_timer() - __createTime)/1000) + "ms");
         
     }
 }
