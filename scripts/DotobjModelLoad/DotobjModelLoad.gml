@@ -79,6 +79,7 @@ function DotobjModelLoad(_buffer, _model_directory = "")
     //Axis-aligned bounding box variables
     var _aabb_x1 =  infinity;
     var _aabb_y1 =  infinity;
+    var _aabb_y1 =  infinity;
     var _aabb_z1 =  infinity;
     var _aabb_x2 = -infinity;
     var _aabb_y2 = -infinity;
@@ -130,7 +131,7 @@ function DotobjModelLoad(_buffer, _model_directory = "")
     var _buffer_size = buffer_get_size(_buffer);
     var _old_tell = buffer_tell(_buffer);
     buffer_seek(_buffer, buffer_seek_start, 0);
-
+    
     //And let's iterate over the entire buffer, byte-by-byte
     var _line_started = false;
     var _value_read_start   = 0;
