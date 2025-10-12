@@ -3,7 +3,10 @@
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
 DotobjSetReverseTriangles(true);
-model = DotobjModelLoadFromFileAsync("planet.obj");
+model = DotobjModelLoadFromFileAsync("planet.obj", function(_model, _cancelled)
+{
+    _model.ConvertToWireframe();
+});
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;
