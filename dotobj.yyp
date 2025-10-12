@@ -54,6 +54,7 @@
     {"id":{"name":"DotobjSetReverseTriangles","path":"scripts/DotobjSetReverseTriangles/DotobjSetReverseTriangles.yy",},"order":1,},
     {"id":{"name":"objSponzaTest","path":"objects/objSponzaTest/objSponzaTest.yy",},"order":4,},
     {"id":{"name":"rmLoadingScreen","path":"rooms/rmLoadingScreen/rmLoadingScreen.yy",},"order":2,},
+    {"id":{"name":"__DotobjTrace","path":"scripts/__DotobjTrace/__DotobjTrace.yy",},"order":2,},
     {"id":{"name":"DotobjTryCache","path":"scripts/DotobjTryCache/DotobjTryCache.yy",},"order":0,},
     {"id":{"name":"objPlanet3DSMaxTest","path":"objects/objPlanet3DSMaxTest/objPlanet3DSMaxTest.yy",},"order":8,},
     {"id":{"name":"objMaskRGBFormat","path":"objects/objMaskRGBFormat/objMaskRGBFormat.yy",},"order":17,},

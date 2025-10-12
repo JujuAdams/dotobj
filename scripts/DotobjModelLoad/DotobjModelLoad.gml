@@ -1096,7 +1096,9 @@ function DotobjModelLoad(_buffer, _model_directory = "")
 
     //If we want to report the load time, do it!
     if (DOTOBJ_OUTPUT_LOAD_TIME) show_debug_message("DotobjModelLoad(): lines=" + string(_meta_line) + ", groups=" + string(array_length(_groups_array)) + ", vertex buffers=" + string(_meta_vertex_buffers) + ", triangles=" + string(_meta_triangles) + ". Time to load was " + string((get_timer() - _timer)/1000) + "ms");
-
+    
+    _model_struct.loaded = true;
+    
     //Return our data
     return _model_struct;
 }

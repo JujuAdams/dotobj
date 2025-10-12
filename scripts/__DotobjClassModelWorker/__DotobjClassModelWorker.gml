@@ -50,6 +50,9 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         
         __finished = true;
         
+        //Doesn't matter if we're fully loaded or not!
+        __modelStruct.loaded = true;
+        
         if (__timeSource == undefined)
         {
             time_source_stop(__timeSource);

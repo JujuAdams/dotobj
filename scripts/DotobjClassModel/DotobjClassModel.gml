@@ -57,6 +57,12 @@ function DotobjClassModel() constructor
     groups_array     = [];
     material_library = "";
     materials_array  = [];
+    loaded           = false;
+    
+    static GetLoaded = function()
+    {
+        return loaded;
+    }
     
     static GetAABB = function()
     {
@@ -91,6 +97,11 @@ function DotobjClassModel() constructor
     
     static Duplicate = function()
     {
+        if (not loaded)
+        {
+            __DotobjError("Cannot duplicate a model that has not finished loading");
+        }
+        
         var _new_model = new DotobjClassModel();
         
         var _i = 0;
@@ -105,6 +116,11 @@ function DotobjClassModel() constructor
     
     static Serialize = function(_buffer)
     {
+        if (not loaded)
+        {
+            __DotobjError("Cannot serialize a model that has not finished loading");
+        }
+        
         buffer_write(_buffer, buffer_string, "dotobj juju adams");
         buffer_write(_buffer, buffer_string, DOTOBJ_SERIALIZE_VERSION);
         buffer_write(_buffer, buffer_string, sha1);
@@ -200,6 +216,11 @@ function DotobjClassModel() constructor
     
     static SetMaterialForMeshes = function(_library_name, _material_name)
     {
+        if (not loaded)
+        {
+            __DotobjTrace("Warning! It is not recommended to call `.SetMaterialForMeshes()` on a model that has not finished loading");
+        }
+        
         var _i = 0;
         repeat(array_length(groups_array))
         {
