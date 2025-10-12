@@ -82,6 +82,11 @@ function DotobjClassMesh() constructor
     
     static ConvertToWireframe = function()
     {
+        if (vertex_buffer == undefined)
+        {
+            return;
+        }
+        
         if (frozen)
         {
             __DotobjError("Cannot convert a frozen mesh to wireframe");
@@ -92,19 +97,14 @@ function DotobjClassMesh() constructor
             return;
         }
         
-        __vertex_format = _system.__vertexFormatPNCT;
         
-        if (__vertex_format == _system.__vertexFormatPNCT)
+        if (has_tangents)
         {
-            var _vertexStride = 36;
-        }
-        else if (__vertex_format == _system.__vertexFormatPNCTTan)
-        {
-            var _vertexStride = 52;
+            var _vertexStride = 52; //From _system.__vertexFormatPNCTTan
         }
         else
         {
-            __DotobjError("Unknown vertex format");
+            var _vertexStride = 36; //From _system.__vertexFormatPNCT
         }
         
         var _vbuff = vertex_create_buffer();
