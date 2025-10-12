@@ -95,6 +95,19 @@ function DotobjClassModel() constructor
         return self;
     }
     
+    static ConvertToWireframe = function()
+    {
+        //Call the ConvertToWireframe() method for all groups (which calls the ConvertToWireframe() method for all meshes in those groups)
+        var _g = 0;
+        repeat(array_length(groups_array))
+        {
+            groups_array[_g].ConvertToWireframe();
+            ++_g;
+        }
+        
+        return self;
+    }
+    
     static Duplicate = function()
     {
         if (not loaded)

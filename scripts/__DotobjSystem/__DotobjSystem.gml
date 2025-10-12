@@ -27,9 +27,9 @@ function __DotobjSystem()
         vertex_format_add_texcoord();                                      //      +  8
         vertex_format_add_custom(vertex_type_float4, vertex_usage_colour); //      + 16    //I don't think vertex_usage_tangent works...
         __vertexFormatPNCTTan = vertex_format_end();                       //vertex size = 52
-    
-    
-    
+        
+        
+        
         //Create maps to store all our material definitions
         __mtlFileLoadedMap   = ds_map_create();
         __materialLibraryMap = ds_map_create();

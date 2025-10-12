@@ -38,6 +38,19 @@ function DotobjClassGroup() constructor
         return self;
     }
     
+    static ConvertToWireframe = function()
+    {
+        //Call the ConvertToWireframe() method for meshes
+        var _m = 0;
+        repeat(array_length(meshes_array))
+        {
+             meshes_array[_m].ConvertToWireframe();
+            ++_m;
+        }
+        
+        return self;
+    }
+    
     static Duplicate = function()
     {
         var _new_group = new DotobjClassGroup();

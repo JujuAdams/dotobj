@@ -6,6 +6,8 @@
 
 function DotobjClassMesh() constructor
 {
+    static _system = __DotobjSystem();
+    
     //Meshes are children of groups. Meshes contain a single vertex buffer that drawn via
     //used with vertex_submit(). A mesh has an associated vertex list (really a list of
     //triangles, one vertex at a time), and an associated material. Material definitions
@@ -76,6 +78,87 @@ function DotobjClassMesh() constructor
                 vertex_freeze(vertex_buffer);
             }
         }                                         
+    }
+    
+    static ConvertToWireframe = function()
+    {
+        if (frozen)
+        {
+            __DotobjError("Cannot convert a frozen mesh to wireframe");
+        }
+        
+        if (primitive != pr_trianglelist)
+        {
+            return;
+        }
+        
+        __vertex_format = _system.__vertexFormatPNCT;
+        
+        if (__vertex_format == _system.__vertexFormatPNCT)
+        {
+            var _vertexStride = 36;
+        }
+        else if (__vertex_format == _system.__vertexFormatPNCTTan)
+        {
+            var _vertexStride = 52;
+        }
+        else
+        {
+            __DotobjError("Unknown vertex format");
+        }
+        
+        var _vbuff = vertex_create_buffer();
+        vertex_begin(_vbuff, _system.__vertexFormatPNCT);
+        
+        var _buffer = buffer_create_from_vertex_buffer(vertex_buffer, buffer_fixed, 1);
+        repeat(vertex_get_number(vertex_buffer) div 3)
+        {
+            var    _x1 = buffer_read(_buffer, buffer_f32);
+            var    _y1 = buffer_read(_buffer, buffer_f32);
+            var    _z1 = buffer_read(_buffer, buffer_f32);
+            var   _nx1 = buffer_read(_buffer, buffer_f32);
+            var   _ny1 = buffer_read(_buffer, buffer_f32);
+            var   _nz1 = buffer_read(_buffer, buffer_f32);
+            var _rgba1 = buffer_read(_buffer, buffer_u32);
+            var    _u1 = buffer_read(_buffer, buffer_f32);
+            var    _v1 = buffer_read(_buffer, buffer_f32);
+            
+            var    _x2 = buffer_read(_buffer, buffer_f32);
+            var    _y2 = buffer_read(_buffer, buffer_f32);
+            var    _z2 = buffer_read(_buffer, buffer_f32);
+            var   _nx2 = buffer_read(_buffer, buffer_f32);
+            var   _ny2 = buffer_read(_buffer, buffer_f32);
+            var   _nz2 = buffer_read(_buffer, buffer_f32);
+            var _rgba2 = buffer_read(_buffer, buffer_u32);
+            var    _u2 = buffer_read(_buffer, buffer_f32);
+            var    _v2 = buffer_read(_buffer, buffer_f32);
+            
+            var    _x3 = buffer_read(_buffer, buffer_f32);
+            var    _y3 = buffer_read(_buffer, buffer_f32);
+            var    _z3 = buffer_read(_buffer, buffer_f32);
+            var   _nx3 = buffer_read(_buffer, buffer_f32);
+            var   _ny3 = buffer_read(_buffer, buffer_f32);
+            var   _nz3 = buffer_read(_buffer, buffer_f32);
+            var _rgba3 = buffer_read(_buffer, buffer_u32);
+            var    _u3 = buffer_read(_buffer, buffer_f32);
+            var    _v3 = buffer_read(_buffer, buffer_f32);
+            
+            vertex_position_3d(_vbuff, _x1, _y1, _z1); vertex_normal(_vbuff, _nx1, _ny1, _nz1); vertex_argb(_vbuff, _rgba1); vertex_texcoord(_vbuff, _u1, _v1);
+            vertex_position_3d(_vbuff, _x2, _y2, _z2); vertex_normal(_vbuff, _nx2, _ny2, _nz2); vertex_argb(_vbuff, _rgba2); vertex_texcoord(_vbuff, _u2, _v2);
+            vertex_position_3d(_vbuff, _x2, _y2, _z2); vertex_normal(_vbuff, _nx2, _ny2, _nz2); vertex_argb(_vbuff, _rgba2); vertex_texcoord(_vbuff, _u2, _v2);
+            vertex_position_3d(_vbuff, _x3, _y3, _z3); vertex_normal(_vbuff, _nx3, _ny3, _nz3); vertex_argb(_vbuff, _rgba3); vertex_texcoord(_vbuff, _u3, _v3);
+            vertex_position_3d(_vbuff, _x3, _y3, _z3); vertex_normal(_vbuff, _nx3, _ny3, _nz3); vertex_argb(_vbuff, _rgba3); vertex_texcoord(_vbuff, _u3, _v3);
+            vertex_position_3d(_vbuff, _x1, _y1, _z1); vertex_normal(_vbuff, _nx1, _ny1, _nz1); vertex_argb(_vbuff, _rgba1); vertex_texcoord(_vbuff, _u1, _v1);
+        }
+        
+        vertex_end(_vbuff);
+        buffer_delete(_buffer);
+        
+        vertex_delete_buffer(vertex_buffer);
+        vertex_buffer = _vbuff;
+        primitive = pr_linelist;
+        
+        return self;
     }
     
     static Duplicate = function()
