@@ -51,5 +51,5 @@
 
 function DotobjModelLoad(_buffer, _modelDirectory = "", _consumeBuffer = false)
 {
-    return __DotobjStartWorker(_buffer, _modelDirectory, _consumeBuffer, infinity).__Force().__modelStruct;
+    return __DotobjStartWorker(_buffer, _modelDirectory, undefined, _consumeBuffer, infinity).__Force().__modelStruct;
 }

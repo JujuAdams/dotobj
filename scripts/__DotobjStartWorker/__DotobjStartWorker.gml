@@ -1,9 +1,10 @@
 /// @param buffer
 /// @param modelDirectory
+/// @param callback
 /// @param consumeBuffer
 /// @param budget
 
-function __DotobjStartWorker(_inBuffer, _modelDirectory, _consumeBuffer, _budget)
+function __DotobjStartWorker(_inBuffer, _modelDirectory, _callback, _consumeBuffer, _budget)
 {
     _modelDirectory = __DotobjTidyDirectory(_modelDirectory);
     
@@ -18,5 +19,5 @@ function __DotobjStartWorker(_inBuffer, _modelDirectory, _consumeBuffer, _budget
         buffer_copy(_inBuffer, 0, buffer_get_size(_inBuffer), _buffer, 0);
     }
     
-    return new __DotobjClassModelWorker(_buffer, _modelDirectory, _budget);
+    return new __DotobjClassModelWorker(_buffer, _modelDirectory, _callback, _budget);
 }

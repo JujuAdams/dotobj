@@ -1,8 +1,9 @@
 /// @param buffer
 /// @param modelDirectory
+/// @param callback
 /// @param budget
 
-function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
+function __DotobjClassModelWorker(_buffer, _modelDirectory, _callback, _budget) constructor
 {
     static _system = __DotobjSystem();
     static _vertexFormatPNCT    = _system.__vertexFormatPNCT;
@@ -13,6 +14,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     
     __buffer         = _buffer;
     __modelDirectory = _modelDirectory;
+    __callback       = _callback;
     __budget         = _budget;
     
     __finished = false;
@@ -41,7 +43,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     {
         __DotobjError("Not yet implemented!");
         
-        __End();
+        __End(true);
     }
     
     static __Force = function()
@@ -54,7 +56,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         return self;
     }
     
-    static __End = function()
+    static __End = function(_cancelled)
     {
         if (__finished) return;
         
@@ -87,6 +89,11 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         ds_list_destroy(__colourList);
         ds_list_destroy(__normalList);
         ds_list_destroy(__textureList);
+        
+        if (is_method(__callback) || (is_numeric(__callback) && script_exists(__callback)))
+        {
+            __callback(__modelStruct, _cancelled);
+        }
     }
     
     //Cache values taken from the global system. Developers may decide to change settings for
@@ -1212,7 +1219,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     
     static __WorkCleanUp = function()
     {
-        __End();
+        __End(false);
         
         //Report errors if we found any
         if (DOTOBJ_OUTPUT_WARNINGS)
