@@ -111,6 +111,7 @@ function DotobjClassModel() constructor
             ++_i;
         }
         
+        _new_model.loaded = true;
         return _new_model;
     }
     
@@ -196,6 +197,7 @@ function DotobjClassModel() constructor
             }
         }
         
+        loaded = true;
         return self;
     }
     
