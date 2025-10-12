@@ -1,4 +1,4 @@
-<h1 align="center">dotobj 7.0.0</h1>
+<h1 align="center">dotobj 7.1.0</h1>
 
 <p align="center">.obj/.mtl loader, written in native GML, for GameMaker LTS 2022 by <a href="https://www.jujuadams.com/" target="_blank">Juju Adams</a></p>
 
