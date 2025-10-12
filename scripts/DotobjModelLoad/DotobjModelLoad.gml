@@ -32,8 +32,8 @@
 /// vertex buffers.
 /// 
 /// You may alter how dotobj loads models by calling the "Settings" functions e.g.
-/// `DotobjSetWireframe()`. Please review these functions, found in the "Settings" folder in the
-/// asset browser.
+/// `DotobjSetFlipTexcoordV()`. Please review these functions, found in the "Settings" folder in
+/// the asset browser.
 /// 
 /// Texture coordinates for .obj models will typically be normalised (0 -> 1). If you would like to
 /// remap texture coordinates to atlased texture you will need to do so yourself.

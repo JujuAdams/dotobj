@@ -91,7 +91,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     
     //Cache values taken from the global system. Developers may decide to change settings for
     //different models and we don't want to get caught out
-    __wireframe              = _system.__wireframe; __meshPrimitive = __wireframe? pr_linelist : pr_trianglelist;
     __flipTexcoords          = _system.__flipTexcoordV;
     __reverseTriangles       = _system.__reverseTriangles;
     __writeTangents          = _system.__writeTangents;
@@ -110,7 +109,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     {
         material     = DOTOBJ_DEFAULT_MATERIAL_NAME;
         has_tangents = other.__writeTangents;
-        primitive    = other.__meshPrimitive;
         other.__meshVertexesArray = vertexes_array;
     }
     
@@ -176,8 +174,7 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
     {
         var _modelMaterialsArray = __modelStruct.materials_array;
         
-        var _buffer        = __buffer;
-        var _meshPrimitive = __meshPrimitive;
+        var _buffer = __buffer;
         
         var _reverseTriangles = __reverseTriangles;
         var _writeTangents    = __writeTangents;
@@ -385,7 +382,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
                                 {
                                     material     = DOTOBJ_DEFAULT_MATERIAL_NAME;
                                     has_tangents = _writeTangents;
-                                    primitive    = _meshPrimitive;
                                     _meshVertexesArray = vertexes_array;
                                 }
                             break;
@@ -411,7 +407,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
                                     {
                                         material     = DOTOBJ_DEFAULT_MATERIAL_NAME;
                                         has_tangents = _writeTangents;
-                                        primitive    = _meshPrimitive;
                                         _meshVertexesArray = vertexes_array;
                                     }
                                 }
@@ -501,7 +496,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
                                     {
                                         material     = _materialName;
                                         has_tangents = _writeTangents;
-                                        primitive    = _meshPrimitive;
                                         var _meshVertexesArray = vertexes_array;
                                     }
                                 }
@@ -693,7 +687,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         __meshStruct        = __groupMeshesArray[__meshIndex];
         __meshVertexesArray = __meshStruct.vertexes_array;
         __meshMaterial      = __meshStruct.material;
-        __meshPrimitive     = __meshStruct.primitive;
         
         if (DOTOBJ_OUTPUT_DEBUG) show_debug_message("__DotobjClassModelWorker(): Group \"" + __groupName + "\" (ln=" + string(__groupLine) + ") mesh " + string(__meshIndex) + " uses material \"" + __meshMaterial + "\" and has " + string(array_length(__meshVertexesArray)) + " vertexes (" + string(array_length(__meshVertexesArray)/3) + " triangles)");
         
@@ -1194,13 +1187,6 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
             
             __Update = __WorkFinishMesh;
         }
-    }
-    
-    static __WorkAddLines = function()
-    {
-        //TODO
-        
-        __Update = __WorkCleanUp;
     }
     
     static __WorkFinishMesh = function()

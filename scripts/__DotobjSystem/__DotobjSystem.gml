@@ -43,7 +43,6 @@ function __DotobjSystem()
         __reverseTriangles = false;
         __writeTangents    = false;
         __forceTangentCalc = false;
-        __wireframe        = false;
         __transformOnLoad  = false;
         
         //Create a default material
