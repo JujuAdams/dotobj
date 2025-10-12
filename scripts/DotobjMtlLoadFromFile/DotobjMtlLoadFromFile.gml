@@ -26,7 +26,7 @@ function DotobjMtlLoadFromFile(_path)
         else
         {
             var _buffer = buffer_load(_path);
-            var _result = DotobjMtlLoadFromBuffer(_path, _buffer, filename_dir(_path));
+            var _result = DotobjMtlLoadFromBuffer(_path, _buffer, __DotobjFilenameDir(_path));
             buffer_delete(_buffer);
             
             _mtlFileLoadedMap[? _path] = _result;

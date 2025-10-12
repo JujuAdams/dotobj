@@ -2,5 +2,5 @@
 
 function DotobjModelLoadFromFileAsync(_filename)
 {
-    return DotobjModelLoadAsync(buffer_load(_filename), filename_dir(_filename), true);
+    return DotobjModelLoadAsync(buffer_load(_filename), __DotobjFilenameDir(_filename), true);
 }

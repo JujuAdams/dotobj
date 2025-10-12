@@ -57,8 +57,7 @@ function DotobjModelLoad(_buffer, _model_directory = "")
     
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
     
-    //Tidy up the model directory
-    if (string_char_at(_model_directory, string_length(_model_directory)) != "\\") _model_directory += "\\";
+    _model_directory = __DotobjTidyDirectory(_model_directory);
     
     //Create some variables to track errors
     var _vec4_error            = false;

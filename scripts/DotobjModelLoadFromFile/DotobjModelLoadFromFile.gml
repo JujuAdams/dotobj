@@ -8,7 +8,7 @@
 function DotobjModelLoadFromFile(_filename)
 {
     var _buffer = buffer_load(_filename);
-    var _result = DotobjModelLoad(_buffer, filename_dir(_filename));
+    var _result = DotobjModelLoad(_buffer, __DotobjFilenameDir(_filename));
     buffer_delete(_buffer);
 
     return _result;

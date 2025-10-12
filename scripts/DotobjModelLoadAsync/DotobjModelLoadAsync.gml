@@ -1,10 +1,6 @@
 function DotobjModelLoadAsync(_inBuffer, _modelDirectory = "", _consumeBuffer = false, _budget = 12)
 {
-    //Tidy up the model directory
-    if (string_char_at(_modelDirectory, string_length(_modelDirectory)) != "\\")
-    {
-        _modelDirectory += "\\";
-    }
+    _modelDirectory = __DotobjTidyDirectory(_modelDirectory);
     
     if (_consumeBuffer)
     {

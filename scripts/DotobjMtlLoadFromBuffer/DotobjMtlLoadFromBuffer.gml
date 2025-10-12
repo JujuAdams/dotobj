@@ -12,8 +12,7 @@ function DotobjMtlLoadFromBuffer(_library_name, _buffer, _directory = "")
 {
     if (DOTOBJ_OUTPUT_LOAD_TIME) var _timer = get_timer();
     
-    //Tidy up the directory
-    if (string_char_at(_directory, string_length(_directory)) != "\\") _directory += "\\";
+    _directory = __DotobjTidyDirectory(_directory);
 
     //We keep a list of data per line
     var _line_data_list = ds_list_create();
