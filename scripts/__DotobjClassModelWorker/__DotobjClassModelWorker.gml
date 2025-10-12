@@ -44,6 +44,16 @@ function __DotobjClassModelWorker(_buffer, _modelDirectory, _budget) constructor
         __End();
     }
     
+    static __Force = function()
+    {
+        while(not __finished)
+        {
+            __Update();
+        }
+        
+        return self;
+    }
+    
     static __End = function()
     {
         if (__finished) return;

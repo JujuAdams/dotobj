@@ -7,9 +7,5 @@
 
 function DotobjModelLoadFromFile(_filename)
 {
-    var _buffer = buffer_load(_filename);
-    var _result = DotobjModelLoad(_buffer, __DotobjFilenameDir(_filename));
-    buffer_delete(_buffer);
-
-    return _result;
+    return __DotobjStartWorker(buffer_load(_filename), __DotobjFilenameDir(_filename), true, infinity).__Force().__modelStruct;
 }
