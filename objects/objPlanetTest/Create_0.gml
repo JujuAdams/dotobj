@@ -8,8 +8,7 @@ DotobjAliasImagePathToSprite("textures\\planet_tex_arid.png", sprPlanetTexArid);
 //The script returns a dotobj model (in reality, a struct) that we can draw in the Draw event
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
-model_planet = DotobjModelLoadFromFile("planet.obj");
-model_planet.Freeze();
+model_planet = DotobjModelLoadFromFileAsync("planet.obj");
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;

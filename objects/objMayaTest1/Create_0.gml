@@ -3,8 +3,7 @@
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
 DotobjSetReverseTriangles(true);
-model = DotobjModelLoadFromFile("maya_1.obj");
-model.Freeze();
+model = DotobjModelLoadFromFileAsync("maya_1.obj");
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;

@@ -9,7 +9,6 @@ DotobjAliasImagePathToSprite("textures\\planet_tex_arid.png", sprPlanetTexArid);
 //If the model references a material (.mtl) file then that will be loaded as well
 DotobjSetFlipTexcoordV(true);
 model_planet = DotobjModelLoadFromFile("planet.obj");
-model_planet.Freeze();
 
 //Duplicate the model
 model_planet2 = model_planet.Duplicate();

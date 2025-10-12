@@ -4,8 +4,7 @@
 DotobjSetFlipTexcoordV(true);
 DotobjSetReverseTriangles(true);
 DotobjSetWireframe(true);
-model = DotobjModelLoadFromFile("planet.obj");
-model.Freeze();
+model = DotobjModelLoadFromFileAsync("planet.obj");
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;

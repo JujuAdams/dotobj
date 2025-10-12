@@ -1,4 +1,4 @@
-model = DotobjModelLoadFromFile("cube\\cube.obj");
+model = DotobjModelLoadFromFileAsync("cube\\cube.obj");
 
 //Mouse lock variables (press F3 to lock the mouse and use mouselook)
 mouse_lock = false;
